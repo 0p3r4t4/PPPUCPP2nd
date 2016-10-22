@@ -46,3 +46,35 @@ Repositorios con ejercicios resueltos:
 https://github.com/bewuethr/stroustrup_ppp
 https://github.com/Jtaim/Programming-Principles-and-Practice-Using-Cpp
 
+-------------------------------
+Since I'm a git newbie, I must take notes about useful and basic commands.
+
+COMMIT
+
+    git commit -m "Comment"
+
+PUSH
+
+    git push -u origin master
+
+CONFIG
+
+    git config -l
+    git config --local -l
+    git config --global -l
+
+git status
+
+Set the remote URL
+
+    git remote add origin https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+
+Change the remote URL
+
+    git remote set-url origin ssh://gitlab.com/0p3r4t4/PPPUCPP2nd.git https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+
+Tracking of new files or stage modified files for commit:
+
+    git add <file>
+
+
