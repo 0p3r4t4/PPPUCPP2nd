@@ -1,0 +1,38 @@
+//  Token para indicar el principio de un comentario en el código fuente.
+<<  Operador de salida que inserta contenido en un stream.
+C++ Lenguaje de programación dseñado para una amplia selección de tareas de programación.
+assignmnet Operación/operador que da a una variable un nuevo valor.
+cin Character INput stream. Stream para modelar la entrada de texto estándar del sistema.
+comment Mensaje escrito para describir qué intenta hacer el programa y, en general, para proveer infomación útil al programador siempre que esta no pueda ser expresada mediante el código.
+compiler Programa que traduce el código fuente en código objeto o ejecutable que el ordenador es capaz de entender y ejecutar como una lista ordenada de sentencias.
+compile-time error Error producido o detectado durante la compilación, durante la traducción del código fuente a ejecutable.
+concatenation Operación propia del tipo string que permite unir dos o más cadenas en una sóla.
+conversion
+cout Character OUTput stream. Stream para modelar la salida de texto estándar del sistema.
+declaration
+decrement Operación que permite restar 1 a un valor de un tipo entero
+definition
+executable Fichero de código objeto entendible y ejecutable por el ordenador como una lista ordenada de sentencias.
+function Lista agrupada de sentencias con un nombre. Tiene cuatro partes: tipo de retorno, nombre, lista de parámetros y cuerpo de la función.
+header  
+IDE
+#include
+increment
+initialization Operación que da declara una variable y le da un valor inicial.
+library
+linker
+main()
+name
+narrowing
+object Una zona de memoria cuyo valor se interpreta según un tipo concreto.
+object code
+operation
+operator
+output
+program
+source code
+statement
+type
+type safety
+value
+variable
