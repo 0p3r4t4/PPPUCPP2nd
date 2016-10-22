@@ -56,8 +56,12 @@ COMMIT
 PUSH
 
     git push -u origin master
+    
+or (provided that origin is defined and master is the current branch)
 
-CONFIG
+    git push
+
+View git configuration:
 
     git config -l
     git config --local -l
@@ -69,9 +73,9 @@ Set the remote URL
 
     git remote add origin https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
 
-Change the remote URL
+Change the GitLab remote URL from HTTPS to SSH:
 
-    git remote set-url origin ssh://gitlab.com/0p3r4t4/PPPUCPP2nd.git https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+    git remote set-url origin git@gitlab.com:0p3r4t4/PPPUCPP2nd.git https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
 
 Tracking of new files or stage modified files for commit:
 
