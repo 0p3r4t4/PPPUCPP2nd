@@ -8,8 +8,8 @@ I use mainly Ubuntu and derivative distros as programming platforms.
 Through my trip on this book I've used computers with Ubuntu 14.04 and
 Xubuntu 16.04, both on 64 bits version.
 
-I have used the latest GCC available as direct install from repositories, in
-the momento of writing, version 6.2.0. To install it you have to execute the commands:
+I have used the latest GCC available as direct install from repositories, at
+the moment of writing, version 6.2.0. To install it you have to execute the commands:
 
     sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     sudo apt-get update
@@ -32,8 +32,8 @@ If you want to examine other solutions and coding flavours, don't hesitate on ta
 these:
 
 [Bjarne Stroustrup's Selected Exercise
-Solutions](http://www.stroustrup.com/Programming/Solutions/exercise_solutions.html)
-On Github:
-[https://github.com/bewuethr/stroustrup_ppp]
-[https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C-]
+Solutions](http://www.stroustrup.com/Programming/Solutions/exercise_solutions.html)  
+On Github:  
+* https://github.com/bewuethr/stroustrup_ppp
+* https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C-
 
