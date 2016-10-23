@@ -18,8 +18,6 @@
 
 #include "std_lib_facilities.h"
 
-const vector<long int> milestones = {1000, 1000000, 1000000000};
-
 int main()
 {
     int rice {0};
