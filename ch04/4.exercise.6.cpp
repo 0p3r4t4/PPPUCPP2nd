@@ -1,3 +1,18 @@
+// 4.exercise.6.cpp
+//
+// Make a vector holding ten string values "zero", "one", ... "nine".
+// Use that in a program that converts a digit to its corresonding
+// spelled-out value; e.g. the input 7 gives the output seven. Hava
+// the same program, using the same input loop, convert spelled-out
+// numbers into their digit form; e.g. the input seven gives the
+// output 7.
+//
+// Comments:
+//  As stated by Bjarne Stroustrup in his "Selected Exercise Solutions"
+//  cin.clear() is needed to solve this problem without making the
+//  program too complicated. Since iostreams and their functions are
+//  exposed later on the book, we are cheating a bit.
+//
 #include "std_lib_facilities.h"
 
 const vector<string> names {"zero", "one", "two",
@@ -31,6 +46,7 @@ int main()
                 cout << names[number] << '\n';
         }
         else {
+            // The cheat. clear() return us to the begining of the input
             cin.clear();
             cin >> name;
             if ( name == "|" )

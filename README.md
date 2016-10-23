@@ -21,7 +21,7 @@ The majority of the exercises were compiled with:
 
 Sometimes I've statically analyze exercises with
 [Cppcheck](http://cppcheck.sourceforge.net/). Feel free to Google about it and
-consider other alternatives for static analysis as
+consider other alternatives for static analysis like
 [Clang-Tidy](http://clang.llvm.org/extra/clang-tidy/).
 
 
