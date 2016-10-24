@@ -1,4 +1,4 @@
-// 4.exercise.9.cpp
+// 4.exercise.09.cpp
 //
 // Try to calculate the number of rice grains that the inventor asked for in
 // exercise 8 above. You'll find that the number is so large that it won't

@@ -11,75 +11,70 @@
 
 #include "std_lib_facilities.h"
 
-const vector<string> values = {"rock", "paper", "scissors"};
+const vector<string> hands = {"rock", "paper", "scissors"};
 
-bool is_value(string value)
+bool is_hand(string hand)
 {
     bool retval {false};
 
-    for (auto v : values)
-        if (v == value) retval = true;
+    for (auto v : hands)
+        if (v == hand) retval = true;
 
     return retval;
 }
 
-string get_player_value()
+string get_player_hand()
 {
-    string value {""};
+    string hand {""};
     bool ok {false};
 
-    while (!ok) {
+    while (!ok && !cin.eof()) {
         cout << "Take your bet, rock, paper or scissors? ";
-        cin >> value;
-        if (!is_value(value))
+        cin >> hand;
+        if (!is_hand(hand))
             cout << "That's not rock, paper os scissors ...\n";
         else
             ok = true;
     }
 
-    return value;
-}
-
-vector<char> get_random_values()
-{
-    vector<char> randoms;
-    string rword {""};
-
-    cout << "Insert some word to randomize computer play: ";
-    cin >> rword;
-    for (auto c : rword)
-        randoms.push_back(c);
-
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n';
-    return randoms;
+    return hand;
 }
 
 int main()
 {
-    int rand_index {0};
-    int values_index {0};
-    string player_value {""};
-
     cout << "Let's play rock, paper or scissors ....\n";
 
-    vector<char> randoms;
-    randoms = get_random_values();
+    cout << "Insert some word to randomize computer play: ";
+    string random {""};
+    // Get the user entry, spaces or not, until new line
+    getline(cin, random);
 
-    while(true) {
-        // traverse random elements on a loop
-        rand_index = (rand_index+1)%randoms.size();
-        // select the computer value by adding the rand element, and control
-        // range access by doing mod operation
-        values_index = (values_index+randoms[rand_index])%values.size();
+    int hand_idx {0};               // Index to hands vector.
+    int rand_idx {0};               // Index to random string characters.
+    string player_hand {""};
 
-        player_value = get_player_value();
-        cout << "Player has: " << player_value 
-            << "\tComputer has: " << values[values_index] << '\n'
-            << "\tRand: " << randoms[rand_index] << " Index: "
-            << values_index << '\n';
+    while(!cin.eof()) {
+        // cycle through random string characters
+        rand_idx = (rand_idx+1)%random.size();
+        // select the computer hand by adding the current random string character
+        // pointed by rand_idx to hand_idx, and use it to cycle throug hands
+        // vector.
+        hand_idx = (hand_idx+random[rand_idx])%hands.size();
+
+        player_hand = get_player_hand();
         
-        //switch-statement to play, here
+        // call to get_player_hand could have return after EOF, and we don't
+        // want to continue playing.
+        if (!cin.eof()){
+            cout << "Player has: " << player_hand
+                << "\tComputer has: " << hands[hand_idx] << '\n'
+                << "\tRand: " << random[rand_idx] << " Index: "
+                << hand_idx << '\n';
+            
+            //switch-statement to play, here
+        }
+        else
+            cout << "Bye!\n";
     }
     return 0;
 }

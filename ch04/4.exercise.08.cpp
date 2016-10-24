@@ -1,4 +1,4 @@
-// 4.exercise.8.cpp
+// 4.exercise.08.cpp
 //
 // There is an old story that the emperor wants to thank the inventor of
 // the game of chess and asked the inventor to name his reward. The
@@ -16,10 +16,13 @@
 //
 // Comments:
 //  I hit a monster. Google about std::vector<bool> and learn
-//  how, nowadays, vector<bool> is a specialized vector whose index
-//  operator do not return a bool. Solutions vary, but I choose
-//  the simplest one, use a deque instead. Cheat again, but learning
-//  the hard way, for sure.
+//  how, nowadays, vector<bool> is a specialized vector whose subscript
+//  operator do not return a bool. Solutions vary and read such a thing as
+//  "proxy object reference" is too much for me at this point of the book, so
+//  I choose the simplest one, use a deque instead. Cheat again, but learning
+//  the hard way, for sure. Since in the context of the program I use the deque
+//  member functions size(), push_back() and subscript operator [], it's not 
+//  different from we know of a vector.
 
 #include "std_lib_facilities.h"
 

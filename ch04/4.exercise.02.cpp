@@ -1,3 +1,10 @@
+// 4.exercise.02.cpp
+//
+// If we define the median of a sequence as "a numbet do that exactly as many
+// elements come before it in the sequence as come after it", fix the program
+// in 4.6.3 do that it always prints out a median. Hint: A median need not to
+// be an element of the sequence.
+
 #include "std_lib_facilities.h"
 
 int main()
