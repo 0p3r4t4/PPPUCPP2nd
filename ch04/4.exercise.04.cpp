@@ -1,3 +1,12 @@
+// 4.exercise.04.cpp
+//
+// Write a program to play a numbers guessing game. The user thinks of a number
+// between 1 and 100 and your program ask questions to figure out what the
+// number is (e.g., "Is the number you are thinking of less than 50?"). Your
+// program should be able to identify the number after asking no more than
+// seven questions. Hint: User the < and <= operators and the if-else
+// construct.
+
 #include "std_lib_facilities.h"
 
 int main()
@@ -13,7 +22,7 @@ int main()
     char answer {' '};
 
     while (first != last) {
-        if ((last-first) == 1) guess = last;    // Correction to avoid average loss
+        if ((last-first) == 1) guess = last;    // Correction to avoid loss
                                                 // of information by int
                                                 // division
         else guess = (first+last)/2;
