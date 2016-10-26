@@ -1,7 +1,13 @@
-// 4.exercise.12.cpp
+// 4.exercise.15.cpp
 //
-// Modify the program described in the previous exercise to take an input value
-// max and then find all the prime numbers from 1 to max.
+// Write a program that takes an input value n and then finds the first
+// n primes.
+//
+// Comments:
+//  I don't think that the Sieve of Eratosthenes is useful in this problem.
+//  We need to simply iterate over natural numbers testing them being prime or
+//  not, until we found the desired number of primes. So te solution from
+//  exercise 12 feest better.
 
 #include "std_lib_facilities.h"
 
