@@ -1,4 +1,4 @@
-// 4.exercise.7.cpp
+// 4.exercise.07.cpp
 //
 //  Modify the "mini calculator" from exercise 5 to accept (just)
 //  single digit numbers written as either digits or spelled out
