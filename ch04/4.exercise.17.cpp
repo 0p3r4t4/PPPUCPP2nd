@@ -7,16 +7,16 @@
 
 int main()
 {
-    vector<int> sample;
+    vector<string> sample;
 
-    cout << "Write a series of integer numbers (end the input with Ctrl+D): ";
-    int element {0};
+    cout << "Write a series of strings (end the input with Ctrl+D): ";
+    string element {""};
     while (cin >> element)
         sample.push_back(element);
 
     if (sample.size() != 0) {
         // Vector to store different values from sample
-        vector<int> values;
+        vector<string> values;
         // Vector to store the times each element from values appears in sample
         vector<int> times;
         
@@ -35,20 +35,29 @@ int main()
             }
         }
 
+        // min nad max
+        string min {sample[0]};
+        string max {sample[0]};
+        for ( string s : sample ) {
+            if ( s < min ) min = s;
+            if ( s > max ) max = s;
+        }
         // Time to get the max in times
         // What if there are more than a mode (various elements that appers
         // the same amount of times, and that amount is the maximum)? I think
         // that we still don't know enough to solve that situation in
         // an efficent way.
-        int max {0};
+        int max_times {0};
         int idx {0};
         for (size_t i=0; i<times.size(); ++i) {
-            if (times[i] > max) {
-                max = times[i];
+            if (times[i] > max_times) {
+                max_times = times[i];
                 idx = i;
             }
         }
 
+        cout << "The min string in the sample is: " << min << '\n';
+        cout << "The max string in the sample is: " << max << '\n';
         cout << "The mode of the sample is " << values[idx] << " with " 
             << times[idx] << " appareances.\n";
 
