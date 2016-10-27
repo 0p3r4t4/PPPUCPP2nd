@@ -38,7 +38,7 @@ int main()
         }
 
         // Time to get the max in times
-        // What if there are more than a mode (various elements that appers
+        // What if there are more than a mode (various elements that appears
         // the same amount of times, and that amount is the maximum)? I think
         // that we still don't know enough to solve that situation in
         // an efficent way.
