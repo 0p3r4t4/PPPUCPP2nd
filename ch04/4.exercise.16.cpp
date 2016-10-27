@@ -4,7 +4,7 @@
 // max and min of that series. The number that appears the most times in
 // a sequence is called the mode. Create a program that finds the mode of a set
 // of positive integers.
-//
+
 #include "std_lib_facilities.h"
 
 int main()
