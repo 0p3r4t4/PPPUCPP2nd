@@ -1,3 +1,9 @@
+// 4.4.1.1.try_this.cpp
+//
+// Use the example above as a model for a program that converts yen ('y'),
+// kroner ('k'), and pounds ('p') into dollars. If you like realism, you can
+// find conversoin rates on the web.
+
 #include "std_lib_facilities.h"
 
 int main()
