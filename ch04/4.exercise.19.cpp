@@ -9,8 +9,8 @@
 
 #include "std_lib_facilities.h"
 
-bool name_in(string name, vector<string> names) {
-
+bool name_in(string name, vector<string> names)
+{
     bool retval {false};
 
     for (string x : names)
