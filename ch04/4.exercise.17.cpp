@@ -38,9 +38,9 @@ int main()
         // min nad max
         string min {sample[0]};
         string max {sample[0]};
-        for ( string s : sample ) {
-            if ( s < min ) min = s;
-            if ( s > max ) max = s;
+        for (string s : sample) {
+            if (s < min) min = s;
+            if (s > max) max = s;
         }
         // Time to get the max in times
         // What if there are more than a mode (various elements that appers
@@ -56,9 +56,9 @@ int main()
             }
         }
 
-        cout << "The min string in the sample is: " << min << '\n';
-        cout << "The max string in the sample is: " << max << '\n';
-        cout << "The mode of the sample is " << values[idx] << " with " 
+        cout << "The min string in the sample is: \"" << min << "\"\n";
+        cout << "The max string in the sample is: \"" << max << "\"\n";
+        cout << "The mode of the sample is \"" << values[idx] << "\" with " 
             << times[idx] << " appareances.\n";
 
     } else {
