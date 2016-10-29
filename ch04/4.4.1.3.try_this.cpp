@@ -1,3 +1,13 @@
+// 4.4.1.3.try_this.cpp
+//
+// Rewrite your currency converter program from the previous Try this to use
+// a switch-statement. Add conversions from yuan and kroner. Which version of
+// the program is easier to write, understand and modify? Why?
+//
+// Comments:
+//  kroner conversion is already done in the previous try this.
+//  Is this a typo to mean kronen in one or another problem statement?
+
 #include "std_lib_facilities.h"
 
 int main()
