@@ -9,7 +9,36 @@
 
 #include "std_lib_facilities.h"
 
+bool name_in(string name, vector<string> names) {
+
+    bool retval {false};
+
+    for (string x : names)
+        if (x == name) retval = true;
+
+    return retval;
+}
+
 int main()
 {
+    vector<string> names;
+    vector<int> scores;
+    string name;
+    int score;
+
+    while ((cin >> name >> score) && (name != "NoName" || score != 0)) {
+        if (name_in(name, names)) {
+            cout << "Error: Name '" + name + "' introduced twice.\n";
+            return 1;
+        } else {
+            names.push_back(name);
+            scores.push_back(score);
+        }
+    }
+
+    cout << "\nPairs introduced:\n";
+    for (size_t i=0; i<names.size(); ++i)
+        cout << '(' << names[i] << ", " << scores[i] << ")\n";
+
     return 0;
 }
