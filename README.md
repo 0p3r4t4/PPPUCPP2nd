@@ -1,4 +1,4 @@
-Exercises (Try these and Drills) from Bjarne Stroutrup's Programming, Principles and Practice Using C++ (2nd Edition)
+Exercises (Try these and Drills) from Bjarne Stroustrup's Programming, Principles and Practice Using C++ (2nd Edition)
 ============================================================
 
 Platform and Compilers
