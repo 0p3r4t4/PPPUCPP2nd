@@ -57,7 +57,7 @@ int main()
     int op_b {0};
 
     cout << "The Single Digit Calculator ...\n"
-        << "Insert two operands (from 0 to 9, on digits or spelled out)"
+        << "Insert two operands (from 0 to 9, on digits or spelled out) "
         << "separated by an operation (+,-,*,/):\n";
     
     while (true) {
