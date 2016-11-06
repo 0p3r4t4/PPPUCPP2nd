@@ -1,0 +1,32 @@
+Our hexagon was regular with 2cm sides. Did we get that answer right? Just do the
+"back of the envelope" calculation. Take a piece of paper and scribble on it.
+Don't feel that's beneath you. Many famous scientists have been greatly admired
+for their ability to come up with an approximate answer using a pencil and the 
+back of an envelope (or a napkin). This is an ability - a simple habit, really -
+that can save us a lot of time and confusion.
+
+Comments:
+
+    The answer in the book comes up to 10.3923.
+    
+    Here come my guess:
+
+        An easy method to draw a regular hexagon using a compass tool implies to set the
+        compass to the length of the side and draw a circle with it. Hence, the radius
+        of the circle and the side of the hexagon will be the same.
+
+        We can consider the hexagon as inscribed to that circle whose area will be a
+        good estimation to the area of the hexagon.
+
+        Since we know, hopefully, that the area of a circle is π∙r² (PI*pow(radius, 2))
+        we can calculate it with a radius of 2cm to obtain 12.56636cm².
+
+        Our program result doesn't seem ridiculous. although our estimation is far from
+        precise.
+    
+    Of course you can do more "back of the envelope" work and by dividing the
+    hexagon on six equilateral triangles and using Pythagoras's theorem, is almost
+    direct to formulate the area of the hexagon as (3*sqrt(3)*pow(s, 2))/2, with 's'
+    the length of the hexagon's side.
+    But I think the previous estimation is faster and fairly simple.
+
