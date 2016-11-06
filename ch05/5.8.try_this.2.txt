@@ -1,0 +1,37 @@
+5.8.try_this.2.txt
+
+Estimate the driving times. Also, estimate the corresponding flight times (using
+ordinary commercial air travel). Then, try to verify your estimates by using 
+appropiate sources, such as maps and timetables. We'd use online sources.
+
+European citizen here so,
+    1. My measures are in metric system
+    2. My knowledge about U.S.A. Geography are very limited so I cheat a bit.
+
+New York City to Denver
+
+    So I know NY is in the East Coast, but I need to locate Denver on a map.
+    I guess something between 2500 and 3000 km. So let's say 2750 km.
+
+    Considering an average speed of 100 km/h, we can drive from NYC to Denver in
+    about 27 hours and a half.
+
+    I really don't know the average speed of commercial flights but let it be
+    700 km/h. That gives us about 4 hours to fly from NYC to Denver.
+
+    Results from Google Maps:
+        Driving time: 25 hours (2866 km)
+        Flight time: 4h 15 min
+
+    Not so bad ...
+
+London to Nice
+
+    My distance guess is about 1000 km.
+
+    Taking the same average speeds from the previous trip ...
+
+    Driving time: 10 hours (versus 13 h 17 min from Google Maps)
+    Fligh time: 1 and a half hours (versus 1 h 55 min from Google Maps)
+
+    I obviously underestimate the distance between cities, being in fact 1392 km.
