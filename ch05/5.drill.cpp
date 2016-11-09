@@ -27,13 +27,13 @@ try {
     // Original -> error: ‘Cout’ was not declared in this scope
     // Cout << "Success!\n";
     // Fixed
-    cout << "Success!\n";
+    cout << "1. Success!\n";
 
     // Fragment 2 (Compile-time error)
     // Original -> error: missing terminating " character
     // cout << "Success!\n;
     // Fixed
-    cout << "Success!\n";
+    cout << "2. Success!\n";
 
     // Fragment 3 (Compile-time error)
     // Original -> error: stray ‘\’ in program 
@@ -41,13 +41,13 @@ try {
     //          -> error: ‘n’ was not declared in this scope
     // cout << "Success" << !\n";
     // Fixed
-    cout << "Success" << "!\n"; // Being literal. cout << "Success!\n"; seems better
+    cout << "3. Success" << "!\n"; // Being literal. cout << "Success!\n"; seems better
 
     // Fragment 4 (Compile-time error)
     // Original -> error: ‘success’ was not declared in this scope
     // cout << success << '\n';
     // Fixed
-    cout << "Success!" << '\n';
+    cout << "4. Success!" << '\n';
 
     // Fragment 5 (Compile-time error)
     // Original -> error: conversion from ‘int’ to non-scalar type ‘std::string
@@ -62,7 +62,7 @@ try {
     int res = 7;
     vector<int> v5(10);
     v5[5] = res;
-    cout << "Success!\n";
+    cout << "5. Success!\n";
 
     // Fragment 6 (Compile-time error and Logical error)
     // Original -> 2 * error: no match for call to ‘(Vector<int>) (int)’
@@ -72,7 +72,7 @@ try {
     // Fixed
     vector<int> v6(10);
     v6[5] = 7;
-    if (v6[5] == 7) cout << "Success!\n";   // Logical error in the comparison
+    if (v6[5] == 7) cout << "6. Success!\n";   // Logical error in the comparison
 
     // Fragment 7 (Compile-time error)
     // Original -> error: ‘cond’ was not declared in this scope
@@ -80,7 +80,7 @@ try {
     // else cout << "Fail!\n";
     // Fixed
     bool cond = true;
-    if (cond) cout << "Success!\n";
+    if (cond) cout << "7. Success!\n";
     else cout << "Fail!\n";
 
     // Fragment 8 (Logical error)
@@ -90,7 +90,7 @@ try {
     // else cout << "Fail!\n";
     // Fixed
     bool c8 = true;
-    if (c8) cout << "Success!\n";
+    if (c8) cout << "8. Success!\n";
     else cout << "Fail!\n";
     
     // Fragment 9 (Logical error)
@@ -101,7 +101,7 @@ try {
     // Fixed
     string s9 = "ape";
     bool c9 = "fool"<s9;
-    if (!c9) cout << "Success!\n";
+    if (!c9) cout << "9. Success!\n";
 
     // Fragment 10 (Logical error)
     // Original -> Prints nothing. We can change the string literals or the
@@ -110,8 +110,78 @@ try {
     // if (s10 == "fool") cout << "Success!\n";
     // Fixed
     string s10 = "ape";
-    if (s10 != "fool") cout << "Success!\n";
+    if (s10 != "fool") cout << "10. Success!\n";
 
+    // Fragment 11 (Compile-time error and Logical error)
+    // Original -> error: no match for ‘operator<’ (operand types are
+    //             ‘std::ostream {aka std::basic_ostream<char>}’ and ‘const char [10]’)
+    //          -> Prints nothing. We can change the string literals or the
+    //             logic behind de condition
+    // string s11 = "ape";
+    // if (s11 == "fool") cout < "Success!\n"; 
+    // Fixed
+    string s11 = "ape";
+    if (s11 != "fool") cout << "11. Success!\n"; 
+
+    // Fragment 12 (Compile-time error and Logical error)
+    // Original -> error: could not convert ‘std::operator+(const
+    //             std::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*) [with _CharT
+    //             = char; _Traits = std::char_traits<char>; _Alloc
+    //             = std::allocator<char>](((const char*)"fool"))’ from
+    //             ‘std::basic_string<char>’ to ‘bool’
+    //          -> error: no match for ‘operator<’ (operand types are
+    //             ‘std::ostream {aka std::basic_ostream<char>}’ and ‘const char[10]’)
+    string s12 = "ape";
+    if (s12 != "fool") cout << "12. Success!\n";
+
+    // Fragment 13 (Logical error)
+    // Original -> for-loop control always true; infinite loop.
+    // vector<char> v13(5);
+    // for (int i=0; 0<v13.size(); ++i)
+    //     cout << "13. Success!\n";
+    // Fixed (Warning about comparing a int (i) with unsigned integer
+    // (v13.size8); using size_t type)
+    vector<char> v13(5);
+    for (size_t i=0; i<v13.size(); ++i)
+        cout << "13. Success!\n";
+
+    // Fragment 14
+    // Original -> No error, although I understand is intended to iterate
+    //             v14.size() times, so the comparison in the control statement
+    //             cuase to iterate once more.
+    //vector<char> v14(5);
+    //for (int i=0; i<=v14.size(); ++i)
+    //    cout << "14. Success!\n";
+    // Fixed (size_t again)
+    vector<char> v14(5);
+    for (size_t i=0; i<v14.size(); ++i)
+        cout << "14. Success!\n";
+
+    // Fragment 15 (Logical error)
+    // Original -> The magic number 6 do not cover completely the string we
+    // want to print.
+    // string s15 = "Success!\n";
+    // for (int i=0; i<6; ++i)
+    //     cout << s15[i];
+    // Fixed
+    string s15 = "15. Success!\n";
+    for (size_t i=0; i<s15.size(); ++i)
+        cout << s15[i];
+
+    // Fragment 16 (Compile-time error; Syntax error)
+    // Original -> error: ‘then’ was not declared in this scope
+    //          -> also, there has no sense to write an if-statement that only
+    //             executes one of its branches. A fix to this could be a
+    //             simple cout << "Success!\n"; and no more
+    // if (true) then
+    //     cout << "Success!\n";
+    // else 
+    //     cout << "Fail\n";
+    // Fixed
+    if (true) 
+        cout << "16. Success!\n";
+    else 
+        cout << "Fail\n";
 
     return 0;
 }
