@@ -149,9 +149,9 @@ try {
     // Original -> No error, although I understand is intended to iterate
     //             v14.size() times, so the comparison in the control statement
     //             cuase to iterate once more.
-    //vector<char> v14(5);
-    //for (int i=0; i<=v14.size(); ++i)
-    //    cout << "14. Success!\n";
+    // vector<char> v14(5);
+    // for (int i=0; i<=v14.size(); ++i)
+    //     cout << "14. Success!\n";
     // Fixed (size_t again)
     vector<char> v14(5);
     for (size_t i=0; i<v14.size(); ++i)
@@ -182,6 +182,30 @@ try {
         cout << "16. Success!\n";
     else 
         cout << "Fail\n";
+
+    // Fragment 17 (Non-error)
+    // Original -> The narrow conversion from int to char in the second line of
+    //             code causes the comparison to not "work as expected".
+    // int x17 = 2000;
+    // char c17 = x17;
+    // if (c17 == 2000) cout << "17. Success!\n";
+    // Fixed
+    int x17 = 2000;
+    int c17 = x17;
+    if (c17 == 2000) cout << "17. Success!\n";
+
+    // Fragment 18 (Non_error)
+    // Original -> It seems it works correctly, although it subscripts the
+    //             string out of bounds. Correctly means luckily. std::string
+    //             do not perform out of bounds checking with [] operator, so
+    //             not exception is thrown.
+    // string s18 = "Success!\n";
+    // for (int i=0; i<1109; ++i)
+    //     cout << s18[i];
+    // Fixed
+    string s18 = "18. Success!\n";
+    for (size_t i=0; i<s18.size(); ++i)
+        cout << s18[i];
 
     return 0;
 }
