@@ -48,6 +48,8 @@ try
 
     return 0;
 }
+// Exception style a bit mixed, I know. Just testing with those provided
+// by C++ and the personalized ones in the same program.
 catch (Bad_input)
 {
     cerr << "Bad input, sorry!\n";
