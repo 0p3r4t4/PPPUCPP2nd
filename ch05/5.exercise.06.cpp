@@ -26,7 +26,7 @@
 #include "std_lib_facilities.h"
 
 // Constant messages for exceptions thrown
-const string ex_abszero_msg = "Indicated temperature below absolute zero";
+const string ex_abszero_msg = "Indicated temperature below absolute zero!";
 const string ex_badunit_msg = "Indicated unit not known (valid values are C, c, F or f)";
 const string ex_badinput_msg = "Incorrect input syntax";
 
@@ -54,7 +54,7 @@ try
     double degrees = 0;
     char unit = ' ';
     
-    cout << "Insert a temperaturre in Celsius or Fahrenheit to convert.\n"
+    cout << "Insert a temperature in Celsius or Fahrenheit to convert.\n"
          << "(Magnitude and unit separated by a space, unit in (C,c,F,f); e.g. 30 C or 90 F)\n"
          << ": ";
 
@@ -62,11 +62,11 @@ try
         switch (unit) {
             case 'c':
             case 'C':
-                cout << degrees << " ºC are equivalent to " << ctof(degrees) << " ºF\n";
+                cout << degrees << " ºC is equivalent to " << ctof(degrees) << " ºF\n";
                 break;;
             case 'f':
             case 'F':
-                cout << degrees << " ºF are equivalent to " << ftoc(degrees) << " ºC\n";
+                cout << degrees << " ºF is equivalent to " << ftoc(degrees) << " ºC\n";
                 break;;
             default:
                 throw runtime_error(ex_badunit_msg);
