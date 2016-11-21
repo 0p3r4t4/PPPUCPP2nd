@@ -19,6 +19,7 @@
 
 #include "std_lib_facilities.h"
 
+const string ex_bad_number_msg = "The number of values to sum must be 1 or greater!";
 const string ex_bounds_msg = "You asked to sum more elements than those supplied!";
 const string ex_bad_input_msg = "You entered something that's not an integer!";
 
@@ -45,9 +46,11 @@ try
     cout << "Please enter the number of values you want to sum: ";
     cin >> N;
     if (!cin) throw runtime_error(ex_bad_input_msg);
+    if (N < 1) throw runtime_error(ex_bad_number_msg);
 
     cout << "Please enter some integers (press '|' to stop); ";
-    for (int element; cin >> element;)
+    int element;
+    while (cin >> element)
         elements.push_back(element);
 
     if (cin.eof()) {
