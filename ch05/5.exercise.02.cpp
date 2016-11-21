@@ -34,8 +34,8 @@ double ctok(double c)
     return c + 273.15;
 }
 
-// 4. In main() is tried to read from the input to a variable not declares (d)
-// 5. In main(), "c", a sting, not a double variable, is used as an argument
+// 4. In main() is tried to read from the input to a variable not declared (d)
+// 5. In main(), "c", a string, not a double variable, is used as an argument
 //    in the call to ctok()
 // 6. Cout is not right written
 // 7. There is no clue to the user of what this program does
