@@ -114,7 +114,7 @@ try
     double x1 = (-b + sqrt_term) / (2*a);
     double x2 = (-b - sqrt_term) / (2*a);
 
-    // Does the results comply with the equation? We evaluate the polynomial
+    // Do the results comply with the equation? We evaluate the polynomial
     double p1 = a*x1*x1 + b*x1 + c;
     double p2 = a*x2*x2 + b*x2 + c;
 
@@ -162,7 +162,7 @@ try
         x2 = (-b - sqrt_term) / (2*a);
     }
 
-    // Does the results comply with the equation? We evaluate the polynomial
+    // Do the results comply with the equation? We evaluate the polynomial
     // We use the nested form of the polynomial to minimize operations
     // and thus, the accumulated rounding error
     double p1 = (a*x1+b)*x1+c;
