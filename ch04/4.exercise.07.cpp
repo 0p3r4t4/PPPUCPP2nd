@@ -9,7 +9,7 @@
 //      as clearing cin somehow gets rid of end of input (Ctrl+D, Ctrl+Z)
 //      and I really have been stuck with this exercise too much time
 //      to investigate further.
-//      And we cheat, just like in exeercise 5, by using cin.clear().
+//      And we cheat, just like in exeercise 6, by using cin.clear().
 //      I expand the cheat by using cin.ignore() to discard input after a
 //      bad read.
 
