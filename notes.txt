@@ -1,84 +1,112 @@
-Para instalar gcc en versiones superiores a las del sistema Ubuntu:
+COMPILER AND TOOLS
 
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-    sudo apt-get update
-    sudo apt-get install gcc-6 g++-6
-    sudo apt-get install gcc-5 g++-5
--------------------------------
+    To install GCC higher versions than the one provided by Ubuntu:
 
-Para compilar con la última versión de g++ en la implementación más reciente del
-estándar ISO (sin entrar en detalles de optimización, arquitectura o tal):
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install gcc-6 g++-6
+        sudo apt-get install gcc-5 g++-5
 
-    g++-6 -std=c++1z -Wall -o <ejecutable> <código fuente>
--------------------------------
+    -------------------------------
 
-El stream cout permite la salida de variables de tipo bool. Por defecto escribe 1 para
-true y 0 para false, pero podemos hacer que escriba true o false con el modificador
-std::boolalpha:
+    To compile with the latest version of g++ in the most recent ISO standard
+    implementation (no optimization, architectural details or so provided):
 
-    bool b = true;
-    cout << b;
-
-    resultado: 1
-
-    bool b = true;
-    cout << boolalpha << b;
-
-    resultado: true
--------------------------------
-
-Podemos hacer que el stream cout escriba según un locale concreto o según el locale
-del entorno de ejecución del programa, simplemente con:
-
-    cout.imbue(locale(""));
--------------------------------
-
-La "inicialización uniforme y universal" mediante el operador {} impide las conversiones
-implícitas de estrechamiento:
-
-    double x {2.7};     // OK
-    int y {x};          // ERROR: double -> int night narrow
-    char b {1000};      // ERROR: literal value produces narrowing
--------------------------------
-
-Repositorios con ejercicios resueltos:
-
-https://github.com/bewuethr/stroustrup_ppp
-https://github.com/Jtaim/Programming-Principles-and-Practice-Using-Cpp
-
--------------------------------
-Since I'm a git newbie, I must take notes about useful and basic commands.
-
-COMMIT
-
-    git commit -m "Comment"
-
-PUSH
-
-    git push -u origin master
+        g++-6 -std=c++1z -Wall -o exec_file source_file
     
-or (provided that origin is defined and master is the current branch)
+    -------------------------------
 
-    git push
+COUT/CIN STREAM
 
-View git configuration:
+    El stream cout permite la salida de variables de tipo bool. Por defecto escribe 1 para
+    true y 0 para false, pero podemos hacer que escriba true o false con el modificador
+    std::boolalpha:
 
-    git config -l
-    git config --local -l
-    git config --global -l
+        bool b = true;
+        cout << b;
 
-git status
+        resultado: 1
 
-Set the remote URL
+        bool b = true;
+        cout << boolalpha << b;
 
-    git remote add origin https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+        resultado: true
+        
+    -------------------------------
 
-Change the GitLab remote URL from HTTPS to SSH:
+    Podemos hacer que el stream cout escriba según un locale concreto o según el locale
+    del entorno de ejecución del programa, simplemente con:
 
-    git remote set-url origin git@gitlab.com:0p3r4t4/PPPUCPP2nd.git https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+        cout.imbue(locale(""));
 
-Tracking of new files or stage modified files for commit:
+    -------------------------------
 
-    git add <file>
+    Modifiers to print out floating-point numbers:
+        
+        std::fixed          - prints all decimal numbers specified by std::precision
+        std::defaultfloat   - prints the number, honouring std::precision, in the most
+                              convenient format.
+        
+        cout << fixed << a << defaultfloat << b << '\n';
+
+    -------------------------------
+
+    We can test end of input with cin.eof() and input correctness with cin:
+
+        while (cin >> var) ...
+
+MIC TIPS
+
+    La "inicialización uniforme y universal" mediante el operador {} impide las conversiones
+    implícitas de estrechamiento:
+
+        double x {2.7};     // OK
+        int y {x};          // ERROR: double -> int night narrow
+        char b {1000};      // ERROR: literal value produces narrowing
+        
+    -------------------------------
+
+SOLVED EXERCISE REPOSITORIES AND REFERENCES
+
+    https://github.com/bewuethr/stroustrup_ppp
+    https://github.com/Jtaim/Programming-Principles-and-Practice-Using-Cpp
+
+GIT & GITLAB.COM
+
+    Since I'm a git newbie, I must take notes about useful and basic commands.
+
+    COMMIT
+
+        git commit -m "Comment"
+
+    PUSH
+
+        git push -u origin master
+        
+        -or- (provided that origin is defined and master is the current branch)
+
+        git push
+
+    View git configuration:
+
+        git config -l
+        git config --local -l
+        git config --global -l
+
+    View current branch status
+
+        git status
+
+    Set the remote URL
+
+        git remote add origin https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+
+    Change the GitLab remote URL from HTTPS to SSH:
+
+        git remote set-url origin git@gitlab.com:0p3r4t4/PPPUCPP2nd.git https://gitlab.com/0p3r4t4/PPPUCPP2nd.git
+
+    Tracking of new files or stage modified files for commit:
+
+        git add <file>
 
 
