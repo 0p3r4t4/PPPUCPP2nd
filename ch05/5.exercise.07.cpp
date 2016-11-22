@@ -213,11 +213,11 @@ try
 }
 catch (exception& e)
 {
-    cout << "Error: " << e.what() << '\n';
+    cerr << "Error: " << e.what() << '\n';
     return 2;
 }
 catch (...)
 {
-    cout << "Unknown expception!\n";
+    cerr << "Unknown expception!\n";
     return 1;
 }

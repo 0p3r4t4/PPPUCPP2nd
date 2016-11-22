@@ -86,11 +86,11 @@ try
 }
 catch (exception& e)
 {
-    cout << "Error: " << e.what() << '\n';
+    cerr << "Error: " << e.what() << '\n';
     return 2;
 }
 catch (...)
 {
-    cout << "Unknown error.\n";
+    cerr << "Unknown error.\n";
     return 1;
 }

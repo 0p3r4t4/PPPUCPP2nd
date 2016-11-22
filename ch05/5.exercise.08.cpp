@@ -75,11 +75,11 @@ try
 }
 catch (exception& e)
 {
-    cout << "Error: " << e.what() << '\n';
+    cerr << "Error: " << e.what() << '\n';
     return 1;
 }
 catch (...)
 {
-    cout << "Unexpected error!\n";
+    cerr << "Unexpected error!\n";
     return 2;
 }
