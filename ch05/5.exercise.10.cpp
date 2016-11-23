@@ -9,6 +9,8 @@
 const string ex_bad_number_msg = "The number of values to sum must be 1 or greater!";
 const string ex_bounds_msg = "You asked to sum more elements than those supplied!";
 const string ex_bad_input_msg = "You entered something that's not an integer!";
+const string ex_no_diffs_msg = "With the values indicated, I can't calculate"
+                               " differences between adjacent values.";
 
 double sum_of_N(int N, const vector<double>& elements)
 // Return the sum of the N first elements of vector elements
@@ -27,9 +29,11 @@ double sum_of_N(int N, const vector<double>& elements)
 vector<double> diffs_of_N(int N, const vector<double>& elements)
 // Return a vector containing the N-1 differences between the first
 // N adjacent values in elements.
-// pre-condition:   the elements vector has to have at least N elements
+// pre-conditions:   the elements vector has to have at least N elements
+//                   N must be equal or greater than 2 to get a difference
 {
     if (N > int(elements.size())) throw runtime_error(ex_bounds_msg);
+    if (N < 2 ) throw runtime_error(ex_no_diffs_msg);
 
     vector<double> diffs;
     diffs.reserve(N-1);
