@@ -55,16 +55,25 @@ COUT/CIN STREAM
 
         while (cin >> var) ...
 
-MIC TIPS
+MISC TIPS
 
-    La "inicialización uniforme y universal" mediante el operador {} impide las conversiones
-    implícitas de estrechamiento:
+    The "uniform and universal initialization" through {} operator avoids implicit
+    narrowing conversions:
 
         double x {2.7};     // OK
-        int y {x};          // ERROR: double -> int night narrow
+        int y {x};          // ERROR: double -> int might narrow
         char b {1000};      // ERROR: literal value produces narrowing
         
     -------------------------------
+
+    RANDOM NUMBERS
+
+    In a C++11/14 style there is an alternative to classic srand() and rand(). In
+    summary, to get random numbers from 0 to 9, you ca do something like:
+
+        std::default_random_engine engine(std::time(nullptr));
+        std::uniform_int_distribution<> dist(0, 9);
+        int r = dist(engine);
 
 SOLVED EXERCISE REPOSITORIES AND REFERENCES
 
@@ -108,5 +117,9 @@ GIT & GITLAB.COM
     Tracking of new files or stage modified files for commit:
 
         git add <file>
+
+    Remove a file from the repository
+
+        git rm <file>
 
 
