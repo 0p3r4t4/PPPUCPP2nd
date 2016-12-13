@@ -97,8 +97,8 @@ try
 {
     if (input.length() != no_of_digits) throw runtime_error(ex_msg_no_no_of_digits);
 
-    for (size_t i = 0; i < input.length(); ++i)
-        if (input[i] < '0' || input [i] > '9')
+    for (char c : input)
+        if (c < '0' || c > '9')
             throw runtime_error(ex_msg_no_no_of_digits);
 
     for (size_t i = 0; i < input.length() - 1; ++i)
@@ -213,8 +213,6 @@ try
             if (bulls == no_of_digits) {
                 cout << "Congratulations! You guessed right!\n"
                      << "Let's play again ...\n? ";
-                bulls = 0;
-                cows = 0;
                 digits = gen_digits(no_of_digits, engine, dist);
             }
             else {

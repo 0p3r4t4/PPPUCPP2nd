@@ -16,6 +16,22 @@ COMPILER AND TOOLS
     
     -------------------------------
 
+    To static analyze with --clang-tidy-- (change source file, -std and -I arguments as needed)
+
+        clang-tidy 5.exercise.12.cpp
+            -checks=*,-google-readability-braces-around-statements,-readability-braces-around-statements
+            -- -std=c++11 -I/usr/include/c++/5/
+
+    To static analyze with --Clang Static Analyzer--:
+
+        scan-build g++ -std=c++1z 5.exercise.12.cpp
+
+    To static analyze with --CppCheck--:
+
+        cppcheck --enable=all 5.exercise.12.cpp
+
+    -------------------------------
+
 COUT/CIN STREAM
 
     El stream cout permite la salida de variables de tipo bool. Por defecto escribe 1 para

@@ -40,7 +40,6 @@ try
                 break;
             default:
                 throw runtime_error("Given temperature unit isn't a known one.");
-                break; // Really needed??
         }
     } else {
         throw Bad_input();

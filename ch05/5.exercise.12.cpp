@@ -36,8 +36,8 @@ try
 {
     if (input.length() != 4) throw runtime_error(ex_msg_no_four_digit);
 
-    for (size_t i = 0; i < input.length(); ++i)
-        if (input[i] < '0' || input [i] > '9')
+    for (char c : input)
+        if (c < '0' || c > '9')
             throw runtime_error(ex_msg_no_four_digit);
 
     for (size_t i = 0; i < input.length() - 1; ++i)

@@ -29,13 +29,12 @@ try
 
     int fib0 = 1;
     int fib1 = 1;
-    int tmp = 0;
 
     if (fib_no >= 1) cout << "Fib(1)\t" << fib0 << '\n';
     if (fib_no >= 2) cout << "Fib(2)\t" << fib1 << '\n';
     
     for (int i = 3; i <= fib_no; ++i) {
-        tmp = fib0 + fib1;
+        int tmp = fib0 + fib1;
         // If the add causes the result to be less, there is an overflow
         if (tmp < fib1) throw runtime_error(ex_overflow_msg);
         fib0 = fib1;
