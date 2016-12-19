@@ -6,7 +6,7 @@ Why?
 
 After more than a decade without doing any serious programming (some bash and Python
 for system administration tasks do not count, I guess) I faced a required massive
-modification of an old C program and get bitten again by the coding snake.
+modification of an old C program and got bitten again by the coding snake.
 
 I have two main points to struggle with:
  - A strong sense for a need to **return to the basics**.
