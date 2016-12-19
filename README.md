@@ -1,8 +1,72 @@
 Exercises (Try these and Drills) from Bjarne Stroustrup's Programming, Principles and Practice Using C++ (2nd Edition)
 ============================================================
 
-Platform and Compilers
-----------------------
+Why?
+----
+
+After more than a decade without doing any serious programming (some bash and Python
+for system administration tasks do not count, I guess) I faced a required massive
+modification of an old C program and get bitten again by the coding snake.
+
+I have two main points to struggle with:
+ - A strong sense for a need to **return to the basics**.
+ - A **personal debt with C++**, having already used it but just as a glorified 
+C with classes (and from I've learned recently, doing so rather poorly and 
+mistakenly).
+
+I hope that **_Programming, Principles and Practice with C++_** could cope with those.
+
+To be clear, I return to programming as a hobbyist. A full time job as a sysadmin
+and two children don't let me be more ambitious. But that's fine to me now.
+
+At first I only want to have a repository that I could synchronize
+and use through my two personal systems and, perhaps, my mom's PC while visiting.
+Also, very used to *subversion*, I saw an opportunity to play a bit with *git*.
+As a very shy person, I choose *GitLab(.com)* as opposed to *GitHub(.com)* mainly,
+if not only, by the unlimited private repositories.
+
+As I proceeded through the book I've searched for references to compare my exercises
+with. And I found it tremendously useful; find a better solution and learn from it,
+catch those little details that you've disregarded, or, in the rare ocassions when
+it happens, the triumphal sensation of thinking *"my solution is better"*, are all 
+enriching experiences.
+And since I found enrichment on others' job, it will be greedy not to share mine
+(you never know if, or when, it will be useful to somebody else).
+
+About my exercises
+------------------
+
+I'm neither a seasoned programmer nor a newbie, so despite learning new things 
+through the study of the book, I also know a few things explained later or 
+not exposed at all (not a criticism since the book has its scope).
+
+So, although I've tried to restrict myself to the contents of the book, sometimes I
+investigate and go a little bit further. I feel that this behaviour is somehow 
+enforced by the author in his perspective about what programming is (or at least
+in how I understand him). In spite of this, I think I don't deviate that much, so
+if somebody studying the book uses this repository as a reference, there will be 
+no problem to understand this little oddities of mine.
+
+As a point of fact:
+ - I don't use `keep_window_open()` since in Linux it annoys me more that it helps me.
+ - I tend not to use `error()` function provided by `std_lib_facilities.h`. Somehow
+ I feel better throwing on my own.
+ - I sometimes, as an user, don't buy the `a program is allowed to terminate after
+ finding an error` assumption to the point that an user's input error causes no
+ further opportunities.
+
+Notes
+-----
+
+*In construction*
+
+My review of the book (so far)
+------------------------------
+
+*In construction*
+
+Platform, Compilers and Tools
+-----------------------------
 
 I use mainly Ubuntu and derivative distros as programming platforms. 
 Through my trip on this book I've used computers with Ubuntu 14.04 and
@@ -31,9 +95,13 @@ Other sources for exercises
 If you want to examine other solutions and coding flavours, don't hesitate on taking a look at
 these:
 
-[Bjarne Stroustrup's Selected Exercise
+Of course, [Bjarne Stroustrup's Selected Exercise
 Solutions](http://www.stroustrup.com/Programming/Solutions/exercise_solutions.html)  
-On Github:  
-* https://github.com/bewuethr/stroustrup_ppp
-* https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C-
 
+Also:
+ - [TheParryEffect - Programming](http://theparryeffectprogramming.blogspot.co.uk)
+ - [Nick Maclaren's Computing Courses - Programming in Modern C++ - Drill and Exercise Code](http://people.ds.cam.ac.uk/nmm1/C++/Exercises/)
+
+On Github:  
+ - <https://github.com/bewuethr/stroustrup_ppp>
+ - <https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C->
