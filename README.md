@@ -27,7 +27,7 @@ if not only, by the unlimited private repositories.
 
 As I proceeded through the book I've searched for references to compare my exercises
 with. And I found it tremendously useful; find a better solution and learn from it,
-catch those little details that you've disregarded, or, in the rare ocassions when
+catch those little details that I've disregarded, or, in the rare ocassions when
 it happens, the triumphal sensation of thinking *"my solution is better"*, are all 
 enriching experiences.
 And since I found enrichment on others' job, it will be greedy not to share mine
