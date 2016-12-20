@@ -2,6 +2,49 @@
 //
 // Get the calculator as presented above to run, see what it does, and try to
 // figure out why it works as it does.
+//
+// Comments:
+//
+//  In main loop there's an annoyance. The quit command works only if it's
+//  introduced at the start of the program. Otherwise it fails with an "primary
+//  expected" error. The problem goes on the main() as presented in page 209:
+//
+//    while (cin) {
+//        Token t = ts.get();
+//
+//        if (t.kind == 'q') break;
+//        if (t.kind == ';')
+//            cout << '=' << val << '\n';
+//        else 
+//            ts.putback(t);
+//        val = expression();
+//    }
+//
+//  Here, after printing the evaluation with ';', the "val = expression();" get
+//  the program to pause on the "Token t = ts.get();" and waits for cin to be
+//  capable of read something in Token_stream::get(). If now we insert a "q",
+//  Token_stream::get() do not recognize it and pumps the error.
+//  This is only a case of error. I guess it's worse.
+//  I don't know if this will be solved in chapter 7, but it doesn't let me
+//  sleep well, so; we want to wait for input in the ts.get() in main(), and
+//  evaluate with expression only if we have something but a quit or print
+//  command:
+//
+//    while (cin) {
+//        Token t = ts.get();
+//
+//        if (t.kind == 'q') break;
+//        if (t.kind == ';') {
+//            cout << '=' << val << '\n';
+//        }
+//        else {
+//            ts.putback(t);
+//            val = expression();
+//        }
+//    }
+//
+//  As I side effect, if we enter a print command without ans expression, the 
+//  printed value is the last evaluated one. I can live with that.
 
 #include "std_lib_facilities.h"
 
@@ -140,11 +183,13 @@ try
         Token t = ts.get();
 
         if (t.kind == 'q') break;
-        if (t.kind == ';')
+        if (t.kind == ';') {
             cout << '=' << val << '\n';
-        else
+        }
+        else {
             ts.putback(t);
-        val = expression();
+            val = expression();
+        }
     }
 }
 catch (exception& e)

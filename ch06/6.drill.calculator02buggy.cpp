@@ -16,16 +16,48 @@
 //  5. Improve that greeting by mentioning which operators are available and
 //     how to print and exit.
 //
-//  Notes:
-//      The quit command (q or x, as done) does not work if an expression has
-//      been evaluated, it throws a "primary expected" exception.
-//      No more than one print command must be entered. If so a "primary
-//      expected" exception will be thrown (it has more sense since it's
-//      an input not compliant to what we expect). If, prevously to enter an
-//      expression, a print command is inserted alone, the first time evaluates
-//      to 0 and the next ones throw the "primary expected"
-//      Something is wrong with our main loop. Must we solve it now or wait to
-//      chapter 7 for refinement?
+// Comments:
+//
+//  In main loop there's an annoyance. The quit command works only if it's
+//  introduced at the start of the program. Otherwise it fails with an "primary
+//  expected" error. The problem goes on the main() as presented in page 209:
+//
+//    while (cin) {
+//        Token t = ts.get();
+//
+//        if (t.kind == 'x') break;
+//        if (t.kind == '=')
+//            cout << '=' << val << '\n';
+//        else 
+//            ts.putback(t);
+//        val = expression();
+//    }
+//
+//  Here, after printing the evaluation with ';', the "val = expression();" get
+//  the program to pause on the "Token t = ts.get();" and waits for cin to be
+//  capable of read something in Token_stream::get(). If now we insert a "q",
+//  Token_stream::get() do not recognize it and pumps the error.
+//  This is only a case of error. I guess it's worse.
+//  I don't know if this will be solved in chapter 7, but it doesn't let me
+//  sleep well, so; we want to wait for input in the ts.get() in main(), and
+//  evaluate with expression only if we have something but a quit or print
+//  command:
+//
+//    while (cin) {
+//        Token t = ts.get();
+//
+//        if (t.kind == 'x') break;
+//        if (t.kind == '=') {
+//            cout << '=' << val << '\n';
+//        }
+//        else {
+//            ts.putback(t);
+//            val = expression();
+//        }
+//    }
+//
+//  As I side effect, if we enter a print command without ans expression, the 
+//  printed value is the last evaluated one. I can live with that.
 
 // This is example code from Chapter 6.7 "Trying the second version" of
 // "Software - Principles and Practice using C++" by Bjarne Stroustrup
@@ -227,11 +259,13 @@ try
         Token t = ts.get();
 
         if (t.kind == 'x') break; // 'q' for quit
-        if (t.kind == '=')        // ';' for "print now"
+        if (t.kind == '=') {      // ';' for "print now"
             cout << "=" << val << '\n';
-        else
+        }
+        else {
             ts.putback(t);
-        val = expression();
+            val = expression();
+        }
     }
 	keep_window_open();
 }
