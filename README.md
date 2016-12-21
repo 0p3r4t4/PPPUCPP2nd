@@ -14,7 +14,7 @@ I have two main points to struggle with:
 C with classes (and from I've learned recently, doing so rather poorly and 
 mistakenly).
 
-I hope that **_Programming, Principles and Practice with C++_** could cope with those.
+I hope that **_Programming, Principles and Practice Using C++_** could cope with those.
 
 To be clear, I return to programming as a hobbyist. A full time job as a sysadmin
 and two children don't let me be more ambitious. But that's fine to me now.
