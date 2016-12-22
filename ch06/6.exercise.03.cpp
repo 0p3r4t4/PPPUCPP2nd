@@ -11,7 +11,7 @@
 //
 // Comments:
 //  I have two options: 
-//      - Create a new alternative to the Primary Rule
+//      - Create a new alternative to the Primary rule
 //      - Create a new rule for the factorial (and other "higher-level
 //      operators")
 //  I decided to give a chance to the last one, performing changes in the
@@ -29,14 +29,14 @@
 //  
 //  So we must:
 //      - create a new function hiop() to parse the new rule.
-//      - make changes to term() invoking hiop() where we previouly invoke
+//      - make changes to term() invoking hiop() where we previously invoke
 //      primary().
-//      - create a funtion factorial() to calculate the value.
+//      - create a function factorial() to calculate the value.
 //
 //  The factorial() function has an int argument and returns an int. This is
-//  for coherence to the mathematical definition despite we use it whit
-//  doubles. Also, it has been implemented in a non-recursive form. Recursivity
-//  is elegant but it could be expensive. A factorial is a classic example of
+//  coherent to the mathematical definition despite we use it with doubles.
+//  Also, it has been implemented in a non-recursive form. Recursivity
+//  is elegant but it could be expensive. Factorial is a classic example of
 //  recursivity, so I try something different. A recursive implementation would
 //  be:
 //
@@ -165,14 +165,14 @@ double hiop()
     switch (t.kind) {
         case '!':   // handle factorial operation
             return factorial(left);
-            // This coul be written:
+            // This could be written:
             // {
             //      int n = left;
             //      double d = factorial(n);
             //      return d;
             // }
             // , but a brief comparison at Compiler Explorer (https://godbolt.org)
-            // gives that the former has similar but smaller assembly code in
+            // shows that the former has similar but smaller assembly code in
             // gcc 6.3
         default:    // otherwise, return the primary putting back t into ts
             ts.putback(t);
