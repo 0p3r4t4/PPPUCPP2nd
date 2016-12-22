@@ -32,6 +32,7 @@
 //      - make changes to term() invoking hiop() where we previously invoke
 //      primary().
 //      - create a function factorial() to calculate the value.
+//      - add the '!' token to Token_stream::get()
 //
 //  The factorial() function has an int argument and returns an int. This is
 //  coherent to the mathematical definition despite we use it with doubles.
