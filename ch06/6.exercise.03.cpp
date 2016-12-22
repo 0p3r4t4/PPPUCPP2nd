@@ -163,6 +163,8 @@ double hiop()
     double left = primary();
     Token t = ts.get();
 
+    // We don't need a while loop like in term() because
+    // ! is an unary operation
     switch (t.kind) {
         case '!':   // handle factorial operation
             return factorial(left);
