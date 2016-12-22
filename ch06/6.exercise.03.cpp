@@ -1,25 +1,53 @@
-// 6.exercise.02.cpp
+// 6.exercise.03.cpp
 //
-// Add the ability to use {} as well as () in the program, so that
-// {(4+5)*6}/(3+4) will be a valid expression.
+// Add a factorial operator: use a suffix ! operator to represent "factorial".
+// For example, the expression 7! means 7*6*5*4*3*2*1. Make ! bind tighter than
+// * and /; that is, 7*8! means 7*(8!) rather than (7*8)!. Begin by modifying
+// the grammar to account for a higher-level operator. To agree with the
+// standard mathematical definition of factorial, let 0! evaluate to 1. Hint:
+// The calculator functions deal with doubles, but factorial is defined only
+// for ints, so just for x!, assign the x to an int and calculate the factorial
+// of that int.
 //
 // Comments:
+//  I have two options: 
+//      - Create a new alternative to the Primary Rule
+//      - Create a new rule for the factorial (and other "higher-level
+//      operators")
+//  I decided to give a chance to the last one, performing changes in the
+//  grammar as:
 //
-//  This one starts as a copy of 6.9.try_this.cpp and adds the greeting lines
-//  proposed in points 4 and 5 from the Drill. Also add some comments (ripped
-//  from the former files)
+//      ...
+//      Term:
+//          Hiop
+//          Term "*" Hiop
+//          Term "/" Hiop
+//      Hiop:
+//          Primary
+//          Primary "!"
+//      ...
+//  
+//  So we must:
+//      - create a new function hiop() to parse the new rule.
+//      - make changes to term() invoking hiop() where we previouly invoke
+//      primary().
+//      - create a funtion factorial() to calculate the value.
 //
-//  I think that {} must be a synonim of (), so we add a new alternative to the
-//  Primary rule considering the tokens '{' and '}':
+//  The factorial() function has an int argument and returns an int. This is
+//  for coherence to the mathematical definition despite we use it whit
+//  doubles. Also, it has been implemented in a non-recursive form. Recursivity
+//  is elegant but it could be expensive. A factorial is a classic example of
+//  recursivity, so I try something different. A recursive implementation would
+//  be:
 //
-//       Primary:
-//          ...
-//          '{' Expression '}'
+//      int factorial(int n)
+//      {
+//          if (n < 0) error("factorial(), invoked with a negative number");
 //
-//  This new rule implies changes in:
-//      Token_stream::get()
-//      primary()
-//      and greeting message ...
+//          if (n == 0) return 1;
+//          else return (n * factorial(n-1));
+//      }
+//
 
 #include "std_lib_facilities.h"
 
@@ -55,6 +83,7 @@ Token Token_stream::get()
         case '(': case ')':
         case '{': case '}':
         case '+': case '-': case '*': case '/':
+        case '!':
             return Token{ch};
         case '.':
         case '0': case '1': case '2': case '3':
@@ -85,6 +114,24 @@ void Token_stream::putback(Token t)
 Token_stream ts;
 double expression();
 
+int factorial(int n) 
+// Calculates the factorial of n (n!)
+// Non-recursive implementation.
+// Pre-condition:
+//  n must be positive
+{
+    if (n < 0) error("factorial(), invoked with a negative number");
+
+    int f = 1;
+    if (n != 0){
+        while (n > 0) {
+            f *= n;
+            --n;
+        }
+    }
+    return f;
+}
+
 double primary()
 {
     Token t = ts.get();
@@ -110,20 +157,43 @@ double primary()
     }
 }
 
-double term()
+double hiop()
 {
     double left = primary();
+    Token t = ts.get();
+
+    switch (t.kind) {
+        case '!':   // handle factorial operation
+            return factorial(left);
+            // This coul be written:
+            // {
+            //      int n = left;
+            //      double d = factorial(n);
+            //      return d;
+            // }
+            // , but a brief comparison at Compiler Explorer (https://godbolt.org)
+            // gives that the former has similar but smaller assembly code in
+            // gcc 6.3
+        default:    // otherwise, return the primary putting back t into ts
+            ts.putback(t);
+            return left;
+    }
+}
+
+double term()
+{
+    double left = hiop();
     Token t = ts.get();         // get the next token from token stream
 
     while (true) {
         switch (t.kind) {
             case '*':
-                left *= primary();
+                left *= hiop();
                 t = ts.get();
                 break;
             case '/':
                 {
-                    double d = primary();
+                    double d = hiop();
                     if (d == 0) error("divide by zero");
                     left /= d;
                     t = ts.get();
@@ -163,7 +233,8 @@ try
 {
     cout << "Welcome to our simple calculator.\n"
          << "Please enter expressions using floating-point numbers.\n"
-         << "(Currently +, -, *, /, and grouping with () and {} are supported.)\n"
+         << "(Currently +, -, *, /, grouping with () and {} and ! for factorial\n"
+         << "are supported.)\n"
          << "Evaluate the expression with ; at the end. Enter q to quit.\n";
 
     double val = 0;
