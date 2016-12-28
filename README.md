@@ -19,14 +19,14 @@ I hope that **_Programming, Principles and Practice Using C++_** could cope
 with those.
 
 To be clear, I return to programming as a hobbyist. A full time job as a
-sysadmin and two children don't let me be more ambitious. But that's fine to me
-now.
+sysadmin and two children don't let me be more ambitious. But that's fine to
+me.
 
 At first I only want to have a repository that I could synchronize and use
-through my two personal systems and, perhaps, my mom's PC while visiting.
-Also, very used to _subversion_, I saw an opportunity to play a bit with _git_.
-As a very shy person, I choose _GitLab(.com)_ as opposed to _GitHub(.com)_
-mainly, if not only, by the unlimited private repositories.
+through my two personal systems and, perhaps, my mom's PC while visiting her.
+Also, being very used to _subversion_, I saw an opportunity to play a bit with
+_git_.  As a very shy person, I choose _GitLab(.com)_ (as opposed to
+_GitHub(.com)_) mainly, if not only, by the unlimited private repositories.
 
 As I proceeded through the book I've searched for references to compare my
 exercises with. And I found it tremendously useful; find a better solution and
@@ -64,6 +64,9 @@ As a point of fact:
     after finding an error` assumption to the point that an user's input error
     causes no further opportunities.
 
+Some exercises have a companion file with a _.input_ extension. Those are
+input samples to quickly test programs with the help of command redirection.
+
 ---
 
 ## Notes
@@ -80,9 +83,9 @@ _In construction_
 
 ## Platform, Compilers and Tools
 
-I use mainly Ubuntu and derivative distros as programming platforms.  In this
-case I've used computers with Ubuntu 14.04 and Xubuntu 16.04, both on 64 bits
-version.
+I use mainly Ubuntu and derivative distros as programming platforms. In this
+case I've used computers with Ubuntu and Xubuntu with versions ranging from 
+14.04 to 16.04 and almost all the time 64 bits versions.
 
 I have used the latest GCC available as direct install from repositories, at
 the moment of writing, version 6.2.0. To install it you have to execute the
@@ -91,9 +94,9 @@ commands:
     sudo add-apt-repository ppa:ubuntu-toolchain-r/test sudo apt-get update
     sudo apt-get install gcc-6 g++-6
 
-The majority of the exercises were compiled with:
+I use to compile the exercises with a rather poor command line:
 
-    g++-6 -std=c++1z -Wall -o <exercise>.out <exercise>.cpp
+    g++-6 -std=c++1z -Wall -o <exercise> <exercise>.cpp
 
 Sometimes I perform static analysis on exercises with
 [Cppcheck](http://cppcheck.sourceforge.net/) and
@@ -108,7 +111,7 @@ for more details.
 
 I don't actually think that my source code in this repository deserves any
 licensing.  It's far from useful in any real-world scenario other than
-educational purpouses (and perhaps not even that).
+for educational purpouses (and perhaps not even that).
 
 I don't care about what could be done with the source code, so I choose a [MIT
 License](https://gitlab.com/0p3r4t4/PPPUCPP2nd/blob/master/LICENSE) for one
@@ -135,13 +138,10 @@ taking a look at these:
 
 Of course, [Bjarne Stroustrup's Selected Exercise Solutions](http://www.stroustrup.com/Programming/Solutions/exercise_solutions.html)  
 
-Also:
+Also (with no order of preference):
 
 -   (broken link) [TheParryEffect - Programming](http://theparryeffectprogramming.blogspot.co.uk)
 -   [Nick Maclaren's Computing Courses - Programming in Modern C++ - Drill and Exercise Code](http://people.ds.cam.ac.uk/nmm1/C++/Exercises/)
-
-On Github:  
-
 -   <https://github.com/bewuethr/stroustrup_ppp>
 -   <https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C->
 -   <https://github.com/Jtaim/Programming-Principles-and-Practice-Using-Cpp>
