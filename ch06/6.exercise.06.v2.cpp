@@ -93,7 +93,7 @@ bool subject()
     }
     if ( is_in(t, nouns) ) return true;
     
-    return true;
+    return false;
 }
 
 bool sentence()
