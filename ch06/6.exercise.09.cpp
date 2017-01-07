@@ -25,22 +25,22 @@
 
 #include "std_lib_facilities.h"
 
-static const string ex_msg_more_than_four_digits =
-        "Your input is greater than a four digit number.";
+static const string ex_msg_greater_than =
+        "Your input is greater than I can manage.";
 static const string ex_msg_not_only_digits =
         "Your input is not an integer number.";
 
 static const vector<string> powers = {"thousand", "hundred", "ten", "one"};
 
 bool check_input(const string& input)
-// Checks input to be a a four or less digits number.
+// Checks input to be equal or less digits than we're able to manage .
 // Pre-conditions:
-//  The length of the string must be less or equal to 4
+//  The length of the string must be less or equal to powers.size()
 //  Each character of the string must be an ASCII (or compatible, as ISO or UTF8)
 //      value for chars from '0' to '9' (they are consecutive).
 try
 {
-    if (input.length() > 4) throw runtime_error(ex_msg_more_than_four_digits);
+    if (input.length() > powers.size()) throw runtime_error(ex_msg_greater_than);
 
     for (char c : input)
         if (c < '0' || c > '9')
@@ -108,7 +108,7 @@ try{
     int composed = 0;
 
     cout << "Integer number composer.\n"
-         << "Introduce an integer number of four or less digits.\n"
+         << "Introduce an integer number of " << powers.size() << " or less digits.\n"
          << "Terminate the program with Ctrl+D (or Ctrl+Z).\n";
 
     while (cin >> input) {
