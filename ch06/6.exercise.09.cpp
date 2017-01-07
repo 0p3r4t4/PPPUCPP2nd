@@ -66,8 +66,8 @@ vector<int> parse_input(const string& input)
         if (parse.size() != 0 || d != '0')
             parse.push_back(d - '0');
     }
-    // manage case where user has introduced 0 as a number
-    // We can do it in the former for if we change it with to
+    // Manage the case where user has introduced 0 as a number
+    // We can do it in the former for if we change it to
     // a classical form to inspect the current index to input.
     if (parse.size() == 0)
         parse.push_back(0);
