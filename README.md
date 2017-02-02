@@ -26,7 +26,9 @@ At first I only want to have a repository that I could synchronize and use
 through my two personal systems and, perhaps, my mom's PC while visiting her.
 Also, being very used to _subversion_, I saw an opportunity to play a bit with
 _git_.  As a very shy person, I choose _GitLab(.com)_ (as opposed to
-_GitHub(.com)_) mainly, if not only, by the unlimited private repositories.
+_GitHub(.com)_, although after the 20170131 database incident I setup a
+mirror repository on https://github.com/0p3r4t4/PPPUCPP2nd) mainly, if not
+only, by the unlimited private repositories.
 
 As I proceeded through the book I've searched for references to compare my
 exercises with. And I found it tremendously useful; find a better solution and
