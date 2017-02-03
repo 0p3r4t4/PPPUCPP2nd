@@ -100,6 +100,7 @@ try
         cout << "Subset cardinality?\n";
         subc = get_natural();
         cout << perm(setc, subc) << '\n'; 
+        cout << perm(-1, subc) << '\n'; 
     }
     
     return 0;

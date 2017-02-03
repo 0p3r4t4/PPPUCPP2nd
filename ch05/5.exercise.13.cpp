@@ -41,14 +41,14 @@
 
 constexpr int no_of_digits = 4;     // No magic numbers, and some flexibility.
 
+static const string msg_no_no_of_digits =
+        "Your input has less or more (or none) digits than those to be guessed.";
+static const string msg_repeated_digits =
+        "You've entered repeated digits. This way you're never going to guess it!";
 static const string ex_msg_digits_too_large =
         "Not possible to think on more than 10 digits.";
 static const string ex_msg_repeated_gen_digits =
         "gen_digits() has failed to constraint digit uniqueness.";
-static const string ex_msg_no_no_of_digits =
-        "Your input has less or more (or none) digits than those to be guessed.";
-static const string ex_msg_repeated_digits =
-        "You've entered repeated digits. This way you're never going to guess it!";
 static const string ex_msg_distinct_size =
         "Something nasty has happened; guess and/or number to be guessed do not have same length ";
 
@@ -93,25 +93,26 @@ bool check_input(const string& input)
 //  Each character of the string must be an ASCII (or compatible, as ISO8815 or UTF8)
 //      value for chars from '0' to '9' (they are consecutive).
 //  Each character of the string must be different
-try
 {
-    if (input.length() != no_of_digits) throw runtime_error(ex_msg_no_no_of_digits);
+    if (input.length() != no_of_digits) {
+        cerr << "check_input(): " << msg_no_no_of_digits << '\n';
+        return false;
+    }
 
     for (char c : input)
-        if (c < '0' || c > '9')
-            throw runtime_error(ex_msg_no_no_of_digits);
+        if (c < '0' || c > '9') {
+            cerr << "check_input(): " << msg_no_no_of_digits << '\n';
+            return false;
+        }
 
     for (size_t i = 0; i < input.length() - 1; ++i)
         for (size_t j = i + 1; j < input.length(); ++j)
-            if (i != j && input[i] == input[j])
-                throw runtime_error(ex_msg_repeated_digits);
+            if (i != j && input[i] == input[j]) {
+                cerr << "check_input(): " << msg_repeated_digits<< '\n';
+                return false;
+            }
 
     return true;
-}
-catch (exception& e)
-{
-    cout << e.what() << '\n';
-    return false;
 }
 
 vector<int> parse_input(const string& input)
@@ -219,6 +220,9 @@ try
                 print_bulls_and_cows(bulls, cows);
                 cout << "\nGuess again!\n? ";
             }
+        }
+        else {
+            cout << "? ";
         }
     }
     if (cin.eof()) {
