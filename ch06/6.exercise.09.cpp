@@ -25,33 +25,32 @@
 
 #include "std_lib_facilities.h"
 
-static const string ex_msg_greater_than =
+static const string msg_greater_than =
         "Your input is greater than I can manage.";
-static const string ex_msg_not_only_digits =
+static const string msg_not_only_digits =
         "Your input is not an integer number.";
 
 static const vector<string> powers = {"thousand", "hundred", "ten", "one"};
 
 bool check_input(const string& input)
 // Checks input to be equal or less digits than we're able to manage .
-// Pre-conditions:
+// Conditions:
 //  The length of the string must be less or equal to powers.size()
 //  Each character of the string must be an ASCII (or compatible, as ISO or UTF8)
 //      value for chars from '0' to '9' (they are consecutive).
-try
 {
-    if (input.length() > powers.size()) throw runtime_error(ex_msg_greater_than);
+    if (input.length() > powers.size()) {
+        cerr << "check_input(): " <<  msg_greater_than << '\n';
+        return false;
+    }
 
     for (char c : input)
-        if (c < '0' || c > '9')
-            throw runtime_error(ex_msg_not_only_digits);
+        if (c < '0' || c > '9') {
+            cerr << "check_input(): " << msg_not_only_digits << '\n';
+            return false;
+        }
 
     return true;
-}
-catch (exception& e)
-{
-    cout << e.what() << '\n';
-    return false;
 }
 
 vector<int> parse_input(const string& input)

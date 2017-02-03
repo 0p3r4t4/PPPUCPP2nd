@@ -105,10 +105,11 @@ void quadratic_roots(double a, double b, double c)
 //          b² must be greater or equal to 4ac
 // post-conditions
 //          obtained roots must comply with original quadratic equation
-try
 {
-    if (a == 0) throw runtime_error(ex_no_quadratic_msg);
-    if (b*b < 4*a*c) throw runtime_error(ex_no_real_roots_msg);
+    if (a == 0)
+        throw runtime_error("\tquadratic_roots() Exception: " + ex_no_quadratic_msg);
+    if (b*b < 4*a*c)
+        throw runtime_error("\tquadratic_roots() Exception: " + ex_no_real_roots_msg);
 
     double sqrt_term = sqrt(b*b - 4*a*c);
     double x1 = (-b + sqrt_term) / (2*a);
@@ -121,11 +122,8 @@ try
     cout << "\tquadratic_roots()\t" << fixed << x1 << '\t' << x2 << defaultfloat << "\t(" << p1 << ", " << p2 << ")\n";
     
     // Post-condition
-    if (p1 > epsilon || p2 > epsilon) throw runtime_error(ex_wrong_result_msg);
-}
-catch (exception& e)
-{
-    cout << "\tquadratic_roots() Exception: " << e.what() << '\n';
+    if (p1 > epsilon || p2 > epsilon)
+        throw runtime_error("\tquadratic_roots() Exception: " + ex_wrong_result_msg);
 }
 
 void quadratic_roots_2(double a, double b, double c)
@@ -135,10 +133,11 @@ void quadratic_roots_2(double a, double b, double c)
 //          b² must be greater or equal to 4ac
 // post-conditions
 //          obtained roots must comply with original quadratic equation
-try
 {
-    if (a == 0) throw runtime_error(ex_no_quadratic_msg);
-    if (b*b < 4*a*c) throw runtime_error(ex_no_real_roots_msg);
+    if (a == 0)
+        throw runtime_error("\tquadratic_roots_2() Exception: " + ex_no_quadratic_msg);
+    if (b*b < 4*a*c)
+        throw runtime_error("\tquadratic_roots_2() Exception: " + ex_no_real_roots_msg);
 
     double sqrt_term = sqrt(b*b - 4*a*c);
     double x1 = 0;
@@ -171,11 +170,8 @@ try
     cout << "\tquadratic_roots_2()\t" << fixed << x1 << '\t' << x2 << defaultfloat << "\t(" << p1 << ", " << p2 << ")\n";
 
     // Post-condition 
-    if (p1 > epsilon || p2 > epsilon) throw runtime_error(ex_wrong_result_msg);
-}
-catch (exception &e)
-{
-    cout << "\tquadratic_roots2() Exception: " << e.what() << '\n';
+    if (p1 > epsilon || p2 > epsilon)
+        throw runtime_error("\tquadratic_roots_2() Exception: " + ex_wrong_result_msg);
 }
 
 int main()
@@ -200,8 +196,21 @@ try
         cout << " = 0, and their evaluations (p1, p2) are: \n\n";
         cout << "\tFunction\t\tx1\t\tx2\t\t(p1, p2)\n";
         cout << "\t=============================================================================\n";
-        quadratic_roots(a, b, c);
-        quadratic_roots_2(a, b, c);
+
+        try {
+            quadratic_roots(a, b, c);
+        }
+        catch (exception &e) {
+            cerr << e.what() << '\n';
+        }
+
+        try {
+            quadratic_roots_2(a, b, c);
+        }
+        catch (exception &e) {
+            cerr << e.what() << '\n';
+        }
+
         cout << "\n> ";
     }
     if (cin.eof())

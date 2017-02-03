@@ -18,39 +18,40 @@
 
 #include "std_lib_facilities.h"
 
-static const string ex_msg_no_four_digit = "Your input is not a four digit number.";
-static const string ex_msg_repeated_digits = "You've entered repeated digits. "
-                                             "This way you're never going to guess it!";
+static const string msg_no_four_digit = "Your input is not a four digit number.";
+static const string msg_repeated_digits = "You've entered repeated digits. "
+                                          "This way you're never going to guess it!";
 static const string ex_msg_distinct_size = "Something nasty has happened; guess and/or "
                                            "number to be guessed do not have a length "
                                            "of 4.";
 
 bool check_input(const string& input)
 // Checks input to be a 4-unique-digit string.
-// Pre-conditions:
+// Conditions:
 //  The length of the string must be exactly 4
 //  Each character of the string must be an ASCII (or compatible, as ISO or UTF8)
 //      value for chars from '0' to '9' (they are consecutive).
 //  Each character of the string must be different
-try
 {
-    if (input.length() != 4) throw runtime_error(ex_msg_no_four_digit);
+    if (input.length() != 4) {
+        cerr << "check_input(): " << msg_no_four_digit << '\n';
+        return false;
+    }
 
     for (char c : input)
-        if (c < '0' || c > '9')
-            throw runtime_error(ex_msg_no_four_digit);
+        if (c < '0' || c > '9') {
+            cerr << "check_input(): " << msg_no_four_digit << '\n';
+            return false;
+        }
 
     for (size_t i = 0; i < input.length() - 1; ++i)
         for (size_t j = i + 1; j < input.length(); ++j)
-            if (i != j && input[i] == input[j])
-                throw runtime_error(ex_msg_repeated_digits);
+            if (i != j && input[i] == input[j]) {
+                cerr << "check_input(): " << msg_repeated_digits << '\n';
+                return false;
+            }
 
     return true;
-}
-catch (exception& e)
-{
-    cout << e.what() << '\n';
-    return false;
 }
 
 vector<int> parse_input(const string& input)

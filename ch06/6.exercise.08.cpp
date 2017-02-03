@@ -38,39 +38,40 @@
 
 #include "std_lib_facilities.h"
 
-static const string ex_msg_no_four_letter = "Your input is not a four letters sequence.";
-static const string ex_msg_repeated_letter = "You've entered repeated letters. "
-                                             "This way you're never going to guess it!";
+static const string msg_no_four_letter = "Your input is not a four letters sequence.";
+static const string msg_repeated_letter = "You've entered repeated letters. "
+                                          "This way you're never going to guess it!";
 static const string ex_msg_distinct_size = "Something nasty has happened; guess and/or "
                                            "sequence to be guessed do not have a length "
                                            "of 4.";
 
 bool check_input(const string& input)
 // Checks input to be a 4-unique-lowcase-letters string.
-// Pre-conditions:
+// Conditions:
 //  The length of the string must be exactly 4
 //  Each character of the string must be an ASCII (or compatible, as ISO or UTF8)
 //      value for chars from 'a' to 'z' (they are consecutive).
 //  Each character of the string must be different
-try
 {
-    if (input.length() != 4) throw runtime_error(ex_msg_no_four_letter);
+    if (input.length() != 4) {
+        cerr << "check_input(): " << msg_no_four_letter << '\n';
+        return false;
+    }
 
     for (char c : input)
-        if (c < 'a' || c > 'z')
-            throw runtime_error(ex_msg_no_four_letter);
+        if (c < 'a' || c > 'z') {
+            cerr << "check_input(): " << msg_no_four_letter << '\n';
+            return false;
+        }
 
     for (size_t i = 0; i < input.length() - 1; ++i)
         for (size_t j = i + 1; j < input.length(); ++j)
-            if (i != j && input[i] == input[j])
-                throw runtime_error(ex_msg_repeated_letter);
+            if (i != j && input[i] == input[j]) {
+                cerr << "check_input(): " << msg_repeated_letter << '\n';
+                return false;
+            }
 
     return true;
-}
-catch (exception& e)
-{
-    cout << e.what() << '\n';
-    return false;
 }
 
 int get_bulls(const string& letters, const string& guess)
