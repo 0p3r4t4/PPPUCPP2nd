@@ -1,5 +1,7 @@
 # Exercises (Try these and Drills) from Bjarne Stroustrup's Programming, Principles and Practice Using C++ (2nd Edition)
 
+(The canonical repository is hosted on <https://gitlab.com/0p3r4t4/PPPUCPP2nd>)
+
 ## Why
 
 After more than a decade without doing any serious programming (some bash and
@@ -27,7 +29,7 @@ through my two personal systems and, perhaps, my mom's PC while visiting her.
 Also, being very used to _subversion_, I saw an opportunity to play a bit with
 _git_.  As a very shy person, I choose _GitLab(.com)_ (as opposed to
 _GitHub(.com)_, although after the 20170131 database incident I setup a
-mirror repository on https://github.com/0p3r4t4/PPPUCPP2nd) mainly, if not
+mirror repository on <https://github.com/0p3r4t4/PPPUCPP2nd>) mainly, if not
 only, by the unlimited private repositories.
 
 As I proceeded through the book I've searched for references to compare my
@@ -47,12 +49,12 @@ through the study of the book, I also know a few things explained later or not
 exposed at all (not a criticism since the book has its scope).
 
 So, although I've tried to restrict myself to the contents of the book,
-sometimes I investigate and go a little bit further. I feel that this behaviour
-is somehow enforced by the author in his perspective about what programming is
-(or at least in how I understand him). In spite of this, I think I don't
-deviate that much, so if somebody studying the book uses this repository as a
-reference, there will be no problem to understand these little oddities of
-mine.
+sometimes I investigate and go a little bit further, both right and wrong. I
+feel that this behaviour is somehow enforced by the author in his perspective
+about what programming is (or at least in how I understand him). In spite of
+this, I think I don't deviate that much, so if somebody studying the book uses
+this repository as a reference, there will be no problem to understand these
+little oddities of mine.
 
 As a point of fact:
 
@@ -65,6 +67,21 @@ As a point of fact:
 -   I sometimes, as an user, don't buy the `a program is allowed to terminate
     after finding an error` assumption to the point that an user's input error
     causes no further opportunities.
+
+> Well, the former is truth until exercise 10 from chapter 6, where I realize
+> I'm pretending to be smarter than I actually am:
+
+> -   using exception mechanisms wrong, being far from undestanding them
+>     correctly, and going into well known pitfalls (as doing flow control with
+>     them). 
+
+> -   doing some bizarre coding to not terminate the program in case of certain
+>     errors and failing to understand that **I'm learning** step by step and
+>     far from being capable of doing bulletproof programs.
+
+> In summary, I changed my mind and admit `error()` and `a program is
+> allowed to terminate after finding an error` as the pedagogical tools they
+> are. So expect a mix of solutions, some of them not too inspired.
 
 Some exercises have a companion file with a _.input_ extension. Those are
 input samples to quickly test programs with the help of command redirection.
@@ -85,20 +102,21 @@ _In construction_
 
 ## Platform, Compilers and Tools
 
-I use mainly Ubuntu and derivative distros as programming platforms. In this
-case I've used computers with Ubuntu and Xubuntu with versions ranging from 
-14.04 to 16.04 and almost all the time 64 bits versions.
+I use mainly Ubuntu and derivative distros as programming platforms.
 
-I have used the latest GCC available as direct install from repositories, at
-the moment of writing, version 6.2.0. To install it you have to execute the
-commands:
+I use GCC version 5 as supplied for 16.04 release. If you want, or are in the
+need, to use more modern versions than those supplied by the standard
+repositories, you can install them from PPA:
 
     sudo add-apt-repository ppa:ubuntu-toolchain-r/test sudo apt-get update
     sudo apt-get install gcc-6 g++-6
 
-I use to compile the exercises with a rather poor command line:
+I usually compile the exercises with a rather poor command line:
 
-    g++-6 -std=c++1z -Wall -o <exercise> <exercise>.cpp
+    g++ -std=c++1z -Wall -o <exercise> <exercise>.cpp
+
+I also use the great [Termux](https://termux.com/) for Android, which provides
+Clang instead of GCC, and serves well to program on the go.
 
 Sometimes I perform static analysis on exercises with
 [Cppcheck](http://cppcheck.sourceforge.net/) and
@@ -142,7 +160,6 @@ Of course, [Bjarne Stroustrup's Selected Exercise Solutions](http://www.stroustr
 
 Also (with no order of preference):
 
--   (broken link) [TheParryEffect - Programming](http://theparryeffectprogramming.blogspot.co.uk)
 -   [Nick Maclaren's Computing Courses - Programming in Modern C++ - Drill and Exercise Code](http://people.ds.cam.ac.uk/nmm1/C++/Exercises/)
 -   <https://github.com/bewuethr/stroustrup_ppp>
 -   <https://github.com/thelastpolaris/Programming-Principles-and-Practice-Using-C->
