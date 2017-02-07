@@ -35,7 +35,7 @@
 
 #include "std_lib_facilities.h"
 
-const string ex_msg_pmul_with_negs = "check_pmul() called with negative integers.";
+const string ex_msg_pmul_with_negs = "called with negative integers.";
 const string ex_msg_product_overflows = "integer multiplication overflows.";
 
 int get_natural()
@@ -55,7 +55,7 @@ bool check_pmul(int a, int b)
 //      Both arguments must be positive.
 {
     if (a < 0 || b < 0) 
-        throw runtime_error(ex_msg_pmul_with_negs);
+        throw runtime_error("check_pmul(): " + ex_msg_pmul_with_negs);
 
     if ( a > (numeric_limits<int>::max() / b) )
         return false;
@@ -82,7 +82,34 @@ int perm(int n, int k)
         if (check_pmul(prod, i))
             prod *= i;
         else
-            throw runtime_error(ex_msg_product_overflows);
+            throw runtime_error("perm(): " + ex_msg_product_overflows);
+
+    return prod;
+}
+
+int comb(int n, int k)
+// Calculates the k-combinations of n elements, what we call C(n, k).
+// This is not done with the factorial formula expressed in the statement but,
+// being the k-combinations of n element also known as the binomial
+// coefficient, using the multiplicative formual as stated in
+// https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
+//
+// Preconditions:
+//      - n and k must be positive and n >= k. We will not check this
+//      precondition here since we assume it is assured by previous calls to
+//      get_natural() and check_input().
+{
+    if (n == 0 || k == 0) return 1;
+
+    int prod = 1;
+
+    for (int i = 1; i <= k; ++i)
+        if (check_pmul(prod, n+1-i))
+            // Multiplying first by the numerator ensure the division to have
+            // no reminder. 
+            prod = (prod * (n+1-i)) / i;
+        else
+            throw runtime_error("comb(): " + ex_msg_product_overflows);
 
     return prod;
 }
@@ -99,8 +126,18 @@ try
         setc = get_natural();
         cout << "Subset cardinality?\n";
         subc = get_natural();
-        cout << perm(setc, subc) << '\n'; 
-        cout << perm(-1, subc) << '\n'; 
+        
+        try {
+            cout << "P(" << setc << ", " << subc << ") = " << perm(setc, subc) << '\n'; 
+        } catch(exception &e) {
+            cerr << "Exception -> " << e.what() << '\n';
+        }
+
+        try {
+            cout << "C(" << setc << ", " << subc << ") = " << comb(setc, subc) << '\n'; 
+        } catch(exception &e) {
+            cerr << "Exception -> " << e.what() << '\n';
+        }
     }
     
     return 0;
