@@ -10,7 +10,7 @@
 //              (a-b)!
 // 
 // where ! is used as a suffix factorial operator. For example, 4! is
-// 4\*3\*2\*1.
+// 4*3*2*1.
 // 
 // Combinations are similar to permutations, except that the order of the
 // objects doesn't matter. For example, if you were making a "banana split"
@@ -35,27 +35,31 @@
 
 #include "std_lib_facilities.h"
 
-const string ex_msg_pmul_with_negs = "called with negative integers.";
-const string ex_msg_product_overflows = "integer multiplication overflows.";
+const string err_msg_pmul_with_negs = "called with negative integers.";
+const string err_msg_nk_precon =
+        "n and k parameters relationship precondition violated.";
+const string err_msg_product_overflows = "integer multiplication overflows.";
 
-int get_natural()
+int get_natural(const string& msg)
 // Currently it only reads a integer without any check. It's an straight
 // version to check other functions implementation.
 {
     int n;
+    cout << msg;
     cin >> n;
     return n;
 }
 
 bool check_pmul(int a, int b)
-// Partial implementation from SECURE CODING INT32C.
-// It do not throw since is its work to tell if multiplication could
-// be performed or not. Using exceptions is, I think, BLAHBLAHBLAH
+// Partial implementation not using larger integer type and only for
+// positive integers, from https://www.securecoding.cert.org INT32C.
+// Is its work to tell if multiplication could
+// be performed or not.
 // Precondition:
 //      Both arguments must be positive.
 {
     if (a < 0 || b < 0) 
-        throw runtime_error("check_pmul(): " + ex_msg_pmul_with_negs);
+        error("check_pmul(): " + err_msg_pmul_with_negs);
 
     if ( a > (numeric_limits<int>::max() / b) )
         return false;
@@ -70,10 +74,13 @@ int perm(int n, int k)
 // If either n or k equals zero, the permutation is 1.
 //
 // Preconditions:
-//      - n and k must be positive and n >= k. We will not check this
-//      precondition here since we assume it is assured by previous calls to
-//      get_natural() and check_input().
+//      - n and k must be positive and n >= k. It's very unlikely to happen
+//      otherwise since we assume it is assured by previous calls to
+//      get_natural(), but to maintain good habits ...
 {
+    if (n < 0 || k < 0 || n < k)
+        error("perm(): " + err_msg_nk_precon);
+
     if (n == 0 || k == 0) return 1;
 
     int prod = 1;
@@ -82,7 +89,7 @@ int perm(int n, int k)
         if (check_pmul(prod, i))
             prod *= i;
         else
-            throw runtime_error("perm(): " + ex_msg_product_overflows);
+            error("perm(): " + err_msg_product_overflows);
 
     return prod;
 }
@@ -93,12 +100,16 @@ int comb(int n, int k)
 // being the k-combinations of n element also known as the binomial
 // coefficient, using the multiplicative formual as stated in
 // https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
+// If either n or k equals zero, the combination is 1.
 //
 // Preconditions:
-//      - n and k must be positive and n >= k. We will not check this
-//      precondition here since we assume it is assured by previous calls to
-//      get_natural() and check_input().
+//      - n and k must be positive and n >= k. It's very unlikely to happen
+//      otherwise since we assume it is assured by previous calls to
+//      get_natural(), but to maintain good habits ...
 {
+    if (n < 0 || k < 0 || n < k)
+        error("perm(): " + err_msg_nk_precon);
+
     if (n == 0 || k == 0) return 1;
 
     int prod = 1;
@@ -109,7 +120,7 @@ int comb(int n, int k)
             // no reminder. 
             prod = (prod * (n+1-i)) / i;
         else
-            throw runtime_error("comb(): " + ex_msg_product_overflows);
+            error("comb(): " + err_msg_product_overflows);
 
     return prod;
 }
@@ -119,25 +130,18 @@ try
 {
     int setc = 0;
     int subc = 0;
-    char cont = 'y';
 
-    while (cont == 'y' || cont == 'Y') {
-        cout << "Set cardinality?\n";
-        setc = get_natural();
-        cout << "Subset cardinality?\n";
-        subc = get_natural();
+    cout << "Calculator for k-permutation and k-combination of n elements\n"
+            "without repetition. Be ware of large numbers, the calculator\n"
+            "is very limited.\n";
+
+    while (cin) {
+        cout << endl;
+        setc = get_natural("Set cardinality (n)? ");
+        subc = get_natural("Subset cardinality (k)? ");
         
-        try {
-            cout << "P(" << setc << ", " << subc << ") = " << perm(setc, subc) << '\n'; 
-        } catch(exception &e) {
-            cerr << "Exception -> " << e.what() << '\n';
-        }
-
-        try {
-            cout << "C(" << setc << ", " << subc << ") = " << comb(setc, subc) << '\n'; 
-        } catch(exception &e) {
-            cerr << "Exception -> " << e.what() << '\n';
-        }
+        cout << "  P(" << setc << ", " << subc << ") = " << perm(setc, subc) << '\n'; 
+        cout << "  C(" << setc << ", " << subc << ") = " << comb(setc, subc) << '\n'; 
     }
     
     return 0;
