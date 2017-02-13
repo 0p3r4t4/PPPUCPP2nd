@@ -39,15 +39,36 @@ const string err_msg_pmul_with_negs = "called with negative integers.";
 const string err_msg_nk_precon =
         "n and k parameters relationship precondition violated.";
 const string err_msg_product_overflows = "integer multiplication overflows.";
+const string err_msg_eoi = "Unexpected end of input.";
 
 int get_natural(const string& msg)
-// Currently it only reads a integer without any check. It's an straight
-// version to check other functions implementation.
+// Asks the user (printing the message msg) for a positive integer.
+// It keeps asking until a positive integer is entered or EOF is reached
+// or signaled, in which case it throws an error.
+// Tries to read an integer ignoring the rest of the line, whatever it is, and
+// despite that read has been successfull or not.
 {
-    int n;
-    cout << msg;
-    cin >> n;
-    return n;
+    int n = 0;
+    
+    for (;;) {
+        cout << msg;
+        cin >> n;
+        if (cin) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (n < 0)
+                cout << n << " is not a positive integer.\n";
+            else
+                return n;
+        }
+        else if (!cin.eof()) {
+            cout << "Your input is not a number.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else {
+            error("get_natural(): " + err_msg_eoi);
+        }
+    }
 }
 
 bool check_pmul(int a, int b)
