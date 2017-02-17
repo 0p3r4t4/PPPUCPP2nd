@@ -36,17 +36,35 @@
 #include "std_lib_facilities.h"
 
 const string err_msg_pmul_with_negs = "called with negative integers.";
-const string err_msg_nk_precon =
-        "n and k parameters relationship precondition violated.";
+const string err_msg_nk_precon = "n and k parameters relationship precondition violated.";
 const string err_msg_product_overflows = "integer multiplication overflows.";
 const string err_msg_eoi = "Unexpected end of input.";
+const string err_msg_main_bad_option = "Bad option parsing.";
+
+const string msg_setc_get = "Set cardinality (n)? ";
+const string msg_subc_get = "Subset cardinality (n)? ";
+const string msg_calc_option = "What type of calculation do you want? (p)ermutation, (c)ombination or (b)oth? ";
+const string msg_again_option = "Do you want to perform a new calculation (y/n)? ";
+
+static const vector<char> calc_options = {'p', 'P', 'c', 'C', 'b', 'B'};
+static const vector<char> again_options = {'y', 'Y', 'n', 'N'};
+
+bool is_in(const char c, const vector<char> v)
+// Returns true if character c is contained in vector<char> v and returns false
+// otherwise.
+{
+    for (char cv : v) 
+        if (cv == c) return true;
+
+    return false;
+}
 
 int get_natural(const string& msg)
 // Asks the user (printing the message msg) for a positive integer.
 // It keeps asking until a positive integer is entered or EOF is reached
 // or signaled, in which case it throws an error.
 // Tries to read an integer ignoring the rest of the line, whatever it is, and
-// despite that read has been successfull or not.
+// despite that read has been successful or not.
 {
     int n = 0;
     
@@ -67,6 +85,31 @@ int get_natural(const string& msg)
         }
         else {
             error("get_natural(): " + err_msg_eoi);
+        }
+    }
+}
+
+char get_option(const string& msg, const vector<char> v)
+// Asks the user (printing the message msg) for a char value (option).
+// It keeps asking until the answer is a char value that is present in vector
+// v or EOF is reached or signales, in which case it throws and error.
+// Only the first character of a line is considered, ignoring the rest of it.
+{
+    char c = 0;
+    for (;;) {
+        cout << msg;
+        cin >> c;
+        if (cin) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (is_in(c, v))
+                return c;
+            else
+                cout << c << " is not a valid option.\n";
+        }
+        else {
+            // If cin fails reading a char, I guess the only way is to
+            // have reached end of input. I could be mistaken, though.
+            error("get_option(): " + err_msg_eoi);
         }
     }
 }
@@ -151,19 +194,45 @@ try
 {
     int setc = 0;
     int subc = 0;
+    char option = ' ';
 
     cout << "Calculator for k-permutation and k-combination of n elements\n"
-            "without repetition. Be ware of large numbers, the calculator\n"
+            "without repetition. Beware of large numbers, the calculator\n"
             "is very limited.\n";
 
     while (cin) {
         cout << endl;
-        setc = get_natural("Set cardinality (n)? ");
-        subc = get_natural("Subset cardinality (k)? ");
+        setc = get_natural(msg_setc_get);
+        subc = get_natural(msg_subc_get);
         
-        cout << "  P(" << setc << ", " << subc << ") = " << perm(setc, subc) << '\n'; 
-        cout << "  C(" << setc << ", " << subc << ") = " << comb(setc, subc) << '\n'; 
+        option = get_option(msg_calc_option, calc_options);
+        switch(option) {
+            case 'p':
+            case 'P':
+                cout << "  P(" << setc << ", " << subc << ") = "
+                     << perm(setc, subc) << '\n'; 
+                break;
+            case 'c':
+            case 'C':
+                cout << "  C(" << setc << ", " << subc << ") = "
+                     << comb(setc, subc) << '\n'; 
+                break;
+            case 'b':
+            case 'B':
+                cout << "  P(" << setc << ", " << subc << ") = "
+                     << perm(setc, subc) << '\n'; 
+                cout << "  C(" << setc << ", " << subc << ") = "
+                     << comb(setc, subc) << '\n'; 
+                break;
+            default:
+                error("main(): " + err_msg_main_bad_option);
+        }
+
+        option = get_option(msg_again_option, again_options);
+        if (option == 'n' || option == 'N') break;
     }
+
+    cout << "\nBye!\n\n";
     
     return 0;
 }

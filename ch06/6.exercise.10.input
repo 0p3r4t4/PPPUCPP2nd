@@ -1,8 +1,19 @@
-60
+60  // Statement sample for permutations P=205320 C=34220
 3
-12.4
-5
-24 blah meh
-6
-12
-asdf
+b
+y
+5   // Statement sample for combinations P=60 C=10
+3
+B
+Y
+15  // P=32760 C=1365
+4
+B
+y
+12  // P=1 C=1
+0
+B
+y
+60  // Force overflow error
+15
+P
