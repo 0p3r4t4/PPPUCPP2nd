@@ -162,7 +162,7 @@ int comb(int n, int k)
 // Calculates the k-combinations of n elements, what we call C(n, k).
 // This is not done with the factorial formula expressed in the statement but,
 // being the k-combinations of n element also known as the binomial
-// coefficient, using the multiplicative formual as stated in
+// coefficient, using the multiplicative formula as stated in
 // https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
 // If either n or k equals zero, the combination is 1.
 //
