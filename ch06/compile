@@ -1,5 +1,3 @@
-#!/bin/bash
-
 which g++ > /dev/null
 gpp=$?
 which clang++ > /dev/null

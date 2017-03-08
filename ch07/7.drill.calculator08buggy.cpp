@@ -40,6 +40,9 @@ struct Token {
 	string name;
 	Token(char ch) :kind(ch), value(0) { }
 	Token(char ch, double val) :kind(ch), value(val) { }
+	// DRILL.1. with this missing constructor the program complies and kinda
+	// works.
+	Token(char ch, string n) : kind(ch), name(n) { }
 };
 
 class Token_stream {
