@@ -34,27 +34,34 @@
 
 #include "std_lib_facilities.h"
 
-struct Token {
-	char kind;
-	double value;
-	string name;
+// DRILL 1. Token has member functions. Define it as class.
+class Token {
+public:
 	Token(char ch) :kind(ch), value(0) { }
 	Token(char ch, double val) :kind(ch), value(val) { }
 	// DRILL.1. with this missing constructor the program complies and kinda
 	// works.
-	Token(char ch, string n) : kind(ch), name(n) { }
+	Token(char ch, string n) : kind(ch), value(0), name(n) { }
+
+	char kind;
+	double value;
+	string name;
 };
 
 class Token_stream {
-	bool full;
-	Token buffer;
 public:
-	Token_stream() :full(0), buffer(0) { }
+    // DRIL 1. The compiler won't protest, but is better to initialize full
+    // with false rather than with a 0
+	Token_stream() :full(false), buffer(0) { }
 
 	Token get();
 	void unget(Token t) { buffer=t; full=true; }
 
 	void ignore(char);
+// DRILL 1. Put private members at the end of the class definition.
+private:
+	bool full;
+	Token buffer;
 };
 
 const char let = 'L';
@@ -99,10 +106,14 @@ Token Token_stream::get()
 		if (isalpha(ch)) {
 			string s;
 			s += ch;
-			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s=ch;
+			// DRILL 1. It's supposed to add chars to the string, so it's s+=ch
+			// instead of s=ch
+			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
 			cin.unget();
 			if (s == "let") return Token(let);	
-			if (s == "quit") return Token(name);
+			// DRILL 1. I guess we must return a quit token instead of a name
+			// one.
+			if (s == "quit") return Token(quit);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -166,6 +177,8 @@ double primary()
 	{	double d = expression();
 		t = ts.get();
 		if (t.kind != ')') error("'(' expected");
+		// DRILL 1. If success, nothing is returned, so:
+		return d;
 	}
 	case '-':
 		return - primary();
