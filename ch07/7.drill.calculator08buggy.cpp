@@ -108,7 +108,7 @@ Token Token_stream::get()
 			s += ch;
 			// DRILL 1. It's supposed to add chars to the string, so it's s+=ch
 			// instead of s=ch
-			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
+			while (cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
 			cin.unget();
 			if (s == "let") return Token(let);	
 			// DRILL 1. I guess we must return a quit token instead of a name
@@ -121,6 +121,9 @@ Token Token_stream::get()
 }
 
 void Token_stream::ignore(char c)
+// It causes current Token in Token_stream to be discarded if Token's kind is
+// of the type of token (number, let, name ...) indicated by argument.
+// It also removes from cin zero or more characters c.
 {
 	if (full && c==buffer.kind) {
 		full = false;
@@ -133,7 +136,9 @@ void Token_stream::ignore(char c)
 		if (ch==c) return;
 }
 
-struct Variable {
+// DRILL 1. With function members we prefer a class declaration
+class Variable {
+public:
 	string name;
 	double value;
 	Variable(string n, double v) :name(n), value(v) { }
@@ -143,14 +148,16 @@ vector<Variable> names;
 
 double get_value(string s)
 {
-	for (int i = 0; i<names.size(); ++i)
+    // DRILL 1. Type returned by size is size_t, an unsigned integer type.
+    // Usually we get warnings from comparing signed and unsigned types.
+	for (size_t i = 0; i<names.size(); ++i)
 		if (names[i].name == s) return names[i].value;
 	error("get: undefined name ",s);
 }
 
 void set_value(string s, double d)
 {
-	for (int i = 0; i<=names.size(); ++i)
+	for (size_t i = 0; i<=names.size(); ++i)
 		if (names[i].name == s) {
 			names[i].value = d;
 			return;
@@ -160,7 +167,7 @@ void set_value(string s, double d)
 
 bool is_declared(string s)
 {
-	for (int i = 0; i<names.size(); ++i)
+	for (size_t i = 0; i<names.size(); ++i)
 		if (names[i].name == s) return true;
 	return false;
 }
@@ -176,7 +183,8 @@ double primary()
 	case '(':
 	{	double d = expression();
 		t = ts.get();
-		if (t.kind != ')') error("'(' expected");
+		// DRILL 1. ')' is expected, not '('. A silly one.
+		if (t.kind != ')') error("')' expected");
 		// DRILL 1. If success, nothing is returned, so:
 		return d;
 	}
@@ -282,20 +290,19 @@ void calculate()
 }
 
 int main()
-
-	try {
-		calculate();
-		return 0;
-	}
-	catch (exception& e) {
-		cerr << "exception: " << e.what() << endl;
-		char c;
-		while (cin >>c&& c!=';') ;
-		return 1;
-	}
-	catch (...) {
-		cerr << "exception\n";
-		char c;
+try {
+    calculate();
+    return 0;
+}
+catch (exception& e) {
+    cerr << "exception: " << e.what() << endl;
+    char c;
+    while (cin >>c&& c!=';') ;
+    return 1;
+}
+catch (...) {
+    cerr << "exception\n";
+    char c;
 		while (cin>>c && c!=';');
 		return 2;
-	}
+}
