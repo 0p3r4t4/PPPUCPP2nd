@@ -1,28 +1,7 @@
-// 7.drill.calculator08buggy.cpp
+// 7.drill.1.calculator08buggy.cpp
 //
 //  1. Starting from the file calculator08buggy.cpp, get the calculator to
 //     compile.
-//  2. Go through the entire program and add appropriate comments.
-//  3. As you commented, you found errors (deviously inserted especially for you
-//     to find). Fix them; they are not in the text of the book.
-//  4. Testing: prepare a set of inputs and use them to test the calculator. Is
-//     your list pretty complete? What should you look for? Include negative
-//     values, 0, very small, very large, and “silly” inputs.
-//  5. Do the testing and fix any bugs that you missed when you commented.
-//  6. Add a predefined name k meaning 1000.
-//  7. Give the user a square root function sqrt(), for example, sqrt(2+6.7).
-//     Naturally, the value of sqrt(x) is the square root of x; for example,
-//     sqrt(9) is 3. Use the standard library sqrt() function that is available
-//     through the header std_lib_facilities.h. Remember to update the comments,
-//     including the grammar.
-//  8. Catch attempts to take the square root of a negative number and print an
-//     appropriate error message.
-//  9. Allow the user to use pow(x,i) to mean “Multiply x with itself i times”;
-//     for example, pow(2.5,3) is 2.5*2.5*2.5.  Require i to be an integer using
-//     the technique we used for %.
-// 10. Change the “declaration keyword” from let to #.
-// 11. Change the “quit keyword” from quit to exit. That will involve defining
-//     a string for quit just as we did for let in §7.8.2.
 
 /*
 	calculator08buggy.cpp
@@ -35,29 +14,30 @@
 #include "std_lib_facilities.h"
 
 // DRILL 1. Token has member functions. Define it as class.
+// Also use uniform initialization for data members and obviate
+// initialization where default initialization will do it.
 class Token {
 public:
-	Token(char ch) :kind(ch), value(0) { }
-	Token(char ch, double val) :kind(ch), value(val) { }
-	// DRILL.1. with this missing constructor the program complies and kinda
-	// works.
-	Token(char ch, string n) : kind(ch), value(0), name(n) { }
-
 	char kind;
 	double value;
 	string name;
+
+	Token(char ch) :kind{ch} { }
+	Token(char ch, double val) :kind{ch}, value{val} { }
+	// DRILL.1. with this missing constructor the program complies and kinda
+	// works.
+	Token(char ch, string n) : kind{ch}, name{n} { }
 };
 
 class Token_stream {
 public:
     // DRIL 1. The compiler won't protest, but is better to initialize full
-    // with false rather than with a 0
-	Token_stream() :full(false), buffer(0) { }
-
+    // with false rather than with a 0. 
+    Token_stream() :full{false}, buffer{0} { }
 	Token get();
-	void unget(Token t) { buffer=t; full=true; }
-
-	void ignore(char);
+    // DRILL 1. unget() is not used on the book, putback() is used instead
+	void putback(Token t) { buffer=t; full=true; }
+	void ignore(char c);
 // DRILL 1. Put private members at the end of the class definition.
 private:
 	bool full;
@@ -69,6 +49,9 @@ const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+// DRILL 1. Lets get rid of magical constants, as "let" or "quit".
+const string declkey = "let";
+const string quitkey = "quit";
 
 Token Token_stream::get()
 {
@@ -85,7 +68,7 @@ Token Token_stream::get()
 	case '%':
 	case ';':
 	case '=':
-		return Token(ch);
+		return Token{ch};
 	case '.':
 	case '0':
 	case '1':
@@ -97,10 +80,10 @@ Token Token_stream::get()
 	case '7':
 	case '8':
 	case '9':
-	{	cin.unget();
+	{	cin.putback(ch);
 		double val;
 		cin >> val;
-		return Token(number,val);
+		return Token{number, val};
 	}
 	default:
 		if (isalpha(ch)) {
@@ -109,12 +92,16 @@ Token Token_stream::get()
 			// DRILL 1. It's supposed to add chars to the string, so it's s+=ch
 			// instead of s=ch
 			while (cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
-			cin.unget();
-			if (s == "let") return Token(let);	
+			// DRILL 1. This could work, but the book insistently uses
+			// cin.putback(ch) as substitute.
+			// cin.unget();
+			cin.putback(ch);
+			// DRILL 1. Lets get rid of magical constants, as "let" or "quit".
+			if (s == declkey) return Token{let};	
 			// DRILL 1. I guess we must return a quit token instead of a name
 			// one.
-			if (s == "quit") return Token(quit);
-			return Token(name,s);
+			if (s == quitkey) return Token{quit};
+			return Token{name,s};
 		}
 		error("Bad token");
 	}
@@ -123,9 +110,9 @@ Token Token_stream::get()
 void Token_stream::ignore(char c)
 // It causes current Token in Token_stream to be discarded if Token's kind is
 // of the type of token (number, let, name ...) indicated by argument.
-// It also removes from cin zero or more characters c.
+// It also removes chars from cin until the kind of Token c is found.
 {
-	if (full && c==buffer.kind) {
+	if (full && c == buffer.kind) {
 		full = false;
 		return;
 	}
@@ -133,7 +120,7 @@ void Token_stream::ignore(char c)
 
 	char ch;
 	while (cin>>ch)
-		if (ch==c) return;
+		if (ch == c) return;
 }
 
 // DRILL 1. With function members we prefer a class declaration
@@ -141,34 +128,47 @@ class Variable {
 public:
 	string name;
 	double value;
-	Variable(string n, double v) :name(n), value(v) { }
+	// DRILL 1. Although is not really needed
+	// Variable(string n, double v) :name(n), value(v) { }
 };
 
-vector<Variable> names;	
+// DRILL 1. var_table, as stated in the book, feels like a better name than
+// "names"
+vector<Variable> var_table;	
 
 double get_value(string s)
 {
-    // DRILL 1. Type returned by size is size_t, an unsigned integer type.
-    // Usually we get warnings from comparing signed and unsigned types.
-	for (size_t i = 0; i<names.size(); ++i)
-		if (names[i].name == s) return names[i].value;
-	error("get: undefined name ",s);
+    // DRILL 1. We prefer ranged-for loops
+	// for (size_t i = 0; i < names.size(); ++i)
+	// if (names[i].name == s) return names[i].value;
+	for (const Variable& v : var_table)
+	    if (v.name == s) return v.value;
+	error("get: undefined name ", s);
 }
 
 void set_value(string s, double d)
 {
-	for (size_t i = 0; i<=names.size(); ++i)
-		if (names[i].name == s) {
-			names[i].value = d;
-			return;
-		}
-	error("set: undefined name ",s);
+    // DRILL 1. We prefer ranged-for loops
+	// for (size_t i = 0; i<=names.size(); ++i)
+	//      if (names[i].name == s) {
+	//          names[i].value = d;
+	//          return;
+    //      }
+    for (Variable& v : var_table)
+        if (v.name == s) {
+            v.value = d;
+            return;
+        }
+	error("set: undefined name ", s);
 }
 
 bool is_declared(string s)
 {
-	for (size_t i = 0; i<names.size(); ++i)
-		if (names[i].name == s) return true;
+    // DRILL 1. We prefer ranged-for loops
+	// for (size_t i = 0; i<names.size(); ++i)
+	//      if (names[i].name == s) return true;
+	for (const Variable& v : var_table)
+	    if (v.name == s) return true;
 	return false;
 }
 
@@ -215,7 +215,7 @@ double term()
 			break;
 		}
 		default:
-			ts.unget(t);
+			ts.putback(t);
 			return left;
 		}
 	}
@@ -234,7 +234,7 @@ double expression()
 			left -= term();
 			break;
 		default:
-			ts.unget(t);
+			ts.putback(t);
 			return left;
 		}
 	}
@@ -249,7 +249,7 @@ double declaration()
 	Token t2 = ts.get();
 	if (t2.kind != '=') error("= missing in declaration of " ,name);
 	double d = expression();
-	names.push_back(Variable(name,d));
+	var_table.push_back(Variable{name,d});
 	return d;
 }
 
@@ -260,7 +260,7 @@ double statement()
 	case let:
 		return declaration();
 	default:
-		ts.unget(t);
+		ts.putback(t);
 		return expression();
 	}
 }
@@ -278,13 +278,14 @@ void calculate()
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
-		while (t.kind == print) t=ts.get();
+		while (t.kind == print) t = ts.get();
 		if (t.kind == quit) return;
-		ts.unget(t);
-		cout << result << statement() << endl;
+		ts.putback(t);
+		cout << result << statement() << '\n';
 	}
-	catch(runtime_error& e) {
-		cerr << e.what() << endl;
+	// DRILL 1. Better catch exception than the narrower runtime_error
+	catch(exception& e) {
+		cerr << e.what() << '\n';
 		clean_up_mess();
 	}
 }
@@ -295,14 +296,15 @@ try {
     return 0;
 }
 catch (exception& e) {
-    cerr << "exception: " << e.what() << endl;
-    char c;
-    while (cin >>c&& c!=';') ;
+    cerr << "exception: " << e.what() << '\n';
+    // DRILL 1. Bad syntax in &&. In Linux I don't actually need this
+    // char c;
+    // while (cin >> c && c!=';') ;
     return 1;
 }
 catch (...) {
     cerr << "exception\n";
-    char c;
-		while (cin>>c && c!=';');
-		return 2;
+    // char c;
+	// while (cin >> c && c!=';');
+	return 2;
 }
