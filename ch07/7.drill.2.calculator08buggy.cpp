@@ -1,40 +1,55 @@
 // 7.drill.2.calculator08buggy.cpp
 //
 //  2. Go through the entire program and add appropriate comments.
-//  3. As you commented, you found errors (deviously inserted especially for you
-//     to find). Fix them; they are not in the text of the book.
-//  4. Testing: prepare a set of inputs and use them to test the calculator. Is
-//     your list pretty complete? What should you look for? Include negative
-//     values, 0, very small, very large, and “silly” inputs.
-//  5. Do the testing and fix any bugs that you missed when you commented.
-//  6. Add a predefined name k meaning 1000.
-//  7. Give the user a square root function sqrt(), for example, sqrt(2+6.7).
-//     Naturally, the value of sqrt(x) is the square root of x; for example,
-//     sqrt(9) is 3. Use the standard library sqrt() function that is available
-//     through the header std_lib_facilities.h. Remember to update the comments,
-//     including the grammar.
-//  8. Catch attempts to take the square root of a negative number and print an
-//     appropriate error message.
-//  9. Allow the user to use pow(x,i) to mean “Multiply x with itself i times”;
-//     for example, pow(2.5,3) is 2.5*2.5*2.5.  Require i to be an integer using
-//     the technique we used for %.
-// 10. Change the “declaration keyword” from let to #.
-// 11. Change the “quit keyword” from quit to exit. That will involve defining
-//     a string for quit just as we did for let in §7.8.2.
 
-/*
-	calculator08buggy.cpp
-
-	Helpful comments removed.
-
-	We have inserted 3 bugs that the compiler will catch and 3 that it won't.
-*/
+// This program implements a basic expression calculator based in this input
+// grammar:
+//
+//  Calculation:
+//      Statement
+//      Print
+//      Quit
+//      Calculation Statement
+//  Statement:
+//      Declaration
+//      Expression
+//  Print:
+//      ";"
+//  Quit:
+//      "quit"
+//  Declaration:
+//      "let" Name "=" Expression
+//  Expression:
+//      Term
+//      Expression "+" Term
+//      Expression "-" Term
+//  Term:
+//      Primary
+//      Term "*" Primary
+//      Term "/" Primary
+//  Primary:
+//      Number
+//      "("Expression")"
+//      "-" Primary
+//      "+" Primary
+//      Name
+//  Number:
+//      [floating-point-literal]
+//  Name:
+//      [alphabetic-char]
+//      Name[alphabetic-char]
+//      Name[digit-char]
+//
+// Input comes from cin through the Token_stream called ts.
 
 #include "std_lib_facilities.h"
 
+// Models a grammar token from input
 class Token {
 public:
-	char kind;
+    // kind is always needed while value and name are initialized depending on
+    // the needs of each kind. Thus, three distinct constructors are defined.
+	char kind;  
 	double value;
 	string name;
 
@@ -43,6 +58,7 @@ public:
 	Token(char ch, string n) : kind{ch}, name{n} { }
 };
 
+// Models cin as a Token stream
 class Token_stream {
 public:
     Token_stream() :full{false}, buffer{0} { }
@@ -54,17 +70,23 @@ private:
 	Token buffer;
 };
 
+// Token kinds - Arbitrarily chosen
 const char let = 'L';
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+// Keywords
 const string declkey = "let";
 const string quitkey = "quit";
 
 Token Token_stream::get()
+// Processes cin to get terminal symbols from the implemented grammar
 {
+    // If already have a token buffered, return it and make
+    // room for the next one
 	if (full) { full=false; return buffer; }
+
 	char ch;
 	cin >> ch;
 	switch (ch) {
@@ -77,24 +99,18 @@ Token Token_stream::get()
 	case '%':
 	case ';':
 	case '=':
-		return Token{ch};
+		return Token{ch};   // These literals directly define Token kind
 	case '.':
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':   // Numeric literal
 	{	cin.putback(ch);
 		double val;
 		cin >> val;
 		return Token{number, val};
-	}
+	} 
 	default:
+	    // We can also expect strings. These to be keywords for declaration and
+	    // exiting the program or variable names.
 		if (isalpha(ch)) {
 			string s;
 			s += ch;
@@ -109,16 +125,21 @@ Token Token_stream::get()
 }
 
 void Token_stream::ignore(char c)
+// Clear input until c or '\n' is found
 {
+    // First inspect if a Token of c kind is buffered
 	if (full && c == buffer.kind) {
 		full = false;
 		return;
 	}
+	// Dismiss buffered token
 	full = false;
 
-	char ch;
-	while (cin>>ch)
-		if (ch == c) return;
+    // and work directly on cin
+	char ch{' '};
+    while (ch != c && ch != '\n')
+        ch = cin.get();
+    return;
 }
 
 class Variable {
@@ -167,11 +188,13 @@ double primary()
 		if (t.kind != ')') error("')' expected");
 		return d;
 	}
-	case '-':
+	case '-':   // Negative signed numbers
 		return - primary();
+	case '+':   // Positive signed numbers
+		return + primary();
 	case number:
 		return t.value;
-	case name:
+    case name:  // Variable: get value from table
 		return get_value(t.name);
 	default:
 		error("primary expected");
@@ -221,14 +244,17 @@ double expression()
 
 double declaration()
 {
+    // Check part by part of Declaration gramamr rule behind "let"
 	Token t = ts.get();
-	if (t.kind != 'a') error ("name expected in declaration");
-	string name = t.name;
-	if (is_declared(name)) error(name, " declared twice");
+	if (t.kind != name) error ("name expected in declaration");
+	string var_name = t.name;
+	if (is_declared(var_name)) error(var_name, " declared twice");
+
 	Token t2 = ts.get();
-	if (t2.kind != '=') error("= missing in declaration of " ,name);
+	if (t2.kind != '=') error("= missing in declaration of " ,var_name);
+
 	double d = expression();
-	var_table.push_back(Variable{name,d});
+	var_table.push_back(Variable{var_name,d});
 	return d;
 }
 
@@ -246,7 +272,8 @@ double statement()
 
 void clean_up_mess()
 {
-	ts.ignore(print);
+	ts.ignore(print);   // Discard input until a print command or a new line
+	                    // is found (inclusive).
 }
 
 const string prompt = "> ";
@@ -254,17 +281,18 @@ const string result = "= ";
 
 void calculate()
 {
-	while(true) try {
+	while(true) 
+	try {
 		cout << prompt;
 		Token t = ts.get();
-		while (t.kind == print) t = ts.get();
+		while (t.kind == print) t = ts.get();   // Remove print commands
 		if (t.kind == quit) return;
 		ts.putback(t);
 		cout << result << statement() << '\n';
 	}
 	catch(exception& e) {
 		cerr << e.what() << '\n';
-		clean_up_mess();
+		clean_up_mess();    // Discard remaining input and prompt user again
 	}
 }
 
@@ -278,6 +306,6 @@ catch (exception& e) {
     return 1;
 }
 catch (...) {
-    cerr << "exception\n";
+    cerr << "Uknown exception!\n";
 	return 2;
 }
