@@ -40,6 +40,7 @@
 //      Primary
 //      Term "*" Primary
 //      Term "/" Primary
+//      Term "%" Primary
 //  Primary:
 //      Number
 //      "("Expression")"
@@ -229,6 +230,12 @@ double term()
 			left /= d;
 			break;
 		}
+        case '%':
+        {   double d = primary();
+            if (d == 0) error("divide by zero");
+            left = fmod(left, d);
+            break;
+        }
 		default:
 			ts.putback(t);
 			return left;
