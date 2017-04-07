@@ -1,18 +1,10 @@
-// 7.drill.6.calculator08buggy.cpp
+// 7.drill.7.calculator08buggy.cpp
 //
 //  7. Give the user a square root function sqrt(), for example, sqrt(2+6.7).
 //     Naturally, the value of sqrt(x) is the square root of x; for example,
 //     sqrt(9) is 3. Use the standard library sqrt() function that is available
 //     through the header std_lib_facilities.h. Remember to update the comments,
 //     including the grammar.
-//  8. Catch attempts to take the square root of a negative number and print an
-//     appropriate error message.
-//  9. Allow the user to use pow(x,i) to mean “Multiply x with itself i times”;
-//     for example, pow(2.5,3) is 2.5*2.5*2.5.  Require i to be an integer using
-//     the technique we used for %.
-// 10. Change the “declaration keyword” from let to #.
-// 11. Change the “quit keyword” from quit to exit. That will involve defining
-//     a string for quit just as we did for let in §7.8.2.
 
 // This program implements a basic expression calculator based in this input
 // grammar:
@@ -46,6 +38,9 @@
 //      "-" Primary
 //      "+" Primary
 //      Name
+//      Function"("Expression")"
+//  Function:
+//      "sqrt"
 //  Number:
 //      [floating-point-literal]
 //  Name:
@@ -54,6 +49,14 @@
 //      Name[digit-char]
 //
 // Input comes from cin through the Token_stream called ts.
+//
+// Comments:
+//  Looking forward to implement more than one function (beginning with
+//  sqrt()), I have translated their evaluation to eval_funtion(), primarily to
+//  control the appareance of parenthesis around a expression after the
+//  function name.
+//  I guess that assigning a Token kind to each function won't work on the long
+//  run but for now it's an easy trick.
 
 #include "std_lib_facilities.h"
 
@@ -89,12 +92,15 @@ const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+const char sqrtfun = 's';
 // Keywords
 const string declkey = "let";
 const string quitkey = "quit";
+// Builtin functions
+const string sqrtkey = "sqrt";
 
 Token Token_stream::get()
-// Processes cin to get terminal symbols from the implemented grammar
+// Processes cin to get tokens from the implemented grammar
 {
     // If already have a token buffered, return it and make
     // room for the next one
@@ -131,6 +137,7 @@ Token Token_stream::get()
 			cin.putback(ch);
 			if (s == declkey) return Token{let};	
 			if (s == quitkey) return Token{quit};
+			if (s == sqrtkey) return Token{sqrtfun};
 			return Token{name,s};
 		}
 		error("Bad token");
@@ -191,6 +198,24 @@ Token_stream ts;
 
 double expression();
 
+double eval_function(char c)
+// Evaluates function of kind c. The next on input must be "("Expression")".
+{
+    Token t = ts.get();
+    if (t.kind != '(') error("'(' expected after function");
+    double d = expression();
+    t = ts.get();
+    if (t.kind != ')') error("')' expected after function");
+    switch (c) {
+    case sqrtfun:
+        return sqrt(d);
+    default:
+        // In case we have defined the name as a token for Funtion rule but
+        // forgot to implement its evaluation
+        error("Function not implemented");
+    }
+}
+
 double primary()
 {
 	Token t = ts.get();
@@ -209,6 +234,10 @@ double primary()
 		return t.value;
     case name:  // Variable: get value from table
 		return get_value(t.name);
+	case sqrtfun:
+	    // Call to eval_function by t.kind so we can collapse evaluation of
+	    // distinct functions on a single line
+	    return eval_function(t.kind);
 	default:
 		error("primary expected");
 	}
