@@ -30,6 +30,7 @@
 //      Primary
 //      Term "*" Primary
 //      Term "/" Primary
+//      Term "%" Primary
 //  Primary:
 //      Number
 //      "("Expression")"
@@ -219,6 +220,15 @@ double term()
 			left /= d;
 			break;
 		}
+		// DRILL 5. I'll only fix it here but, since step 1, '%' is considered
+		// as a Token on Token_stream::get() and no code for modulo has been
+		// included.
+        case '%':
+        {   double d = primary();
+            if (d == 0) error("divide by zero");
+            left = fmod(left, d);
+            break;
+        }
 		default:
 			ts.putback(t);
 			return left;
