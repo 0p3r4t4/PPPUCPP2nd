@@ -1,19 +1,6 @@
 // 7.drill.6.calculator08buggy.cpp
 //
 //  6. Add a predefined name k meaning 1000.
-//  7. Give the user a square root function sqrt(), for example, sqrt(2+6.7).
-//     Naturally, the value of sqrt(x) is the square root of x; for example,
-//     sqrt(9) is 3. Use the standard library sqrt() function that is available
-//     through the header std_lib_facilities.h. Remember to update the comments,
-//     including the grammar.
-//  8. Catch attempts to take the square root of a negative number and print an
-//     appropriate error message.
-//  9. Allow the user to use pow(x,i) to mean “Multiply x with itself i times”;
-//     for example, pow(2.5,3) is 2.5*2.5*2.5.  Require i to be an integer using
-//     the technique we used for %.
-// 10. Change the “declaration keyword” from let to #.
-// 11. Change the “quit keyword” from quit to exit. That will involve defining
-//     a string for quit just as we did for let in §7.8.2.
 
 // This program implements a basic expression calculator based in this input
 // grammar:
@@ -318,6 +305,10 @@ void calculate()
 
 int main()
 try {
+    // DRILL 6.
+    // Predefined variables
+    var_table.push_back(Variable{"k", 1000});
+    
     calculate();
     return 0;
 }
