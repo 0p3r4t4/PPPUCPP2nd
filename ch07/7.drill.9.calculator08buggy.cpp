@@ -3,9 +3,6 @@
 //  9. Allow the user to use pow(x,i) to mean “Multiply x with itself i times”;
 //     for example, pow(2.5,3) is 2.5*2.5*2.5.  Require i to be an integer using
 //     the technique we used for %.
-// 10. Change the “declaration keyword” from let to #.
-// 11. Change the “quit keyword” from quit to exit. That will involve defining
-//     a string for quit just as we did for let in §7.8.2.
 
 // This program implements a basic expression calculator based in this input
 // grammar:
@@ -39,9 +36,13 @@
 //      "-" Primary
 //      "+" Primary
 //      Name
-//      Function"("Expression")"
+//      Function"("Arguments")"
 //  Function:
 //      "sqrt"
+//      "pow"
+//  Arguments:
+//      Expression
+//      Argument","Expression
 //  Number:
 //      [floating-point-literal]
 //  Name:
@@ -50,6 +51,24 @@
 //      Name[digit-char]
 //
 // Input comes from cin through the Token_stream called ts.
+// 
+// Comments:
+//  The fact that sqrt() and pow() have a different number of arguments spoils
+//  the grammar from the previous step. Better said, rather than to spoil it,
+//  it makes explicit its faults. I create a new production rule, Arguments, to
+//  express a variable length list of arguments for a function. This obviates
+//  which argument cardinality corresponds to each function or the condition
+//  we have for the second argument of pow() to be an integer.  Well, I feel
+//  this is a grammar, and must be generalistic. As we don't express on it
+//  which solution for "%" operator we have chosen, we don't need to express
+//  other restrictions that are merely implementation affairs.
+//
+//  We have a new terminal that Token_stream::get() must contemplate: ",".
+//
+//  I won't do it completely, but I contemplate a better implementation
+//  of function argument parsing to support variable length (perhaps infinite)
+//  argument lists. The first step is the vector<double> args in
+//  eval_function().
 
 #include "std_lib_facilities.h"
 
@@ -86,11 +105,13 @@ const char print = ';';
 const char number = '8';
 const char name = 'a';
 const char sqrtfun = 's';
+const char powfun = 'p';
 // Keywords
 const string declkey = "let";
 const string quitkey = "quit";
 // Builtin functions
 const string sqrtkey = "sqrt";
+const string powkey = "pow";
 
 Token Token_stream::get()
 // Processes cin to get tokens from the implemented grammar
@@ -111,6 +132,7 @@ Token Token_stream::get()
 	case '%':
 	case ';':
 	case '=':
+	case ',':   // Added as separator for function argument lists
 		return Token{ch};   // These literals directly define Token kind
 	case '.':
 	case '0': case '1': case '2': case '3': case '4':
@@ -131,6 +153,7 @@ Token Token_stream::get()
 			if (s == declkey) return Token{let};	
 			if (s == quitkey) return Token{quit};
 			if (s == sqrtkey) return Token{sqrtfun};
+			if (s == powkey) return Token{powfun};
 			return Token{name,s};
 		}
 		error("Bad token");
@@ -177,6 +200,7 @@ void set_value(string s, double d)
             v.value = d;
             return;
         }
+
 	error("set: undefined name ", s);
 }
 
@@ -194,17 +218,37 @@ double expression();
 double eval_function(char c)
 // Evaluates function of kind c. The next on input must be "("Expression")".
 {
+    vector<double> args;    // Vector to store (variable number) of function 
+                            // arguments.
     Token t = ts.get();
-    if (t.kind != '(') error("'(' expected after function");
-    double d = expression();
-    t = ts.get();
-    if (t.kind != ')') error("')' expected after function");
+    if (t.kind != '(') error("'(' expected after function call");
+
+    // Handle argument list. Default: no arguments, do nothing, thus, no
+    // default on switch statement.
     switch (c) {
     case sqrtfun:
-        if (d < 0) error("sqrt() is undefined for negative numbers");
-        return sqrt(d);
+        args.push_back(expression());
+        break;
+    case powfun:
+        args.push_back(expression());
+        t = ts.get();
+        if (t.kind != ',') error("Bad number of function arguments");
+        args.push_back(expression());
+        break;
+    }
+
+    t = ts.get();
+    if (t.kind != ')') error("Bad number of function arguments");
+
+    // Evaluation snd restrictions implementation
+    switch (c) {
+    case sqrtfun:
+        if (args[0] < 0) error("sqrt() is undefined for negative numbers");
+        return sqrt(args[0]);
+    case powfun:
+        return pow(args[0], narrow_cast<int>(args[1]));
     default:
-        // In case we have defined the name as a token for Funtion rule but
+        // In case we have defined the name as a token for Function rule but
         // forgot to implement its evaluation
         error("Function not implemented");
     }
@@ -229,6 +273,7 @@ double primary()
     case name:  // Variable: get value from table
 		return get_value(t.name);
 	case sqrtfun:
+	case powfun:
 	    // Call to eval_function by t.kind so we can collapse evaluation of
 	    // distinct functions on a single line
 	    return eval_function(t.kind);
