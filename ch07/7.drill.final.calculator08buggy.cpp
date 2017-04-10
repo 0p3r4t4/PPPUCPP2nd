@@ -55,8 +55,8 @@
 // Comments:
 //
 //  The trap from step 10 is that '#' is not an alphabetic char, so we have to
-//  trick it. But it seems artificial and a simple one will consider '#' as
-//  a magical constant. Not a very smart solution.
+//  trick it. We are changing a keyword with a single character. The trick will
+//  be to discard the "word" and tag the token with te "#" itself.
 
 #include "std_lib_facilities.h"
 
@@ -87,7 +87,7 @@ private:
 };
 
 // Token kinds - Arbitrarily chosen
-const char let = 'L';
+const char let = '#';   // Directly the char to express variable declaration
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
@@ -95,7 +95,6 @@ const char name = 'a';
 const char sqrtfun = 's';
 const char powfun = 'p';
 // Keywords
-const string declkey = "#";
 const string quitkey = "exit";
 // Builtin functions
 const string sqrtkey = "sqrt";
@@ -121,6 +120,7 @@ Token Token_stream::get()
 	case ';':
 	case '=':
 	case ',':   // Added as separator for function argument lists
+	case let:   // Declaration is now a char, not a keyword
 		return Token{ch};   // These literals directly define Token kind
 	case '.':
 	case '0': case '1': case '2': case '3': case '4':
@@ -138,7 +138,6 @@ Token Token_stream::get()
 			s += ch;
 			while (cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
 			cin.putback(ch);
-			if (s == declkey) return Token{let};	
 			if (s == quitkey) return Token{quit};
 			if (s == sqrtkey) return Token{sqrtfun};
 			if (s == powkey) return Token{powfun};
