@@ -25,6 +25,7 @@
 //      "quit"
 //  Declaration:
 //      "let" Name "=" Expression
+//      "const" Name "=" Expression
 //  Assignment:
 //      Name "=" Expression
 //  Expression:
@@ -60,20 +61,11 @@
 // Input comes from cin through the Token_stream called ts.
 //
 // Comments:
-//   I think that assignment is an statement. If we suppose it's an expression
-//   or some lower order production rule, we can fall inside recursion and
-//   obtain things like: foo = bar = 5, to be legal. We just want a name, an
-//   assigment operator and an expression. I will put it at the same level of
-//   delaration.
-//
-//   To detect the assignment we must consume a name token and a, possible,
-//   '=' token. Independently of the kind of the second token, we have consumed
-//   two of them and we have no way to put back both of them to Token_stream.
-//   We can implement a more sophisticated Token_stream that permits more than
-//   one token to be reinserted (a buffer larger than 1). For this I must
-//   introduce vector::pop_back(), to delete last element of a vector. The data
-//   member full is not needed anymore. We will use also vector::empty() and
-//   vector::back().
+//  The user can define constants. For sure. We add a new alternative to
+//  Declaration rule. Previously, in declaration(), we took for granted that
+//  "let" has led us to the function. This time we have to distinguish between
+//  "let" and "const", so we do it in declaration(), to simplify statement(),
+//  in which we have to putback "let" or "const" before calling the former.
 
 #include "std_lib_facilities.h"
 
@@ -104,6 +96,7 @@ private:
 
 // Token kinds - Arbitrarily chosen
 const char let = 'L';
+const char constant = 'C';
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
@@ -112,6 +105,7 @@ const char sqrtfun = 's';
 const char powfun = 'p';
 // Keywords
 const string declkey = "let";
+const string constkey = "const";
 const string quitkey = "quit";
 // Builtin functions
 const string sqrtkey = "sqrt";
@@ -158,6 +152,7 @@ Token Token_stream::get()
 			while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')) s += ch;
 			cin.putback(ch);
 			if (s == declkey) return Token{let};	
+			if (s == constkey) return Token{constant};
 			if (s == quitkey) return Token{quit};
 			if (s == sqrtkey) return Token{sqrtfun};
 			if (s == powkey) return Token{powfun};
@@ -188,6 +183,7 @@ class Variable {
 public:
 	string name;
 	double value;
+	bool constant;
 };
 
 vector<Variable> var_table;	
@@ -203,6 +199,7 @@ void set_value(string s, double d)
 {
     for (Variable& v : var_table)
         if (v.name == s) {
+            if (v.constant) error(s, " is a constant");
             v.value = d;
             return;
         }
@@ -351,17 +348,22 @@ double assignment()
 
 double declaration()
 {
-    // Check part by part of Declaration gramamr rule behind "let"
-	Token t = ts.get();
-	if (t.kind != name) error ("name expected in declaration");
-	string var_name = t.name;
+    // Check if it's a regular declaration or a constant one
+    bool is_const = false;
+    Token t = ts.get();
+    if (t.kind == constant) is_const = true;
+
+    // Check part by part of Declaration gramamr rule behind "let" or "const"
+	Token t2 = ts.get();
+	if (t2.kind != name) error ("name expected in declaration");
+	string var_name = t2.name;
 	if (is_declared(var_name)) error(var_name, " declared twice");
 
-	Token t2 = ts.get();
-	if (t2.kind != '=') error("= missing in declaration of " ,var_name);
+	Token t3 = ts.get();
+	if (t3.kind != '=') error("= missing in declaration of " ,var_name);
 
 	double d = expression();
-	var_table.push_back(Variable{var_name,d});
+	var_table.push_back(Variable{var_name,d,is_const});
 	return d;
 }
 
@@ -370,6 +372,8 @@ double statement()
 	Token t = ts.get();
 	switch(t.kind) {
 	case let:
+	case constant:
+	    ts.putback(t);
 		return declaration();
 	case name:
 	{
@@ -423,6 +427,9 @@ int main()
 try {
     // Predefined variables
     var_table.push_back(Variable{"k", 1000});
+    // Predefined constants
+    var_table.push_back(Variable{"pi", 3.14159265359, true});
+    var_table.push_back(Variable{"e", 2.71828182846, true});
     
     calculate();
     return 0;
