@@ -8,21 +8,20 @@
 //
 //  Calculation:
 //      Statement
-//      Help
+//      Command
 //      Print
-//      Quit
 //      Calculation Statement
 //  Statement:
 //      Declaration
 //      Assignment
 //      Expression
-//  Help:
+//  Command:
 //      "help"
+//      "symbols"
+//      "quit"
 //  Print:
 //      ";"
 //      "\n"
-//  Quit:
-//      "quit"
 //  Declaration:
 //      "let" Name "=" Expression
 //      "const" Name "=" Expression
@@ -65,6 +64,21 @@
 //  Improvements ...
 //  - Implement a command to print the symbols table. THIS ONE will be implemented.
 //  - Implement '^' operand as a substitute or synomim of pow() function.
+//  - Implement a comannd to manage output precision (number of decimals for
+//  a floating point number).
+//
+//  I've added a new grammar rule to group commands, moving "help" and "quit" as
+//  alternatives to this rule, and adding "symbols" as the improvement
+//  currently implemented.
+//
+//  When the token is a command, I reuse name to save the command.
+//
+//  As we have encapsulated symbols data into a class, we have to implement
+//  a function member to access sequentially to this data or a function member
+//  that prints the data itself. We choose the second, for simplicity.
+//
+//  We have to modify help message to accomodate to new functionalities.
+
 
 #include "std_lib_facilities.h"
 
@@ -96,8 +110,7 @@ private:
 // Token kinds - Arbitrarily chosen
 const char let = 'L';
 const char constant = 'C';
-const char help = 'H';
-const char quit = 'Q';
+const char command = 'c';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
@@ -106,6 +119,7 @@ const char powfun = 'p';
 // Keywords
 const string declkey = "let";
 const string constkey = "const";
+const string symkey = "symbols";
 const string helpkey = "help";
 const string quitkey = "quit";
 // Builtin functions
@@ -160,8 +174,9 @@ Token Token_stream::get()
 			cin.putback(ch);
 			if (s == declkey) return Token{let};	
 			if (s == constkey) return Token{constant};
-			if (s == quitkey) return Token{quit};
-			if (s == helpkey) return Token{help};
+			if (s == quitkey) return Token{command, quitkey};
+			if (s == helpkey) return Token{command, helpkey};
+			if (s == symkey) return Token{command, symkey};
 			if (s == sqrtkey) return Token{sqrtfun};
 			if (s == powkey) return Token{powfun};
 			return Token{name,s};
@@ -201,6 +216,7 @@ public:
     void set(string s, double d);
     bool is_declared(string s);
     void declare(string s, double d, bool c);
+    void print();
 };
 
 double Symbol_table::get(string s)
@@ -236,6 +252,15 @@ void Symbol_table::declare(string s, double d, bool c)
     // body, so it's well placed here.
     if (is_declared(s)) error(s, "is declared twice");
     var_table.push_back(Variable{s, d, c});
+}
+
+void Symbol_table::print()
+{
+    for (Variable v : var_table) {
+        cout << v.name << " = " << v.value;
+        if (v.constant) cout << " (constant)";
+        cout << '\n';
+    }
 }
 
 Symbol_table symbols;
@@ -433,17 +458,19 @@ const string result = "= ";
 
 void print_help()
 {
-    cout << "\n\tTiny calculator help.\n\n"
-            "\tBASIC SYNTAX\n\n"
-            "\tWrite help to see this message.\n"
-            "\tWrite quit to exit the program.\n"
+    cout << "\n\tTiny calculator help.\n"
+            "\n\tBASIC SYNTAX\n\n"
             "\tFinish an expression with ; or new line to print results.\n"
             "\tSupported operands: *, /, %, +, -, = (assignment).\n"
-            "\tYou can use parenthesis to group expressions: 4*(2+3).\n\n"
-            "\tFUNCTIONS\n\n"
-            "\t\tsqrt(n)    Square root of n.\n"
-            "\t\tpow(n,e)   e power of n, with e an integer number.\n\n"
-            "\tVARIABLES\n\n"
+            "\tYou can use parenthesis to group expressions: 4*(2+3).\n"
+            "\n\tCOMMANDS\n\n"
+            "\thelp     Prints this help message.\n"
+            "\tsymbols  Prints currently declared variables and constants.\n"
+            "\tquit     Exit the program.\n"
+            "\n\tFUNCTIONS\n\n"
+            "\tsqrt(n)    Square root of n.\n"
+            "\tpow(n,e)   e power of n, with e an integer number.\n"
+            "\n\tVARIABLES\n\n"
             "\tVariable names must be composed of alphanumeric characters and '_',\n"
             "\tand must start with an alphabetic character.\n\n"
             "\tlet var = expr     Declares a variable var and initializes it\n"
@@ -457,6 +484,10 @@ void print_help()
             "\t\tk    1000\n\n";
 }
 
+void print_symbols()
+{
+
+}
 
 void calculate()
 {
@@ -465,11 +496,12 @@ void calculate()
 		cout << prompt;
 		Token t = ts.get();
 		while (t.kind == print) t = ts.get();   // Remove print commands
-		if (t.kind == quit) return;
-		if (t.kind == help) {
-		    print_help();
-		    ts.ignore(print); // To ignore whatevers comes after help command.
-		}
+		if (t.kind == command) {
+		    if (t.name == quitkey) return;
+            if (t.name == helpkey) print_help();
+            if (t.name == symkey) symbols.print();
+            ts.ignore(print); // To ignore whatever comes after a command.
+        }
 		else {
             ts.putback(t);
             cout << result << statement() << '\n';
