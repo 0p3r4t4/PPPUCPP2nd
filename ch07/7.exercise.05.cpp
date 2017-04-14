@@ -19,6 +19,7 @@
 //      Expression
 //  Print:
 //      ";"
+//      "\n"
 //  Quit:
 //      "quit"
 //  Declaration:
@@ -112,9 +113,16 @@ Token Token_stream::get()
         return t;
     }
 
-	char ch;
-	cin >> ch;
+	char ch = ' ';
+
+    // Discard every "space" character except '\n'
+	while (isspace(ch) && ch != '\n')
+        ch = cin.get();   // instead of >> to capture spaces (and other separators)
+
 	switch (ch) {
+	case ';':       // We now have two alternatives for print, so we group them
+	case '\n':
+	    return Token{print};
 	case '(':
 	case ')':
 	case '+':
@@ -122,7 +130,6 @@ Token Token_stream::get()
 	case '*':
 	case '/':
 	case '%':
-	case ';':
 	case '=':
 	case ',':   // Added as separator for function argument lists
 		return Token{ch};   // These literals directly define Token kind
