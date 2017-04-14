@@ -398,10 +398,8 @@ double assignment()
 
 double declaration()
 {
-    // Check if it's a regular declaration or a constant one
-    bool is_const = false;
+    // Get the declaration keyword token to define if it's constant or not
     Token t = ts.get();
-    if (t.kind == constant) is_const = true;
 
     // Check part by part of Declaration gramamr rule behind "let" or "const"
 	Token t2 = ts.get();
@@ -413,7 +411,7 @@ double declaration()
 	if (t3.kind != '=') error("= missing in declaration of " ,var_name);
 
 	double d = expression();
-	symbols.declare(var_name, d, is_const);
+	symbols.declare(var_name, d, t.kind == constant);
 	return d;
 }
 
@@ -482,11 +480,6 @@ void print_help()
             "\t\tpi   3.14159265359 (constant)\n"
             "\t\te    2.71828182846 (constant)\n"
             "\t\tk    1000\n\n";
-}
-
-void print_symbols()
-{
-
 }
 
 void calculate()
