@@ -441,6 +441,8 @@ void print_help()
             "\t\tsqrt(n)    Square root of n.\n"
             "\t\tpow(n,e)   e power of n, with e an integer number.\n\n"
             "\tVARIABLES\n\n"
+            "\tVariable names must be composed of alphanumeric characters and '_',\n"
+            "\tand must start with an alphabetic character.\n\n"
             "\tlet var = expr     Declares a variable var and initializes it\n"
             "\t                   with expr expression evaluation value.\n\n"
             "\tconst var = expr   Declares and initializes a constant named var.\n\n"
