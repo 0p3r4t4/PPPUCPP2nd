@@ -66,12 +66,24 @@ int last {100};
 int candidate {0};
 int question {0};
 
+void checked_modify_range(int f, int l)
+{
+    // First could not be greater than Last
+    // First could decrease and Last coul not increase
+    if ((f > l) || (f < first) || (l > last)) {
+        error("You LIED!");
+    }
+
+    first = f;
+    last = l;
+}
+
 void guess()
 {
     if ((last-first) == 1) candidate = last;    // Correction to avoid loss
-                                            // of information by int
-                                            // division
-    else candidate = (first+last)/2;
+                                                // of information by int
+                                                // division
+    candidate = (first+last)/2;
 
     // We do a flip-flop asking less or more to eliminate numbers at the
     // lower or higher limit. Not doing so and always asking in one sense does the
@@ -92,17 +104,25 @@ void guess()
     char answer {' '};
     cin >> answer;
     ++question;
-    if (answer == yes) 
-        (guess_type == is_less) ? last = candidate - 1 : first = candidate + 1;    
-    else if (answer == no)
-        (guess_type == is_less) ? first = candidate : last = candidate;    
+    if (answer == yes) {
+        // if the answer is yes, we could dismiss the candidate
+        if (guess_type == is_less) checked_modify_range(first, candidate - 1);
+        if (guess_type == is_more) checked_modify_range(candidate + 1, last);    
+    }
+    else if (answer == no) {
+        // if the answer is not, the candidate must be preserved as guessable
+        if (guess_type == is_less) checked_modify_range(candidate, last);
+        if (guess_type == is_more) checked_modify_range(first, candidate);    
+    }
     else {
         cout << "Sorry, I don't understand your answer. Again ...\n";
         --question;
     }
+    cout << first << ", " << last << '\n';
 }
 
-void play()
+int main()
+try
 {
     cout << "Please, think of a number between " << first << " and " << last
         << ". I'll going to guess ...\n";
@@ -113,11 +133,16 @@ void play()
 
     cout << "The number you were thinking of is ... " << first << '\n';
     cout << "I only needed " << question << " questions to guess.\n";
-}
-
-int main()
-{
-    play();
 
     return 0;
+}
+catch (exception& e)
+{
+    cerr << e.what() << '\n';
+    return 1;
+}
+catch (...)
+{
+    cerr << "Unknown exception!\n";
+    return 2;
 }
