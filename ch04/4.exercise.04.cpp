@@ -6,6 +6,14 @@
 // program should be able to identify the number after asking no more than
 // seven questions. Hint: User the < and <= operators and the if-else
 // construct.
+// 
+// Comments:
+//
+//  Revisiting this one on exercise 11 from chapter 7, a bug arises. The best
+//  way to see it is to always answer 'y' to the questions the program does. It
+//  turns that on certain situations the code produces first to be greater than
+//  last. This is only a note. The bug will be adresses on exercise 11 from
+//  chapter 7.
 
 #include "std_lib_facilities.h"
 
