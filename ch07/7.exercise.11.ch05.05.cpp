@@ -10,19 +10,28 @@
 // 
 //   Add to the program so that it can also convert from Kelvin to Celsius.
 //
+// STATEMENT
+//
+//  This program converts a temperature from Kelvin to Celsius and vice versa.
+//
 // COMMENTS
 //
 //  In summary the chapter tell us to:
 //
-//      - Review pregram presentation to the user.
-//      - Do testing trying to break the program and solve bugs found.
-//      - Clean up the code:
-//          - get rid of symbolic constants
-//          - divide the code into functions that do just one single logical
+//      1. Review program presentation to the user.
+//      2. Do testing trying to break the program and solve bugs found.
+//      3. Clean up the code:
+//          a) get rid of symbolic constants
+//          b) divide the code into functions that do just one single logical
 //          action
-//          - review code layout to improve code reading
-//      - Evaluate if we can recover from errors
-//      - Evaluate and implement improvements to the program
+//          c) review code layout to improve code reading
+//      4. Evaluate if we can recover from errors
+//      5. Evaluate and implement improvements to the program
+//
+// 3.c
+//  I include the statement of the exercise, but since it's an improvement
+//  of a previous one, information about the objective is missing. So we
+//  include STATEMENT.
 
 #include "std_lib_facilities.h"
 
