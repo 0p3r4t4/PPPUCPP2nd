@@ -133,7 +133,6 @@ void guess()
     else {
         cout << "Sorry, I don't understand your answer. Again ...\n";
     }
-    cout << first << ", " << last << '\n';
 }
 
 void guess_one_from_two()
