@@ -22,7 +22,7 @@
 //      1. Review program presentation to the user.
 //      2. Do testing trying to break the program and solve bugs found.
 //      3. Clean up the code:
-//          a) get rid of symbolic constants
+//          a) get rid of magic constants and introduce symbolic names
 //          b) divide the code into functions that do just one single logical
 //          action
 //          c) review code layout to improve code reading
