@@ -36,7 +36,7 @@
 // 2. 
 //  Some commands I've used for testing the program aside from manual testing:
 //
-//   for i in {1..25}; do mktemp -d XXXXXXXXXXXXXXXX; done | ./a.out
+//   for i in {1..25}; do mktemp -u XXXXXXXXXXXXXXXX; done | ./a.out
 //  
 //  confronts the program with random strings. It will cause mainly exceptions
 //  but sometimes it produces a good result or catch a quit command.
