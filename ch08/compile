@@ -10,7 +10,9 @@ compile=1
 
 if [[ $gpp -eq 0 ]]; then 
     echo -e "== g++ ====================================\n"
-    g++ -std=c++1z -Wall $1
+    # If we want to compile more than one file, we must take all the 
+    # arguments given to the script
+    g++ -std=c++1z -Wall $*
     compile=$?
     echo
 else
