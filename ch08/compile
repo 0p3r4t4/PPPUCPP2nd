@@ -20,7 +20,7 @@ else
     echo -e "== Trying with clang++ ..."
     if [[ $clangpp -eq 0 ]]; then
         echo -e "== clang++ ================================\n"
-        clang++ -std=c++1z -Wall $1
+        clang++ -std=c++1z -Wall $*
         compile=$?
         echo
     else
@@ -34,14 +34,14 @@ if [[ $compile -eq 0 ]]; then
     echo -e "== Compilation succesful! Proceed with static analysis ...\n"
     if [[ $clangtidy -eq 0 ]]; then
         echo -e "== clang-tidy =============================\n"
-        clang-tidy $1 -checks=*,-google-readability-braces-around-statements,-readability-braces-around-statements -- -std=c++1z -I/usr/include/c++/6/
+        clang-tidy $* -checks=*,-google-readability-braces-around-statements,-readability-braces-around-statements -- -std=c++1z -I/usr/include/c++/6/
         echo
     else
         echo -e "== No clang-tidy!\n"
     fi
     if [[ $cppcheck -eq 0 ]]; then
         echo -e "== cppcheck ===============================\n"
-        cppcheck --enable=all $1
+        cppcheck --enable=all $*
         echo
     else
         echo -e "== No cppcheck!\n"
