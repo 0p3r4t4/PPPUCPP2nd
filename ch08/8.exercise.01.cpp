@@ -64,7 +64,7 @@
 //      Name[digit-char]
 //      Name"_"
 //
-// Input comes from cin through the Token_stream called ts.
+// Input comes from an istream through the Token_stream called ts.
 
 #include "std_lib_facilities.h"
 
@@ -82,15 +82,16 @@ public:
 	Token(char ch, string n) : kind{ch}, name{n} { }
 };
 
-// Models cin as a Token stream
+// Models an istream as a Token stream
 class Token_stream {
 public:
-    //Token_stream() :full{false}, buffer{0} { }
+    Token_stream(istream& is) :input{cin} { }
 	Token get();
 	void putback(Token t) { buffer.push_back(t); }
 	void ignore(char c);
 private:
 	vector<Token> buffer;
+	istream& input;
 };
 
 // Token kinds - Arbitrarily chosen
@@ -113,7 +114,7 @@ const string sqrtkey = "sqrt";
 const string powkey = "pow";
 
 Token Token_stream::get()
-// Processes cin to get tokens from the implemented grammar
+// Processes an istream to get tokens from the implemented grammar
 {
     // If already have a tokens buffered, return the last one
     if (!buffer.empty()) {
@@ -126,7 +127,7 @@ Token Token_stream::get()
 
     // Discard every "space" character except '\n'
 	while (isspace(ch) && ch != '\n')
-        ch = cin.get();   // instead of >> to capture spaces (and other separators)
+        ch = input.get();   // instead of >> to capture spaces (and other separators)
 
 	switch (ch) {
 	case ';':       // We now have two alternatives for print, so we group them
@@ -145,9 +146,9 @@ Token Token_stream::get()
 	case '.':
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9':   // Numeric literal
-	{	cin.putback(ch);
+	{	input.putback(ch);
 		double val;
-		cin >> val;
+		input >> val;
 		return Token{number, val};
 	} 
 	default:
@@ -156,8 +157,8 @@ Token Token_stream::get()
 		if (isalpha(ch)) {
 			string s;
 			s += ch;
-			while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')) s += ch;
-			cin.putback(ch);
+			while (input.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')) s += ch;
+			input.putback(ch);
 			if (s == declkey) return Token{let};	
 			if (s == constkey) return Token{constant};
 			if (s == quitkey) return Token{command, quitkey};
@@ -181,10 +182,10 @@ void Token_stream::ignore(char c)
     // Buffer contains a c kind token
     if (!buffer.empty()) return;
 
-    // and work directly on cin
+    // and work directly on the istream 
 	char ch{' '};
     while (ch != c && ch != '\n')
-        ch = cin.get();
+        ch = input.get();
     return;
 }
 
@@ -210,6 +211,7 @@ double Symbol_table::get(string s)
 	for (const Variable& v : var_table)
 	    if (v.name == s) return v.value;
 	error("get: undefined name ", s);
+
 }
 
 void Symbol_table::set(string s, double d)
@@ -250,7 +252,7 @@ void Symbol_table::print()
 }
 
 Symbol_table symbols;
-Token_stream ts;
+Token_stream ts{cin};
 
 double expression();
 
