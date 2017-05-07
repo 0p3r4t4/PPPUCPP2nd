@@ -6,6 +6,7 @@
 #include "std_lib_facilities.h"
 
 void print(const string& label, const vector<int>& data)
+// Only read arguments, so it safe to pass them by const-reference
 {
     cout << label << ": { ";
     for (int i : data)
