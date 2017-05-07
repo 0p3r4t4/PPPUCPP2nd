@@ -56,7 +56,6 @@ void fibonacci(int x, int y, vector<int>& v, int n)
     v.push_back(y);
 
     for (int i = 2; i < n; ++i)
-        //v.push_back(v[i-2] + v[i-1]);
         v.push_back(check_add(v[i-2],v[i-1]));
 }
 
