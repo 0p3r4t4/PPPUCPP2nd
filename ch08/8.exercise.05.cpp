@@ -13,10 +13,11 @@
 //
 //  The first function will be named reverse_cr() as parameter will be passed
 //  by const-reference. The other one will be reverse_r() as parameter will be
-//  passed by reference.
+//  passed by reference. For this one we use swap(), as the hint says, but we
+//  will no implement it since its available on the standard library, as
+//  pointed out in §8.5.5.
 //
-//  We must check for odd and even elements sequences.
-//
+//  We must check for odd and even size sequences.
 
 #include "std_lib_facilities.h"
 
@@ -66,27 +67,49 @@ void fibonacci(int x, int y, vector<int>& v, int n)
     }
 }
 
-void swap(int& a, int& b)
-// Swaps values of two int variables
-{
-    int temp{a};
-    a = b;
-    b = temp;
-}
-
 vector<int> reverse_cr(const vector<int>& v)
 // Returns a new vector with vector v elements in reverse order
 {
+    vector<int> r;
+
+    for (size_t i = v.size(); i > 0; --i)
+        r.push_back(v[i-1]);
+
+    return r;
 }
 
 void reverse_r(vector<int>& v)
 // Reverses order of elements of vector v
 {
+    size_t limit{v.size()/2}; // Only traverse half of the elements.
+                              // This way, if we have an odd number of elements
+                              // the division ignores the middle one.
+    size_t last_idx{v.size()-1};    // Last element index. To avoid recalc.
+
+    for (size_t i = 0; i < limit; ++i)
+        swap(v[i], v[last_idx-i]);
 }
 
 int main()
 try {
-    vector<int> data;
+    // Test a vector with even element number
+    vector<int> e1;
+    fibonacci(1, 2, e1, 8);         // Generate a vector with even element number
+    print("Original even            ", e1);
+    vector<int> e2{reverse_cr(e1)}; // New vector reversed
+    print("Reverse even by const-ref", e2);
+    reverse_r(e1);                  // Reverse original vector
+    print("Reverse even by ref      ", e1);
+
+    // Test a vector with odd element number
+    vector<int> o1;
+    fibonacci(1, 2, o1, 7);         // Generate a vector with odd element number
+    print("Original odd             ", o1);
+    vector<int> o2{reverse_cr(o1)}; // New vector reversed
+    print("Reverse odd by const-ref ", o2);
+    reverse_r(o1);                  // Reverse original vector
+    print("Reverse odd by ref       ", o1);
+    
     return 0;
 }
 catch(exception& e)
