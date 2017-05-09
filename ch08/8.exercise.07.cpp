@@ -32,7 +32,7 @@ void get_names(vector<string>& name)
 // Asks the user for name_no names and adds them to a vector.
 // No duplicate names are permitted.
 {
-    cout << "Write five people names ...\n";
+    cout << "Write " << name_no << " people names ...\n";
     for (size_t i = 0; i < name_no; ++i) {
         cout << ": ";
         string n;
