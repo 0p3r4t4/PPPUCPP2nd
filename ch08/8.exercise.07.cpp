@@ -15,7 +15,7 @@ constexpr size_t name_no{5};
 void get_names(vector<string>& name)
 {
     cout << "Write five people names ...\n";
-    for (int i = 0; i < name_no; ++i) {
+    for (size_t i = 0; i < name_no; ++i) {
         cout << ": ";
         string n;
         cin >> n;
@@ -36,6 +36,32 @@ void get_ages(const vector<string>& name, vector<double>& age)
         }
         age.push_back(a);
     }
+} 
+
+void print_pairs(const vector<string>& name, const vector<double>& age)
+{
+    size_t limit = name.size();
+    for (size_t i = 0; i < limit; ++i)
+        cout << name[i] << " is " << age[i] << " years old.\n";
+}
+
+size_t name_idx(const vector<string>& name, const string& n)
+{
+    size_t limit = name.size();
+    for (size_t i = 0; i < limit; ++i)
+        if (name[i] == n) return i;
+    error("name_idx(): No element found!");
+}
+
+void sort_pairs(vector<string>& name, vector<double>& age)
+{
+    vector<string> orig_name{name};
+    vector<double> orig_age{age};
+
+    sort(name);
+    size_t limit = name.size();
+    for (size_t i = 0; i < limit; ++i)
+        age[i] = orig_age[name_idx(orig_name, name[i])];
 }
 
 int main()
@@ -45,13 +71,9 @@ try {
 
     get_names(name);
     get_ages(name, age);
-
-    for (auto e : name)
-        cout << e << ' ';
-    cout << '\n';
-    for (auto e : age)
-        cout << e << ' ';
-    cout << '\n';
+    print_pairs(name, age);
+    sort_pairs(name, age);
+    print_pairs(name, age);
 
     return 0;
 }
