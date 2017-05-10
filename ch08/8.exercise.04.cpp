@@ -86,7 +86,7 @@ int main()
 try {
     vector<int> data;
     int max{0};         // Keep track of maximum int obtained
-    int min{0};         // Keep track of minimem int obtained
+    int min{0};         // Keep track of minimum int obtained
     int begin{-200};    // Value from calculate Fibonacci sequences
     int end{200};       // Value to calculate Fibonacci sequences
     int seq_size{50};   // Elements of Fibonacci sequence. 50 is a good

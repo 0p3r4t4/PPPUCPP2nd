@@ -96,7 +96,7 @@ void sort_pairs(vector<string>& name, vector<double>& age)
     vector<string> orig_name{name};   // Reference pre-sorted vector
     vector<double> orig_age{age};     // Source to build a new shuffled vector
 
-    sort(name);
+    sort(name.begin(), name.end());
     size_t limit = name.size();
     for (size_t i = 0; i < limit; ++i)
         age[i] = orig_age[name_idx(orig_name, name[i])];
