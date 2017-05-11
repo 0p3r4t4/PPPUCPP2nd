@@ -24,7 +24,6 @@
 //
 //  More concise and smaller number of parameters and arguments. Less prone to
 //  errors, I think.
-//
 
 #include "std_lib_facilities.h"
 
@@ -53,6 +52,7 @@ void print_stats(const Stats& stats)
 }
 
 double mean(const vector<double>& v)
+// Calculates the the mean of the set of values in v
 {
     double sum{0};
     for (double d : v)
@@ -61,16 +61,19 @@ double mean(const vector<double>& v)
 }
 
 double median(const vector<double>& v)
-// The vector must be sorted
+// Calculates the the median of the set of values in v
+// The vector iss supposed to be sorted!
+// When the number of elements is even, the median is defined
+// as the mean between the two most central values in the series.
 {
     if ((v.size()%2) == 1)          // odd number of elements
-        return v[v.size()/2];   // the central element
+        return v[v.size()/2];       // the central element
     size_t idx{v.size()/2};
-    return (v[idx-1]+v[idx])/2;
+    return (v[idx-1]+v[idx])/2;     
 }
 
 Stats get_stats(const vector<double>& v)
-// Do not modify the passed vector
+// Doesn't modify the passed vector
 {
     vector<double> tmp{v};  // temporal vector to work
     
