@@ -12,6 +12,7 @@
 //  Set to test ...
 //    Test with empty vectors and strings.
 //    Test with quit string being the first or the last element of the vector.
+//    Test with vectors not containing quit string.
 //    Test with variables (or constants) as arguments.
 
 #include "std_lib_facilities.h"
@@ -25,7 +26,7 @@ void print(const vector<string>& v, const string& quit)
 
 void print_until_s(const vector<string>& v, const string& quit)
 {
-    print(v, quit);
+    print(v, quit);     // Added for test information
     for (string s : v) {
         if (s == quit) return;
         cout << '\t' << s << '\n';
@@ -36,8 +37,15 @@ int main()
 try
 {
     vector<string> test_data{"1", "2", "3", "4", "5"};
+    const vector<string> test_data_c{};
+    string quit{"exit"};
+    
     print_until_s({"Hi!", "Hello", "Bye", "quit", "Until tomorrow"}, "quit");
-    print_until_s({"Hi!", "Hello", "Bye", "quit", "Until tomorrow"}, "quit");
+    print_until_s(test_data, "");
+    print_until_s(test_data_c, quit);
+    print_until_s({"quit", "Hello", "Bye", "quit", "Until tomorrow"}, "quit");
+    print_until_s({"Hi!", "Hello", "Bye", "quit", quit}, quit);
+
     return 0;
 }
 catch(exception& e)
