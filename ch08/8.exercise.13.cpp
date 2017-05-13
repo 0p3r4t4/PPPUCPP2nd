@@ -15,10 +15,17 @@
 //
 //  I will implement each function to do just one thing, without taking
 //  advantage of previous sorts or string length calculations.
+//  
+//  The fisrt and last lexicographically find function are implemented
+//  diiferently just out of curiosity.
+//  
+//  Print functions are present for convenience. Initially I named it
+//  differently, but since paramenter types differ and so do the function
+//  signatures, we can overload names.
 
 #include "std_lib_facilities.h"
 
-void print_i_vector(const string& label, const vector<int>& data)
+void print(const string& label, const vector<int>& data)
 // Only read arguments, so it safe to pass them by const-reference
 {
     cout << label << ": { ";
@@ -27,7 +34,7 @@ void print_i_vector(const string& label, const vector<int>& data)
     cout << "}\n";
 }
 
-void print_s_vector(const string& label, const vector<string>& data)
+void print(const string& label, const vector<string>& data)
 // Only read arguments, so it safe to pass them by const-reference
 {
     cout << label << ": { ";
@@ -91,7 +98,7 @@ vector<string> shortest_string(const vector<string>& v)
    return sv;
 }
 
-string first_string(vector<string> v)
+string first_string(const vector<string>& v)
 // Returns the first lexicograpically string from v.
 // We don't want to modify the argument, so we have two options:
 //  - Pass by const-reference and make a copy inside
@@ -102,11 +109,12 @@ string first_string(vector<string> v)
 {
     if (v.size() == 0) error("first_string(): empty vector");
 
-    sort(v.begin(), v.end());
-    return v[0];
+    vector<string> tmp{v};
+    sort(tmp.begin(), tmp.end());
+    return tmp[0];
 }
 
-string last_string(const vector<string>& v)
+string last_string(vector<string> v)
 // Returns the last lexicograpically string from v.
 // We don't want to modify the argument, so we have two options:
 //  - Pass by const-reference and make a copy inside
@@ -117,9 +125,11 @@ string last_string(const vector<string>& v)
 {
     if (v.size() == 0) error("last_string(): empty vector");
 
-    vector<string> tmp{v};
-    sort(tmp.begin(), tmp.end());
-    return tmp[tmp.size()-1];
+    string last{v[0]};
+    for (string s : v)
+        if (s > last) last = s;
+
+    return last;
 }
 
 int main()
@@ -127,10 +137,10 @@ try
 {
     vector<string> data{"one", "two", "three", "four", "five", "six", "seven"};
 
-    print_s_vector("The strings vector is", data);
-    print_i_vector("The corresponding lengths are", gen_length_vector(data));
-    print_s_vector("The longest strings are", longest_string(data));
-    print_s_vector("The shortest strings are", shortest_string(data));
+    print("The strings vector is", data);
+    print("The corresponding lengths are", gen_length_vector(data));
+    print("The longest strings are", longest_string(data));
+    print("The shortest strings are", shortest_string(data));
     cout << "The first lexicographically string is: \""
          << first_string(data) << "\"\n";
     cout << "The last lexicographically string is: \""
