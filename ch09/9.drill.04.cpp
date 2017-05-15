@@ -1,4 +1,4 @@
-// 9.drill.03.cpp
+// 9.drill.04.cpp
 //
 //  This drill simply involves getting the sequence of versions of Date to
 //  work. For each version define a Date called today initialized to June 25,
@@ -19,12 +19,20 @@
 //
 //  I will not do this by separating Date class, Month enumerator or helper
 //  functions in their own header file. Just for the shake of simplicity.
+//  This time I will create a namespace for Date and related stuff.
 //
 //  I will consider the Year class as an example and will not implement it
 //  since it does not live up to the final version of Date.
 //
-//  Date::add_day() will be implemented supposing all months have 31 days. It will
-//  complicate it to do better until best tools, as enums, are introduced.
+//  I can't stop getting myself in trouble. As I've implemented add_day() and
+//  with the introduction of Month enum class, all the operators needed to
+//  manage the Month type are missing and must be overloaded. This work has to
+//  be done at some point, but is sad that I will do it with such a miserable 
+//  add_day() current implementation.
+//
+//  Date::add_day() will be implemented supposing all months have 31 days. It
+//  will complicate it to do better until best tools are introduced and more
+//  elaborated code is written.
 //
 //  In operator<< definition we declare to receive a const-by-reference Date.
 //  And we call Date member functions. As stated in §9.7.4 we must make
@@ -33,9 +41,27 @@
 
 #include "std_lib_facilities.h"
 
+namespace Chrono {
+
 enum class Month {
     jan = 1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
 };
+
+Month operator+(const Month& m, int n)
+{
+    int r = int(m) + n;
+    r %= int(Month::dec);
+
+    if (r == 0) return Month::dec;  // Revert effect of modulo ...
+    return Month(r);
+}
+
+// Define other operators based on +
+Month operator-(const Month& m, int n) { return (m+(-n)); }
+Month& operator+=(Month& m, int n) { m = m + n; return m; }
+
+bool operator<(const Month& m, int n) { return int(m) < n; }
+bool operator>(const Month& m, int n) { return int(m) > n; }
 
 class Date {
 public:
@@ -63,6 +89,7 @@ bool Date::is_valid()
 {
     if (d < 1 || d > 31) return false;
     if (m < Month::jan || m > Month::dec) return false;
+    return true;
 }
 
 void Date::add_day(int n)
@@ -73,28 +100,35 @@ void Date::add_day(int n)
     int n_m = (n / 31) % 12;   // months out of years, to increase
     int n_y = n / (31*12);     // years to increase
 
-    y += n_y;
-    m += n_m;
     d += n_d;
-     
     // We must check for overflows, and n and derivatives can be negative!!
-    if (d > 31) { ++m; d -= 31; }     // Day overflow
-    if (d < 1)  { --m; d += 31; }     // Day underflow
-    // We have modified month, so we must check it
-    if (m > 12) { ++y; m -= 12; }     // Month overflow
-    if (m < 1)  { --y; m += 12; }     // Month underfow
+    if (d > 31) { ++n_m; d -= 31; }     // Day overflow
+    if (d < 1)  { --n_m; d += 31; }     // Day underflow
+ 
+    // Month type takes care of itself on overflows, but we loose track to 
+    // modify year if it happens. We must check it before actually operate
+    // on m.
+    if (Month::dec < (int(m)+n_m)) ++n_y;
+    if (Month::jan > (int(m)+n_m)) --n_y;
+    m += n_m;   // m is of Month type
+    y += n_y;
 }
 
 ostream& operator<<(ostream& os, const Date& d)
 {
     return os << '(' << d.year()
-              << ',' << d.month()
+              << ',' << int(d.month())
               << ',' << d.day() << ')';
 }
+
+}; // namespace Chrono
 
 int main()
 try
 {
+    using Chrono::Date;
+    using Chrono::Month;
+
     Date today{1978, Month::jun, 25};
 
     Date tomorrow{today};
@@ -122,7 +156,7 @@ try
     cout << "Somewhere circa February 2010? " << test << '\n';
 
     // Invalid date
-    Date today_e{2004, 13, -5};
+    Date today_e{2004, Month::dec, -5};
 
     return 0;
 }
@@ -131,7 +165,7 @@ catch(exception& e)
     cerr << e.what() << '\n';
     return 1;
 }
-catch(Date::Invalid)
+catch(Chrono::Date::Invalid)
 {
     cerr << "Invalid date!\n";
     return 2;
