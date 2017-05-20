@@ -114,9 +114,7 @@ bool is_date(int y, Month m, int d)
         break;
     }
 
-    if (days_in_month < d) return false;
-
-    return true;
+    return days_in_month < d;
 }
 
 bool leapyear(int y)
@@ -182,4 +180,4 @@ Date next_weekday(const Date& d)
                 default_date().day()};  // until properly implemented
 }
 
-}; // Chrono
+} // namespace Chrono

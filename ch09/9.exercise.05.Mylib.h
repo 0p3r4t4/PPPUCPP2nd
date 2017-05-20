@@ -1,4 +1,4 @@
-// 9.exercise.05.cpp
+// 9.exercise.05.Mylib.h
 //
 // This exercise and the next few require you to design and implement a Book
 // class, such as you can imagine as part of software for a library. Class Book
@@ -10,6 +10,10 @@
 // letter. Store an ISBN as a string.
 //
 // COMMENTS
+//
+// I think that a default constructor for Book is nonsense. We could invent a
+// book but it's not very logical. So only a explicit all-date constructor is
+// defined.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.05.Chrono.h"
@@ -19,9 +23,31 @@
 
 namespace Mylib {
 
+using Chrono::Date;
+
 class Book {
+public:
+    Book(string& isbn, string& title, string& author, Date& copyright,
+        bool checked_out);
+
+    // modifying function members
+    void check_out() { co = true; }
+    void check_in() { co = false; }
+
+    // non-modifying function members
+    const string& isbn() const { return id; }
+    const string& title() const { return tit; }
+    const string& author() const { return auth; }
+    const Date& copyright() const { return cright; }
+    const bool checked_out() const { return co; }
+private:
+    string id;
+    string tit;
+    string auth;
+    Date cright;
+    bool co;
 };
 
-} // Mylib
+} // namespace Mylib
 
 #endif

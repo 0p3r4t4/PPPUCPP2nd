@@ -13,12 +13,21 @@
 //
 //  I will implement Book class in its own namespace (Mylib, poor named) and
 //  the namespace in its own header a code files.
-//  Since we need a Date I will borrow it from 9.drill.05.cpp and take the
-//  Chrono namespace to its own files.
+//
+//  Since we need a Date I will borrow it from §9.8 and additions from 
+//  9.drill.05.cpp and take the Chrono namespace to its own files.
+//  The functionality from Date is barely used here, so I will not check it
+//  thoroughly and trust previous work and book corectness. 
+//
+//  Chrono header is included several times so I have to introduce include
+//  guards with #ifndef/#define macros. This is not yet introduced, but needed.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.05.Chrono.h"
-//#include "9.exercise.05.Mylib.h"
+#include "9.exercise.05.Mylib.h"
+
+using Chrono::Date;
+using Mylib::Book;
 
 int main()
 try

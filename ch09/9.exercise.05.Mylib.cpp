@@ -17,5 +17,11 @@
 
 namespace Mylib {
     
-}   // Mylib
+Book::Book(string& isbn, string& title, string& author, Date& copyright,
+    bool checked_out): id{isbn}, tit{title}, auth{author}, cright{copyright},
+    co{checked_out}
+{
+}
+
+} // namespace Mylib
 
