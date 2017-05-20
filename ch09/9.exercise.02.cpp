@@ -8,7 +8,7 @@
 //  print() operation that prints out the (name[i],age[i]) pairs (one per line)
 //  in the order determined by the name vector. Provide a sort() operation
 //  that sorts the name vector in alphabetical order and reorganize the age
-//  vector to match. Implement all "operations" as memeber functions. Test the
+//  vector to match. Implement all "operations" as member functions. Test the
 //  class (of course: test early an often).
 //
 // COMMENTS
@@ -28,16 +28,21 @@
 //  right the sorted copies take the place of the originials. This way if a
 //  exception is thrown, the previous object state is not modified (exception
 //  safe code?).
-//
 //  Also, in Name_pairs::sort() we call std::sort(). If we jsut call it with
 //  sort() the compiler argues that the only candidate is Name_pairs::sort().
 //  So we must fully qualify std::sort() or use a local using declaration to
 //  force the use of std::sort(). I'll take the second but the former is, by
 //  the way, simpler and more readable. Doing things consciously wrong :-P
 //
-//  Ability to add more names?
-//  print() prints the pairs sorte by name, but I don't think it should change
-//  the class state, so copies are in place.
+//  Ability to add more names? Not yet. It's not difficult; we must keep
+//  track of the index where we start get more names to avoid asking ages for
+//  the previous ones already covered. 
+//  
+//  print() prints the pairs sorted by name, but I don't think it should change
+//  the class state, so copies must be in place. This function shares code with
+//  sort() and perhaps we must take this code out to a new function. I have
+//  some ideas to do so, but the will complicate the exercise beyond acceptable
+//  (at least for me). I have taken the full qualified std::sort() this time.
 
 #include "std_lib_facilities.h"
 
@@ -99,20 +104,6 @@ void Name_pairs::read_ages()
     }
 } 
 
-void Name_pairs::print() const
-// Prints a line with each name and its respective age, from the same both
-// elements of two distinct vectors.
-{
-    if (name.size() != age.size())
-        error("Name_pairs::print(): name and age"
-              "sizes differ (no age read performed?)");
-
-    size_t limit = name.size();     // To avoid evaluate a function call
-                                    // at the for condition each loop
-    for (size_t i = 0; i < limit; ++i)
-        cout << "\t(" << name[i] << ", " << age[i] << ")\n";
-}
-
 size_t Name_pairs::name_idx(const string& n) const
 // Returns the index at which a name (n) is located on a vector (name).
 // As the program goes we are almost sure the name will be present, so an error
@@ -149,6 +140,28 @@ void Name_pairs::sort()
     age = s_age;
 }
 
+void Name_pairs::print() const
+// Prints a line with each name and its respective age, from the same both
+// elements of two distinct vectors. Printing are done sorted by name.
+{
+    if (name.size() != age.size())
+        error("Name_pairs::print(): name and age"
+              "sizes differ (no age read performed?)");
+
+    vector<string> s_name{name};   // name work copy
+    vector<double> s_age{age};     // age work copy
+
+    // First sort the copies
+    std::sort(s_name.begin(), s_name.end());
+    size_t limit = s_name.size();
+    for (size_t i = 0; i < limit; ++i)
+        s_age[i] = age[name_idx(s_name[i])];
+
+    // Now print sorted
+    for (size_t i = 0; i < limit; ++i)
+        cout << "\t(" << s_name[i] << ", " << s_age[i] << ")\n";
+}
+
 int main()
 try {
     Name_pairs pairs;
@@ -160,9 +173,6 @@ try {
     pairs.sort();
     cout << "\nThat sorted alphabetically by name are:\n";
     pairs.print();
-    //sort_pairs(name, age);
-    //cout << "\nThat sorted by name are:\n";
-    //print_pairs(name, age);
     cout << '\n';
 
     return 0;
