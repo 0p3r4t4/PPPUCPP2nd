@@ -25,7 +25,7 @@
 //
 //  sort() is implemented slightly different than in reference exercise. I
 //  think also better. Sort is performed on copies and only after all goes
-//  right the sorted copies take the place of the originials. This way if a
+//  right the sorted copies take the place of the originals. This way if a
 //  exception is thrown, the previous object state is not modified (exception
 //  safe code?).
 //  Also, in Name_pairs::sort() we call std::sort(). If we jsut call it with
@@ -36,7 +36,7 @@
 //
 //  Ability to add more names? Not yet. It's not difficult; we must keep
 //  track of the index where we start get more names to avoid asking ages for
-//  the previous ones already covered. 
+//  the previous ones already entered. 
 //  
 //  print() prints the pairs sorted by name, but I don't think it should change
 //  the class state, so copies must be in place. This function shares code with

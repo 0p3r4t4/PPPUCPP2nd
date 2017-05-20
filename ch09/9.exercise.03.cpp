@@ -6,17 +6,17 @@
 // COMMENTS
 //
 //  If we implement << operator globally, how can we access the data inside of
-//  Name_pairs? Made the data public is not an option, but returning a const
-//  reference to them through a const member function ... could do the trick?
+//  Name_pairs? Making the data public is not an option, but returning a const
+//  reference to them through a const member function could do the trick.
 //  It seems so.
-//  I've also copy the object and used sort() on that copy. It somehow
-//  simplifies the sorted print code at cost of a one more copy than those
+//  I've also copied the object and used sort() on that copy. It somehow
+//  simplifies the sorted print code at cost of one more copy than those
 //  extrictly necessary.
 //
 //  For == operator, we must assure that data members from two objects are
 //  equal. Since we have two vectors as sensible data and vector<> has its own
 //  == operator, we can take advantage of that. We already have a way to refer
-//  to the data members as needed for << operator.
+//  to the data members as done for << operator.
 //  != operator can be defined based on == operator.
 
 #include "std_lib_facilities.h"
@@ -132,7 +132,7 @@ ostream& operator<<(ostream& os, const Name_pairs& np)
         error("Name_pairs << operator: name and age"
               "sizes differ (no age read performed?)");
 
-    // Now print sorted
+    // Now print sorted data
     size_t limit = name.size();
     for (size_t i = 0; i < limit; ++i)
         cout << "\t(" << name[i] << ", " << age[i] << ")\n";
