@@ -135,7 +135,7 @@ ostream& operator<<(ostream& os, const Name_pairs& np)
     // Now print sorted data
     size_t limit = name.size();
     for (size_t i = 0; i < limit; ++i)
-        cout << "\t(" << name[i] << ", " << age[i] << ")\n";
+        os << "\t(" << name[i] << ", " << age[i] << ")\n";
 
     return os;
 }
