@@ -114,7 +114,7 @@ bool is_date(int y, Month m, int d)
         break;
     }
 
-    return days_in_month < d;
+    return days_in_month >= d;
 }
 
 bool leapyear(int y)

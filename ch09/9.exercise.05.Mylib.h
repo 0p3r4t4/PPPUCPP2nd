@@ -13,7 +13,8 @@
 //
 // I think that a default constructor for Book is nonsense. We could invent a
 // book but it's not very logical. So only a explicit all-date constructor is
-// defined.
+// defined. Also, on book creation, I think it couldn't be checked out, so
+// initial value for Book::co will be false.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.05.Chrono.h"
@@ -25,10 +26,11 @@ namespace Mylib {
 
 using Chrono::Date;
 
+class Invalid_ISBN { };  // to throw in case ISBN is not valid
+
 class Book {
 public:
-    Book(string& isbn, string& title, string& author, Date& copyright,
-        bool checked_out);
+    Book(string isbn, string title, string author, Date copyright);
 
     // modifying function members
     void check_out() { co = true; }
@@ -47,6 +49,11 @@ private:
     Date cright;
     bool co;
 };
+
+// helper functions
+
+bool is_isbn(const string& isbn);
+void print(ostream& os, const Book& book);
 
 } // namespace Mylib
 
