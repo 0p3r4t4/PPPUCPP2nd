@@ -1,4 +1,4 @@
-// 9.exercise.05.Chrono.h
+// 9.exercise.06.Chrono.h
 //
 // Borrowed from §9.8 with additions from 9.drill.05.cpp
 

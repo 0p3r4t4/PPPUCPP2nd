@@ -1,20 +1,10 @@
-// 9.exercise.05.Mylib.cpp
+// 9.exercise.06.Mylib.cpp
 //
-// This exercise and the next few require you to design and implement a Book
-// class, such as you can imagine as part of software for a library. Class Book
-// should have members for the ISBN, title, author, and copyright date. Also
-// store data on whether or not the book is checked out. Create functions for
-// returning those data values. Create functions for checking a book in and
-// out. Do simple validation of data entered into a Book; for example, accept
-// ISBN only of the form n-n-n-x where n is an integer and x is a digit or a
-// letter. Store an ISBN as a string.
+// Add operators for the Book class. Have the == operator check whether the
+// ISBN numbers are the same for two books. Have != also compare the ISBN
+// numbers. Have a << print out the title, author, and ISBN on separate lines.
 //
 // COMMENTS
-//
-// is_isbn() helper function is horrible by itself. But as stand alone check is
-// the best I can think of right now.
-// print() is implemented for convenience to do testing. It could be
-// implemented as an overload to << operator, as asked for in exercise 6.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.06.Chrono.h"
