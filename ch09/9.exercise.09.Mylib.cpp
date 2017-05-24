@@ -166,14 +166,14 @@ void Library::add_patron(Patron p)
 
 void Library::check_out(Book b, Patron p, Chrono::Date d)
 {
-    if (!is_patron(p)) throw Invalid_Patron{};
-    if (!is_book(b)) throw Invalid_Book{};
-    if (!book_in(b)) throw Checked_Out_Book{};
-    if (owes_fees(patron(p))) throw Patron_Owes_Fees{};
+    Book& lb = book(b);         // throws if b is not in m_book
+    Patron& lp = patron(p);     // throws if p is not in m_patron
+    if (lb.checked_out()) throw Checked_Out_Book{};
+    if (owes_fees(lp)) throw Patron_Owes_Fees{};
 
     m_transaction.push_back(Transaction{b, p, d});
-    book(b).check_out();
-    patron(p).set_fees(10.0);
+    lb.check_out();
+    lp.set_fees(10.0);
 }
 
 vector<string> Library::with_fees() const
@@ -221,14 +221,6 @@ Book& Library::book(const Book& b)
     for (Book& x : m_book)
         if (x == b) return x;
     throw Invalid_Book{};
-}
-
-bool Library::book_in(const Book& b) const
-{
-    for (Book x : m_book)
-        if (x == b)
-            return !x.checked_out();
-    return false;
 }
 
 bool Library::is_patron(const Patron& p) const

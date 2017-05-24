@@ -144,7 +144,6 @@ public:
     void print_transactions(ostream& os) const;
 private:
     bool is_book(const Book& b) const; // tell if a book belongs the library
-    bool book_in(const Book& b) const; // tell if a book is checked in
     Book& book(const Book& b); // returns the element of m_book equal to b
     bool is_patron(const Patron& p) const; // tell if a patron already exists
     Patron& patron(const Patron& p); // returns the element of
