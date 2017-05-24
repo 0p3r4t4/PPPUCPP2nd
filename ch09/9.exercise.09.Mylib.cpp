@@ -141,38 +141,42 @@ ostream& operator<<(ostream& os, const Patron& p)
     return os;
 }
 
-// Transaction operators
-ostream& operator<<(ostream& os, const Transaction& t)
+bool operator==(const Patron& a, const Patron& b)
 {
-    os << t.patron.name() << " toke " << t.book.title() << " (ISBN: " 
-       << t.book.isbn() << ") on " << t.date << '\n';
+    return (a.card_number() == b.card_number());
+}
 
-    return os;
+bool operator!=(const Patron& a, const Patron& b)
+{
+    return !(a == b);
 }
 
 // Library member functions
 void Library::add_book(Book b)
 {
-    if (is_book(b.isbn())) throw Repeated_ISBN{};
+    if (is_book(b)) throw Repeated_Book{};
     m_book.push_back(b);
 }
 
 void Library::add_patron(Patron p)
 {
-    if (is_patron(p.card_number())) throw Repeated_Card_Number{};
+    if (is_patron(p)) throw Repeated_Patron{};
     m_patron.push_back(p);
 }
 
-void Library::check_out(string& card_number, string& isbn, Chrono::Date& date)
+void Library::check_out(Book b, Patron p, Chrono::Date d)
 {
-    if (!is_patron(card_number)) throw Invalid_Card_Number{};
-    if (!is_book(isbn)) throw Invalid_ISBN{};
-    if (!book_in(isbn)) throw Book_Checked_Out{};
+    if (!is_patron(p)) throw Invalid_Patron{};
+    if (!is_book(b)) throw Invalid_Book{};
+    if (!book_in(b)) throw Checked_Out_Book{};
+    if (owes_fees(patron(p))) throw Patron_Owes_Fees{};
 
-
+    m_transaction.push_back(Transaction{b, p, d});
+    book(b).check_out();
+    patron(p).set_fees(10.0);
 }
 
-vector<string> Library::users_with_fees() const
+vector<string> Library::with_fees() const
 // Return names of users that owes fees
 {
     vector<string> names;
@@ -205,26 +209,49 @@ void Library::print_transactions(ostream& os) const
         os << t;
 }
    
-bool Library::is_book(const string& isbn)
+bool Library::is_book(const Book& b) const
 {
-    for (Book b : m_book)
-        if (b.isbn() == isbn) return true;
+    for (Book x : m_book)
+        if (x == b) return true;
     return false;
 }
 
-bool Library::book_in(const string& isbn)
+Book& Library::book(const Book& b)
 {
-    for (Book b : m_book)
-        if (b.isbn() == isbn)
-            return !b.checked_out();
+    for (Book& x : m_book)
+        if (x == b) return x;
+    throw Invalid_Book{};
+}
+
+bool Library::book_in(const Book& b) const
+{
+    for (Book x : m_book)
+        if (x == b)
+            return !x.checked_out();
     return false;
 }
 
-bool Library::is_patron(const string& card_number)
+bool Library::is_patron(const Patron& p) const
 {
-    for (Patron p : m_patron)
-        if (p.card_number() == card_number) return true;
+    for (Patron x : m_patron)
+        if (x == p) return true;
     return false;
+}
+
+Patron& Library::patron(const Patron& p)
+{
+    for (Patron& x : m_patron)
+        if (x == p) return x;
+    throw Invalid_Patron{};
+}
+
+// Transaction operators
+ostream& operator<<(ostream& os, const Library::Transaction& t)
+{
+    os << t.patron.name() << " toke " << t.book.title() << " (ISBN: " 
+       << t.book.isbn() << ") on " << t.date << '\n';
+
+    return os;
 }
 
 } // namespace Mylib

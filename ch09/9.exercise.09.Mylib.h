@@ -24,8 +24,6 @@
 //  until I found or think about a better approximation I will stick with this.
 //
 //  Library::print_*() are implemented for testing.
-//  Library::check_out() is done under the assumption that te book is
-//  identified by ISBN and de patron is by card number.
 //
 //  Checking if a book is on the library or if it's available doesn't consider
 //  that it can be more than one specimen of the same. Must we force uniqueness
@@ -33,6 +31,18 @@
 //  instances or repeated users and not consider it. So add_book() and
 //  add_patron() must enforce uniqueness. Private member functions
 //  is_patron() and is_book() will come in handy for this and for check_out().
+//
+//  We need Patron == operator. As we implemented == operator for books based
+//  solely on ISBN, the Patron == will be based on comparison between
+//  card numbers.
+//
+//  When checking out we're receving objects to compare with those stored,
+//  parsistently, in Library::m_patron and Library::m_book. When we're ready to
+//  check out a book, we must call Book::check_out() function on the book,
+//  not the one received by Library::check_out() but the persistent one. So I
+//  added Library::book() and Library::patron() that return references to the
+//  persistent element (from Library::m_book and Library::m_patron,
+//  respectively) that equals the argument provided.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.09.Chrono.h"
@@ -43,10 +53,12 @@
 namespace Mylib {
 
 class Invalid_ISBN { };  // to throw in case ISBN is not valid
-class Repeated_ISBN { };  // to throw in case ISBN is repeated
-class Invalid_Card_Number { }; // to throw in case invalid card number
-class Repeated_Card_Number { }; // to throw in case card number is repeated
-class Book_Checked_Out { }; // to throw in case a book is already checked out
+class Invalid_Book { };  // a book does not exist in the library
+class Repeated_Book { };  // a book already exists in the library
+class Invalid_Patron { }; // patron does not exist in the library
+class Repeated_Patron { }; // patron already exists in the library
+class Patron_Owes_Fees { }; // patron owes fees (sic)
+class Checked_Out_Book { }; // book is already checked out
 
 enum class Genre {
     fiction, nonfiction, periodical, biography, children
@@ -82,7 +94,6 @@ private:
 
 // Book helper functions
 bool is_isbn(const string& isbn);
-void print(ostream& os, const Book& b);
 
 // Book operators
 bool operator==(const Book& a, const Book& b);
@@ -111,36 +122,40 @@ bool owes_fees(const Patron& p);
 
 // Patron operators
 ostream& operator<<(ostream& os, const Patron& p);
-
-struct Transaction {
-    Book book;
-    Patron patron;
-    Chrono::Date date;
-};
-
-// Transaction operators
-ostream& operator<<(ostream& os, const Transaction& t);
+bool operator==(const Patron& a, const Patron& b);
+bool operator!=(const Patron& a, const Patron& b);
 
 class Library {
 public:
+    struct Transaction {
+        Book book;
+        Patron patron;
+        Chrono::Date date;
+    };
+
     void add_book(Book b);
     void add_patron(Patron p);
-    void check_out(string& card_number, string& isbn, Chrono::Date& date);
+    void check_out(Book b, Patron p, Chrono::Date d);
 
     // Reports
-    vector<string> users_with_fees() const; // Return names of users
-                                            // that owes fees
+    vector<string> with_fees() const; // Return names of users that owe fees
     void print_books(ostream& os) const;
     void print_patrons(ostream& os) const;
     void print_transactions(ostream& os) const;
 private:
-    bool is_book(const string& isbn); // tell if a book is already on the library
-    bool book_in(const string& isbn); // tell if a book is checked in
-    bool is_patron(const string& card_number); // tell if a patron already exists
+    bool is_book(const Book& b) const; // tell if a book belongs the library
+    bool book_in(const Book& b) const; // tell if a book is checked in
+    Book& book(const Book& b); // returns the element of m_book equal to b
+    bool is_patron(const Patron& p) const; // tell if a patron already exists
+    Patron& patron(const Patron& p); // returns the element of
+                                     // m_patron equal to p
     vector<Book> m_book;
     vector<Patron> m_patron;
     vector<Transaction> m_transaction;
 };
+
+// Transaction operators
+ostream& operator<<(ostream& os, const Library::Transaction& t);
 
 } // namespace Mylib
 
