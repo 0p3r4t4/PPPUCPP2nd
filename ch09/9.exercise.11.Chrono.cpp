@@ -99,23 +99,31 @@ Date::Date():
 
 void Date::add_day(int n)
 {
-    // We take (31*12) as days in a year supposing every month has 31 days
-    int n_d = n % 31;          // days out of months, to increase
-    int n_m = (n / 31) % 12;   // months out of years, to increase
-    int n_y = n / (31*12);     // years to increase
+    if (n < 0) error("Date::add_day(): only positives increments allowed.");
 
-    d += n_d;
-    // We must check for overflows, and n and derivatives can be negative!!
-    if (d > 31) { ++n_m; d -= 31; }     // Day overflow
-    if (d < 1)  { --n_m; d += 31; }     // Day underflow
- 
-    // Month type takes care of itself on overflows, but we loose track to 
-    // modify year if it happens. We must check it before actually operate
-    // on m.
-    if (Month::dec < (int(m)+n_m)) ++n_y;
-    if (Month::jan > (int(m)+n_m)) --n_y;
-    m += n_m;   // m is of Month type
-    y += n_y;
+    int n_y{365};
+    if (leapyear(y)) ++n_y; 
+    // Add year by year decrementing n by year (leap or common) year.
+    while (n >= n_y) {
+        ++y;
+        n -= n_y;
+        if (leapyear(y)) n_y = 365; 
+        else n_y = 366;
+    }
+
+    int n_m{month_days(m, leapyear(y))};
+    // Add month by month decrementing n by month days.
+    while (n >= n_m) {
+        ++m;
+        n -= n_m;
+        n_m = month_days(m, leapyear(y));
+        if (m == Month::jan) ++y;   // year overflow
+    }
+
+    d = (d+n) % month_days(m, leapyear(y));  // add days modulo days of month
+    if (d == 0) d = month_days(m, leapyear(y)); // modulo is 0 if we reach last
+                                                // day of the month
+    if (d <= n) ++m;   // Month has overflowed
 }
 
 void Date::add_month(int n)
@@ -186,6 +194,18 @@ bool operator!=(const Date& a, const Date& b)
     return !(a == b);
 }
 
+bool operator<(const Date& a, const Date& b)
+{
+    if (a.year() != b.year()) return (a.year() < b.year());
+    if (a.month() != b.month()) return (a.month() < b.month());
+    return (a.day() < b.day());
+}
+
+bool operator<=(const Date& a, const Date& b)
+{
+    return ((a < b) || (a == b));
+}
+
 ostream& operator<<(ostream& os, const Date& d)
 {
     return os << '(' << d.year()
@@ -234,34 +254,37 @@ Date next_Sunday(const Date& d)
 // a week in advance
 {
     Day dow{day_of_week(d)};    // Day of the week for Date d
-    Date r{d.year(), d.month(), d.day()};
-
-    int inc = 7 - int(dow);
-
-    r.add_day(inc);
+    Date r{d};
+    r.add_day(7 - int(dow));
     return r;
 }
 
 Date next_workday(const Date& d)
 {
     Day dow{day_of_week(d)};    // Date of the week for Date d
-    Date r{d.year(), d.month(), d.day()};
+    Date r{d};
 
-    // a switch-statement will be clearer?
-    // This will work if day enum is defined a it is. If we change, p.e.,
-    // to begin with monday = 1 and end with sunday, it won't work. A
-    // switch-statement will correctly handle the change as it only
-    // compares equality.
-    if ((dow >= Day::sunday) && (dow < Day::friday)) r.add_day(1);
-    if (dow == Day::saturday) r.add_day(2);
-    if (dow == Day::friday ) r.add_day(3);
+    r.add_day(1);
+    if (dow == Day::saturday) r.add_day(1);
+    if (dow == Day::friday ) r.add_day(2);
 
     return r;
 }
 
 int week_of_year(const Date& d)
+// As exercise 11 statement says, we assume that the first week is that
+// with January 1 in it, and that a week starts on sunday.
 {
-    return 1;   // until properly implemented
+    Date wd{Date(d.year(), Month::jan, 1)}; // First week date
+    int week{1};
+
+    wd = next_Sunday(wd);
+    while (wd <= d) {   // if date is on sunday, we must reach it
+        wd = next_Sunday(wd);
+        ++week;
+    }
+
+    return week;
 }
 
 } // namespace Chrono

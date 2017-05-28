@@ -17,14 +17,17 @@
 //  "epoch") and since managing dates previous to that implies negative numbers
 //  and added complexity, I'll restrict date to be posterior to the epoch.
 //
-//  I also define +, += and << operators for Day, a ++ operator for Month, and 
-//  a month_days() that returns the days of a month.
+//  I also define +, += and << operators for Day, a ++ operator for Month, <
+//  and <= operator for Date and a month_days() that returns the days of a
+//  month.
 //
 //  day_of_week() could be implemented more efficiently, of course. But I
 //  choose the finger count.
-//  next_workday() could be better, also. Read the comment on the body of the
-//  function.
 //
+//  For next_Sunday() to work, and thus week_of_year(), Date::add_day() must be
+//  properly implemented taking care of month days and leap years. New
+//  Date::add_day() implementation is uglier than the former, but at least it
+//  operate correctly.
 
 #include "std_lib_facilities.h"
 #include "9.exercise.11.Chrono.h"
@@ -32,8 +35,32 @@
 int main()
 try
 {
+    Chrono::Date date;
+    // Check new add_day()
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(7);
+    cout << "January the 8th 2016? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(31);
+    cout << "February the 1st 2016? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(60);
+    cout << "March the 1st 2016? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(365);
+    cout << "December the 31th 2016? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(366);
+    cout << "January the 1st 2017? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    date.add_day(397);
+    cout << "February the 1st 2017? " << date << '\n';
+    date = Chrono::Date{2016, Chrono::Month::jan, 15};
+    date.add_day(80);
+    cout << "April the 4th 2016? " << date << '\n';
+
     // Test Chrono::day_of_week()
-    Chrono::Date date{1970, Chrono::Month::jan, 1};
+    date = Chrono::Date{1970, Chrono::Month::jan, 1};
     cout << date << " is " << Chrono::day_of_week(date) << '\n';
     date = Chrono::Date{1978, Chrono::Month::feb, 23};
     cout << date << " is " << Chrono::day_of_week(date) << '\n';
@@ -74,6 +101,22 @@ try
          << ") is " << Chrono::next_workday(date) << " ("
          << Chrono::day_of_week(Chrono::next_workday(date)) << ")\n";
 
+    // Test Chrono::week_of_year()
+    date = Chrono::Date{2017, Chrono::Month::jan, 1};
+    cout << "For date " << date << " week of the year is " 
+         << Chrono::week_of_year(date) << '\n';
+    date = Chrono::Date{2017, Chrono::Month::jan, 9};
+    cout << "For date " << date << " week of the year is " 
+         << Chrono::week_of_year(date) << '\n';
+    date = Chrono::Date{2017, Chrono::Month::feb, 7};
+    cout << "For date " << date << " week of the year is " 
+         << Chrono::week_of_year(date) << '\n';
+    date = Chrono::Date{2017, Chrono::Month::mar, 15};
+    cout << "For date " << date << " week of the year is " 
+         << Chrono::week_of_year(date) << '\n';
+    date = Chrono::Date{2017, Chrono::Month::may, 28};
+    cout << "For date " << date << " week of the year is " 
+         << Chrono::week_of_year(date) << '\n';
 
     return 0;
 }

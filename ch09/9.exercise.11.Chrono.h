@@ -67,6 +67,8 @@ bool leapyear(int y);                   // true if y is a leap year
 // Date class operators
 bool operator==(const Date& a, const Date& b);
 bool operator!=(const Date& a, const Date& b);
+bool operator<(const Date&a, const Date& b);
+bool operator<=(const Date&a, const Date& b);
 
 ostream& operator<<(ostream& os, const Date& d);
 istream& operator>>(istream& is, Date& dd);
