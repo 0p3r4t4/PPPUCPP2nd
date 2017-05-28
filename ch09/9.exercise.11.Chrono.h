@@ -7,18 +7,33 @@
 
 namespace Chrono {
 
+constexpr int epoch_year{1970};   // Minimal date representation
+
 enum class Day {
     sunday, monday, tuesday, wednesday, thursday, friday, saturday
 };
+
+constexpr Day epoch_dow{Day::thursday};  // Day of the week 1970/1/1
+
+// Day enum class operators
+Day operator+(const Day& d, int n);
+Day& operator+=(Day& d, int n);
+ostream& operator<<(ostream& os, const Day& d);
 
 enum class Month {
     jan = 1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
 };
 
+// Month enum class helper functions
+//
+// returns days in month (common or leap year)
+int month_days(Month m, bool leap);
+
 // Month enum class operators
 Month operator+(const Month& m, int n);
 Month operator-(const Month& m, int n);
 Month& operator+=(Month& m, int n);
+Month& operator++(Month& m);
 
 bool operator<(const Month& m, int n);
 bool operator>(const Month& m, int n);

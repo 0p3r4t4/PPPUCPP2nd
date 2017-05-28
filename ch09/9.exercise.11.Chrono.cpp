@@ -5,6 +5,34 @@
 
 namespace Chrono {
 
+// Day enum class operators
+
+Day operator+(const Day& d, int n)
+{
+    int r = int(d) + n;
+    r %= 7;     // Magic number? I don't think we'll need to chenge 
+                // number of days in a week. By now.
+    return Day(r);
+}
+
+Day& operator+=(Day& d, int n) { d = d + n; return d; }
+
+ostream& operator<<(ostream& os, const Day& d)
+{
+    switch (d) {
+        case Day::sunday:    os << "sunday"; break;
+        case Day::monday:    os << "monday"; break;
+        case Day::tuesday:   os << "tuesday"; break;
+        case Day::wednesday: os << "wednesday"; break;
+        case Day::thursday:  os << "thursday"; break;
+        case Day::friday:    os << "friday"; break;
+        case Day::saturday:  os << "saturday"; break;
+        default: error("Day output: invalid day");
+    }
+
+    return os;
+}
+
 // Month enum class operators
 
 Month operator+(const Month& m, int n)
@@ -19,11 +47,36 @@ Month operator+(const Month& m, int n)
 // Define other operators based on +
 Month operator-(const Month& m, int n) { return (m+(-n)); }
 Month& operator+=(Month& m, int n) { m = m + n; return m; }
+Month& operator++(Month& m) { m = m + 1; return m; }
 
 bool operator<(const Month& m, int n) { return int(m) < n; }
 bool operator>(const Month& m, int n) { return int(m) > n; }
 
-// Date  member function definitions
+// Month helper functions
+
+int month_days(Month m, bool leap)
+{
+    switch (m) {
+        case Month::jan: return 31;
+        case Month::feb: 
+            if (leap) return 29;
+            return 28;
+        case Month::mar: return 31;
+        case Month::apr: return 30;
+        case Month::may: return 31;
+        case Month::jun: return 30;
+        case Month::jul: return 31;
+        case Month::aug: return 31;
+        case Month::sep: return 30;
+        case Month::oct: return 31;
+        case Month::nov: return 30;
+        case Month::dec: return 31;
+        default:
+            error("month_days(): invalid month");
+    }
+}
+
+// Date member function definitions
 
 Date::Date(int yy, Month mm, int dd)
         :y{yy}, m{mm}, d{dd}
@@ -93,6 +146,7 @@ void Date::add_year(int n)
 
 bool is_date(int y, Month m, int d)
 {
+    if (y < epoch_year) return false; // Limit our representation
     if (d <= 0) return false;   // d must be positive
     if (m < Month::jan || m > Month::dec) return false;
 
@@ -157,24 +211,52 @@ istream& operator>>(istream& is, Date& dd)
 
 Day day_of_week(const Date& d)
 {
-    // ...
-    return Day::sunday;     // until properly implemented
+    int y{d.year()};
+    Day dow{epoch_dow};
+
+    for (int i = epoch_year; i < y; ++i) {
+        if (leapyear(i)) dow += 366;
+        else dow += 365;
+    }
+
+    Month m{d.month()};
+    for (Month i = Month::jan; i < m; ++i) {
+        dow += month_days(i, leapyear(y));
+    }
+
+    dow += (d.day() - 1);
+
+    return dow;
 }
 
 Date next_Sunday(const Date& d)
+// return next sunday date to d. If d is currently sunday return
+// a week in advance
 {
-    // ...
-    return Date{default_date().year(),
-                default_date().month(),
-                default_date().day()};  // until properly implemented
+    Day dow{day_of_week(d)};    // Day of the week for Date d
+    Date r{d.year(), d.month(), d.day()};
+
+    int inc = 7 - int(dow);
+
+    r.add_day(inc);
+    return r;
 }
 
 Date next_workday(const Date& d)
 {
-    // ...
-    return Date{default_date().year(),
-                default_date().month(),
-                default_date().day()};  // until properly implemented
+    Day dow{day_of_week(d)};    // Date of the week for Date d
+    Date r{d.year(), d.month(), d.day()};
+
+    // a switch-statement will be clearer?
+    // This will work if day enum is defined a it is. If we change, p.e.,
+    // to begin with monday = 1 and end with sunday, it won't work. A
+    // switch-statement will correctly handle the change as it only
+    // compares equality.
+    if ((dow >= Day::sunday) && (dow < Day::friday)) r.add_day(1);
+    if (dow == Day::saturday) r.add_day(2);
+    if (dow == Day::friday ) r.add_day(3);
+
+    return r;
 }
 
 int week_of_year(const Date& d)
