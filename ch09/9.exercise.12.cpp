@@ -30,6 +30,12 @@ void test_add_day(Chrono::Date d, int nd, string msg)
     cout << msg << d << '\n';
 }
 
+void test_add_month(Chrono::Date d, int nm, string msg)
+{
+    d.add_month(nm);
+    cout << "Chrono::Date::add_month(" << nm << "): " << msg << d << '\n';
+}
+
 void test_day_of_week(Chrono::Date d)
 {
     cout << d << " is " << Chrono::day_of_week(d) << '\n';
@@ -63,7 +69,9 @@ try
     test_days_since_epoch(date);
     test_days_since_epoch(Chrono::Date{2017, Chrono::Month::dec, 1});
     test_days_since_epoch(Chrono::Date{2017, Chrono::Month::dec, 31});
+    test_days_since_epoch(Chrono::Date{17531});
     test_days_since_epoch(Chrono::Date{2018, Chrono::Month::jan, 1});
+    test_days_since_epoch(Chrono::Date{17533});
     cout << '\n';
 
     date = Chrono::Date{2016, Chrono::Month::jan, 1};
@@ -75,6 +83,25 @@ try
     test_add_day(date, 397, "February the 1st 2017? ");
     date = Chrono::Date{2016, Chrono::Month::jan, 15};
     test_add_day(date, 80, "April the 4th 2016? ");
+
+    date = Chrono::Date{2016, Chrono::Month::jan, 1};
+    test_add_month(date, 1, "February the 1st 2016? ");
+    test_add_month(date, 3, "April the 1st 2016? ");
+    test_add_month(date, 6, "July the 1st 2016? ");
+    test_add_month(date, 10, "November the 1st 2016? ");
+    test_add_month(date, 15, "April the 1st 2017? ");
+    date = Chrono::Date{2016, Chrono::Month::jan, 15};
+    test_add_month(date, 1, "February the 15th 2016? ");
+    test_add_month(date, 3, "April the 15th 2016? ");
+    test_add_month(date, 6, "July the 15th 2016? ");
+    test_add_month(date, 10, "November the 15th 2016? ");
+    test_add_month(date, 15, "April the 15th 2017? ");
+    date = Chrono::Date{2016, Chrono::Month::jan, 31};
+    test_add_month(date, 1, "February the 29th 2016? ");
+    test_add_month(date, 3, "April the 30th 2016? ");
+    test_add_month(date, 6, "July the 31th 2016? ");
+    test_add_month(date, 10, "November the 30th 2016? ");
+    test_add_month(date, 15, "April the 30th 2017? ");
 
     // Test Chrono::day_of_week()
     test_day_of_week(Chrono::Date{1970, Chrono::Month::jan, 1});

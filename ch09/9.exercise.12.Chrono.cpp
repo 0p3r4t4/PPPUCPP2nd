@@ -9,7 +9,7 @@ namespace Chrono {
 
 Day operator+(const Day& d, int n)
 {
-    int r = int(d) + n;
+    int r{int(d)+n};
     r %= 7;     // Magic number? I don't think we'll need to chenge 
                 // number of days in a week. By now.
     return Day(r);
@@ -37,7 +37,7 @@ ostream& operator<<(ostream& os, const Day& d)
 
 Month operator+(const Month& m, int n)
 {
-    int r = int(m) + n;
+    int r{int(m)+n};
     r %= int(Month::dec);
 
     if (r == 0) return Month::dec;  // Revert effect of modulo ...
@@ -57,11 +57,6 @@ bool operator>(const Month& m, int n) { return int(m) > n; }
 int month_days(Month m, int y)
 {
     switch (m) {
-        case Month::jan: case Month::mar:
-        case Month::may: case Month::jul:
-        case Month::aug: case Month::oct:
-        case Month::dec: 
-            return 31;
         case Month::apr: case Month::jun:
         case Month::sep: case Month::nov:
             return 30;
@@ -69,7 +64,7 @@ int month_days(Month m, int y)
             if (leapyear(y)) return 29;
             return 28;
         default:
-            error("month_days(): invalid month");
+            return 31;
     }
 }
 
@@ -105,8 +100,8 @@ int Date::day() const
 Month Date::month() const
 {
     // remaining days from January 1st
-    int y = year();
-    int rd = dse - Chrono::days_since_epoch(year(), Month::jan, 1);
+    int y{year()};
+    long int rd{dse - Chrono::days_since_epoch(year(), Month::jan, 1)};
 
     Month m{Month::jan};
     while (rd >= Chrono::month_days(m, y)) {
@@ -119,8 +114,8 @@ Month Date::month() const
 
 int Date::year() const
 {
-    int y = dse / 365;
-    int rd = dse - (y*365);
+    long int y{dse/365};
+    long int rd{dse-(y*365)};
     if ((rd - n_leaps(epoch_year+y)) < 0 ) --y;  // Adjust days be leap years
 
     return (epoch_year + y);
@@ -140,6 +135,16 @@ void Date::add_day(int n)
 
 void Date::add_month(int n)
 {
+    if (n < 0) error("Date::add_month(): only positives increments allowed.");
+
+    int y{year()};
+    Month m{month()};
+
+    for (int i = 0; i < n; ++i) {
+        dse += month_days(m, y);
+        ++m;
+        if (m == Month::jan) ++y;
+    }
 }
 
 void Date::add_year(int n)
@@ -154,7 +159,7 @@ bool is_date(int y, Month m, int d)
     if (d <= 0) return false;   // d must be positive
     if (m < Month::jan || m > Month::dec) return false;
 
-    int month_days = 31;     // most months have 31 days
+    int month_days{31};     // most months have 31 days
 
     switch (m) {
     case Month::feb:            // the length of February varies
