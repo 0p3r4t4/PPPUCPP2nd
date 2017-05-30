@@ -19,116 +19,86 @@
 #include "std_lib_facilities.h"
 #include "9.exercise.12.Chrono.h"
 
-void test_linear_date()
+void test_days_since_epoch(Chrono::Date d)
 {
-    Chrono::Date date;
-    date = Chrono::Date{2017, Chrono::Month::dec, 1};
-    cout << date.days_since_epoch() << ' ';
-    cout << date << ' ';
-    date = Chrono::Date{2017, Chrono::Month::dec, 31};
-    cout << date.days_since_epoch() << ' ';
-    cout << date << ' ';
-    date = Chrono::Date{2018, Chrono::Month::jan, 1};
-    cout << date.days_since_epoch() << ' ';
-    cout << date << ' ';
-    /*
-    for (int i = 0; i < (365+366+1); ++i){
-        date.add_day(1);
-        cout << date << ' ';
-        if (date.days_since_epoch()%5 == 0) cout << '\n';
-    }
-    */
-    cout << '\n';
+    cout << d.days_since_epoch() << ' ' << d << ' ';
+}
+    
+void test_add_day(Chrono::Date d, int nd, string msg)
+{
+    d.add_day(nd);
+    cout << msg << d << '\n';
+}
 
+void test_day_of_week(Chrono::Date d)
+{
+    cout << d << " is " << Chrono::day_of_week(d) << '\n';
+}
+
+void test_next_sunday(Chrono::Date d)
+{
+    cout << "Next sunday to " << d << " (" << Chrono::day_of_week(d)
+         << ") is " << Chrono::next_Sunday(d) << " ("
+         << Chrono::day_of_week(Chrono::next_Sunday(d)) << ")\n";
+}
+
+void test_next_workday(Chrono::Date d)
+{
+    cout << "Next workday to " << d << " (" << Chrono::day_of_week(d)
+         << ") is " << Chrono::next_workday(d) << " ("
+         << Chrono::day_of_week(Chrono::next_workday(d)) << ")\n";
+}
+
+void test_week_of_year(Chrono::Date d)
+{
+    cout << "For date " << d << " week of the year is " 
+         << Chrono::week_of_year(d) << '\n';
 }
 
 int main()
 try
 {
-    test_linear_date();
-
     Chrono::Date date;
-    // Check new add_day()
+
+    test_days_since_epoch(date);
+    test_days_since_epoch(Chrono::Date{2017, Chrono::Month::dec, 1});
+    test_days_since_epoch(Chrono::Date{2017, Chrono::Month::dec, 31});
+    test_days_since_epoch(Chrono::Date{2018, Chrono::Month::jan, 1});
+    cout << '\n';
+
     date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(7);
-    cout << "January the 8th 2016? " << date << '\n';
-    date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(31);
-    cout << "February the 1st 2016? " << date << '\n';
-    date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(60);
-    cout << "March the 1st 2016? " << date << '\n';
-    date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(365);
-    cout << "December the 31th 2016? " << date << '\n';
-    date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(366);
-    cout << "January the 1st 2017? " << date << '\n';
-    date = Chrono::Date{2016, Chrono::Month::jan, 1};
-    date.add_day(397);
-    cout << "February the 1st 2017? " << date << '\n';
+    test_add_day(date, 7, "January the 8th 2016? ");
+    test_add_day(date, 31, "February the 1st 2016? ");
+    test_add_day(date, 60, "March the 1st 2016? ");
+    test_add_day(date, 365, "December the 31th 2016? ");
+    test_add_day(date, 366, "January the 1st 2017? ");
+    test_add_day(date, 397, "February the 1st 2017? ");
     date = Chrono::Date{2016, Chrono::Month::jan, 15};
-    date.add_day(80);
-    cout << "April the 4th 2016? " << date << '\n';
+    test_add_day(date, 80, "April the 4th 2016? ");
 
     // Test Chrono::day_of_week()
-    date = Chrono::Date{1970, Chrono::Month::jan, 1};
-    cout << date << " is " << Chrono::day_of_week(date) << '\n';
-    date = Chrono::Date{1978, Chrono::Month::feb, 23};
-    cout << date << " is " << Chrono::day_of_week(date) << '\n';
-    date = Chrono::Date{2010, Chrono::Month::mar, 31};
-    cout << date << " is " << Chrono::day_of_week(date) << '\n';
-    date = Chrono::Date{2017, Chrono::Month::may, 28};
-    cout << date << " is " << Chrono::day_of_week(date) << '\n';
+    test_day_of_week(Chrono::Date{1970, Chrono::Month::jan, 1});
+    test_day_of_week(Chrono::Date{1978, Chrono::Month::feb, 23});
+    test_day_of_week(Chrono::Date{2010, Chrono::Month::mar, 31});
+    test_day_of_week(Chrono::Date{2017, Chrono::Month::may, 28});
 
     // Test Chrono::next_Sunday()
-    date = Chrono::Date{2017, Chrono::Month::may, 28};
-    cout << "Next sunday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_Sunday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_Sunday(date)) << ")\n";
-    date = Chrono::Date{2017, Chrono::Month::may, 24};
-    cout << "Next sunday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_Sunday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_Sunday(date)) << ")\n";
-    date = Chrono::Date{2017, Chrono::Month::may, 29};
-    cout << "Next sunday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_Sunday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_Sunday(date)) << ")\n";
+    test_next_sunday(Chrono::Date{2017, Chrono::Month::may, 28});
+    test_next_sunday(Chrono::Date{2017, Chrono::Month::may, 24});
+    test_next_sunday(Chrono::Date{2017, Chrono::Month::may, 29});
 
     // Test Chrono::next_workday()
-    date = Chrono::Date{2017, Chrono::Month::may, 24};
-    cout << "Next workday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_workday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_workday(date)) << ")\n";
-    date = Chrono::Date{2017, Chrono::Month::may, 26};
-    cout << "Next workday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_workday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_workday(date)) << ")\n";
-    date = Chrono::Date{2017, Chrono::Month::may, 27};
-    cout << "Next workday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_workday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_workday(date)) << ")\n";
-    date = Chrono::Date{2017, Chrono::Month::may, 28};
-    cout << "Next workday to " << date << " (" << Chrono::day_of_week(date)
-         << ") is " << Chrono::next_workday(date) << " ("
-         << Chrono::day_of_week(Chrono::next_workday(date)) << ")\n";
+    test_next_workday(Chrono::Date{2017, Chrono::Month::may, 24});
+    test_next_workday(Chrono::Date{2017, Chrono::Month::may, 26});
+    test_next_workday(Chrono::Date{2017, Chrono::Month::may, 27});
+    test_next_workday(Chrono::Date{2017, Chrono::Month::may, 28});
 
     // Test Chrono::week_of_year()
-    date = Chrono::Date{2017, Chrono::Month::jan, 1};
-    cout << "For date " << date << " week of the year is " 
-         << Chrono::week_of_year(date) << '\n';
-    date = Chrono::Date{2017, Chrono::Month::jan, 9};
-    cout << "For date " << date << " week of the year is " 
-         << Chrono::week_of_year(date) << '\n';
-    date = Chrono::Date{2017, Chrono::Month::feb, 7};
-    cout << "For date " << date << " week of the year is " 
-         << Chrono::week_of_year(date) << '\n';
-    date = Chrono::Date{2017, Chrono::Month::mar, 15};
-    cout << "For date " << date << " week of the year is " 
-         << Chrono::week_of_year(date) << '\n';
-    date = Chrono::Date{2017, Chrono::Month::may, 28};
-    cout << "For date " << date << " week of the year is " 
-         << Chrono::week_of_year(date) << '\n';
+    test_week_of_year(Chrono::Date{2017, Chrono::Month::jan, 1});
+    test_week_of_year(Chrono::Date{2017, Chrono::Month::jan, 9});
+    test_week_of_year(Chrono::Date{2017, Chrono::Month::feb, 7});
+    test_week_of_year(Chrono::Date{2017, Chrono::Month::mar, 15});
+    test_week_of_year(Chrono::Date{2017, Chrono::Month::may, 28});
 
     return 0;
 }
