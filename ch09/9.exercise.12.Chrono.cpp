@@ -98,7 +98,8 @@ const Date& default_date()
 
 int Date::day() const
 {
-    return dse - Chrono::days_since_epoch(year(), month(), 1);
+    // dse = 0 -> January 1st
+    return dse - Chrono::days_since_epoch(year(), month(), 1) + 1;
 }
 
 Month Date::month() const
@@ -108,7 +109,7 @@ Month Date::month() const
     int rd = dse - Chrono::days_since_epoch(year(), Month::jan, 1);
 
     Month m{Month::jan};
-    while (rd > Chrono::month_days(m, y)) {
+    while (rd >= Chrono::month_days(m, y)) {
         rd -= Chrono::month_days(m, y);
         ++m;
     }
@@ -198,7 +199,7 @@ long int days_since_epoch(int y, Month m, int d)
     for (Month i = Month::jan; i < m; ++i)
         dse += month_days(i, y);
 
-    return (dse + d);
+    return (dse + d - 1);   // 1970 January 1st is our 0 day
 }
 
 bool operator==(const Date& a, const Date& b)

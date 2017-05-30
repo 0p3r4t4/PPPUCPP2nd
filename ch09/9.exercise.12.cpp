@@ -19,9 +19,34 @@
 #include "std_lib_facilities.h"
 #include "9.exercise.12.Chrono.h"
 
+void test_linear_date()
+{
+    Chrono::Date date;
+    date = Chrono::Date{2017, Chrono::Month::dec, 1};
+    cout << date.days_since_epoch() << ' ';
+    cout << date << ' ';
+    date = Chrono::Date{2017, Chrono::Month::dec, 31};
+    cout << date.days_since_epoch() << ' ';
+    cout << date << ' ';
+    date = Chrono::Date{2018, Chrono::Month::jan, 1};
+    cout << date.days_since_epoch() << ' ';
+    cout << date << ' ';
+    /*
+    for (int i = 0; i < (365+366+1); ++i){
+        date.add_day(1);
+        cout << date << ' ';
+        if (date.days_since_epoch()%5 == 0) cout << '\n';
+    }
+    */
+    cout << '\n';
+
+}
+
 int main()
 try
 {
+    test_linear_date();
+
     Chrono::Date date;
     // Check new add_day()
     date = Chrono::Date{2016, Chrono::Month::jan, 1};
