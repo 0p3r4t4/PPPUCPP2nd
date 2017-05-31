@@ -44,14 +44,7 @@ Month operator+(const Month& m, int n)
     return Month(r);
 }
 Month& operator++(Month& m) { m = m + 1; return m; }
-/*
-// Define other operators based on +
-Month operator-(const Month& m, int n) { return (m+(-n)); }
-Month& operator+=(Month& m, int n) { m = m + n; return m; }
 
-bool operator<(const Month& m, int n) { return int(m) < n; }
-bool operator>(const Month& m, int n) { return int(m) > n; }
-*/
 // Month helper functions
 
 int month_days(Month m, int y)
@@ -82,14 +75,6 @@ Date::Date(long int days) : dse{days}
 }
 
 Date::Date(): dse{0} { };
-
-/*
-const Date& default_date()
-{
-    static Date dd{2001, Month::jan, 1};    // start of 21st century
-    return dd;
-}
-*/
 
 int Date::day() const
 {
@@ -139,19 +124,28 @@ void Date::add_month(int n)
 
     int y{year()};
     Month m{month()};
+    bool last{month_days(m, y) == day()};   // day is last of the month
 
     for (int i = 0; i < n; ++i) {
         dse += month_days(m, y);
         ++m;
         if (m == Month::jan) ++y;
     }
+
+    // If we start with a date on the last day of the month and original month
+    // has more days than the destination month, we have an offset of 1, 2 or 3
+    // days on the next month. We want to stay on the last day of the month, so
+    // we have to substract that offset.
+    if (last && (day()<4)) dse -= day();
 }
 
 void Date::add_year(int n)
 {
+    int leaps{n_leaps(year()+n) - n_leaps(year())};
+    dse += (n*365)+leaps;
 }
 
-// helper functions
+// Helper functions
 
 bool is_date(int y, Month m, int d)
 {
@@ -216,12 +210,7 @@ bool operator!=(const Date& a, const Date& b)
 {
     return !(a == b);
 }
-/*
-bool operator<(const Date& a, const Date& b)
-{
-    return a.days_since_epoch() < b.days_since_epoch();
-}
-*/
+
 bool operator<=(const Date& a, const Date& b)
 {
     return a.days_since_epoch() <= b.days_since_epoch();

@@ -19,16 +19,9 @@ enum class Month {
     jan = 1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
 };
 // Month enum class helper functions
-//
-// returns days in month (common or leap year)
-int month_days(Month m, int y);
+int month_days(Month m, int y); // returns days in month (common or leap year)
 // Month enum class operators
-//Month operator+(const Month& m, int n);
-//Month operator-(const Month& m, int n);
-//Month& operator+=(Month& m, int n);
 Month& operator++(Month& m);
-//bool operator<(const Month& m, int n);
-//bool operator>(const Month& m, int n);
 
 // Epoch constants
 constexpr int epoch_year{1970};   // Minimal date representation
@@ -66,7 +59,6 @@ long int days_since_epoch(int y, Month m, int d);   // conversion from y/m/d
 // Date class operators
 bool operator==(const Date& a, const Date& b);
 bool operator!=(const Date& a, const Date& b);
-//bool operator<(const Date&a, const Date& b);
 bool operator<=(const Date&a, const Date& b);
 
 ostream& operator<<(ostream& os, const Date& d);
