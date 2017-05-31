@@ -154,9 +154,13 @@ try
     date = Chrono::Date{2016, Chrono::Month::feb, 29};
     test_add_year(date, 1, "February the 28th 2017? ");
     test_add_year(date, 4, "February the 29th 2020? ");
-    date = Chrono::Date{2016, Chrono::Month::mar, 1};
-    test_add_year(date, 1, "March the 1st 2017? ");
-    test_add_year(date, 4, "March the 1st 2020? ");
+    date = Chrono::Date{2016, Chrono::Month::mar, 15};
+    test_add_year(date, 1, "March the 15th 2017? ");
+    test_add_year(date, 4, "March the 15th 2020? ");
+    date = Chrono::Date{2015, Chrono::Month::mar, 15};
+    test_add_year(date, 1, "March the 15th 2016? ");
+    test_add_year(date, 4, "March the 15th 2019? ");
+    /*
 
     cout << '\n';
     test_day_of_week(Chrono::Date{1970, Chrono::Month::jan, 1});
@@ -181,6 +185,7 @@ try
     test_week_of_year(Chrono::Date{2017, Chrono::Month::feb, 7});
     test_week_of_year(Chrono::Date{2017, Chrono::Month::mar, 15});
     test_week_of_year(Chrono::Date{2017, Chrono::Month::may, 28});
+    */
 
     cout << '\n';
     return 0;

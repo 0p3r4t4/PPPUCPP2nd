@@ -141,8 +141,14 @@ void Date::add_month(int n)
 
 void Date::add_year(int n)
 {
-    int leaps{n_leaps(year()+n) - n_leaps(year())};
+    int y{year()};
+    int d{day()};
+
+    int leaps{n_leaps(y+n) - n_leaps(y)};
     dse += (n*365)+leaps;
+
+    if (d > day()) dse -= day();
+    if (d < day()) --dse;
 }
 
 // Helper functions
