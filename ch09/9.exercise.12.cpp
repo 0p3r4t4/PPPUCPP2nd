@@ -8,13 +8,13 @@
 //
 // COMMMENTS
 //
-//  Like previous exercise, I'll reference January 1, 1970 as epoch.
+//  Like the previous exercise, I'll reference January 1, 1970 as epoch.
 //  This is an almost complete rewrite of Chrono namespace and I will take the
 //  chance to clean all I can.
 //
-//  Despite the internal representation we want to preserve the (y,m,d) format
-//  to construct the Date and to input/output it. We can add a new constructor
-//  with days since epoch as the only argument.
+//  Despite the internal representation, is desiderable to preserve the (y,m,d)
+//  format to construct the Date and to input/output it. We can add a new
+//  constructor with "days since epoch" as the only argument.
 //
 //  With Date::add_month() we have to decide. A month is a variable amount of
 //  days. If day of the month is between 1 and 28, there is little to argue.
@@ -39,7 +39,13 @@
 //
 //  But for me, it makes sense to respect "last day" of the month concept.
 //
-//  Using a days since epoch representation simplifies a lot the
+//  As for Date::add_year(), it has some difficulties to implement it by adding
+//  days. Mainly the leap day, and when in a year is the date, before of after
+//  it in our start date. After some tries, and seen that Date::add_month()
+//  performs almost fine, the lazy solution was to use it. After all, a year is
+//  not a fixed amount of days but a fixed amount of months.
+//
+//  Using a "days since epoch" representation simplifies a lot the
 //  implementation (except previous trivial accessors year(), month() and
 //  day()). Also it makes useless member and helper functions and operator
 //  overloads that are needed with the y,m,d representation.
@@ -48,6 +54,8 @@
 
 #include "std_lib_facilities.h"
 #include "9.exercise.12.Chrono.h"
+
+// print info functions (ugly)
 
 void test_days_since_epoch(Chrono::Date d)
 {
@@ -160,7 +168,6 @@ try
     date = Chrono::Date{2015, Chrono::Month::mar, 15};
     test_add_year(date, 1, "March the 15th 2016? ");
     test_add_year(date, 4, "March the 15th 2019? ");
-    /*
 
     cout << '\n';
     test_day_of_week(Chrono::Date{1970, Chrono::Month::jan, 1});
@@ -185,7 +192,6 @@ try
     test_week_of_year(Chrono::Date{2017, Chrono::Month::feb, 7});
     test_week_of_year(Chrono::Date{2017, Chrono::Month::mar, 15});
     test_week_of_year(Chrono::Date{2017, Chrono::Month::may, 28});
-    */
 
     cout << '\n';
     return 0;
