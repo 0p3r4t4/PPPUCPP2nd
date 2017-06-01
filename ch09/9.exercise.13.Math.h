@@ -7,24 +7,28 @@
 
 namespace Math {
 
+// Math functions
+int gcd(int a, int b);   // Find greatest common divisor between two integers
+
 class Rational {
-    public:
-        class ZeroQ { };            // q = 0 exception
-        Rational(int p, int q);     // p/q constructor
-        Rational(int n);            // n/1 (integer) constructor
+public:
+    class ZeroQ { };            // q = 0 exception
+    Rational(int p, int q);     // p/q constructor
+    Rational(int n);            // n/1 (integer) constructor
+    Rational();                 // default constructor, 0/1
 
-        double float_point() const;       // conversion to double
-        // Accessors
-        int p() const { return m_p; };      
-        int q() const { return m_q; };
+    double float_point() const;       // conversion to double
+    // Accessors
+    int p() const { return m_p; };      
+    int q() const { return m_q; };
 
-        void simplify();    // reduce to lowest terms
-    private:
-        int m_p;  // the numerator
-        int m_q;  // the denominator
+private:
+    int m_p;  // the numerator
+    int m_q;  // the denominator
 
-        void normalize();   // normalize signs: reinterpret the rational 
-                            // always with possitive denominator
+    void normalize();   // normalize signs: reinterpret the rational 
+                        // always with possitive denominator
+    void reduce();      // reduce to lowest terms
 };
 
 // Rational class operators
