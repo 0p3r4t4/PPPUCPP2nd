@@ -141,8 +141,8 @@ real programming job is.
 
 As it sounds, it feels like a harsh review, but that would imply to
 underestimate the author, something I wouldn't dare to do in regard to Bjarne
-Stroustrup. Instead, I believe that all is an orchestrated master plan and
-that, in the end, it works like a damned good introductory text to (real and
+Stroustrup. Instead, I believe that all is an orchestrated master plan that, in
+the end, makes it work like a terrific good introductory text to (real and
 serious) programming.
 
 ---
