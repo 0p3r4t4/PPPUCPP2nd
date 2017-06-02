@@ -92,11 +92,58 @@ input samples to quickly test programs with the help of command redirection.
 
 _In construction_
 
+As an elderly, my memory is not what it used to be and I force myself to take
+some notes from time to time:
+
+-   [Use of compilers and
+    tools](https://gitlab.com/0p3r4t4/PPPUCPP2nd/blob/master/notes/compiler_and_tools.md).
+    Don't expect a dense compilation here, as it's biased by my work
+    environment.
+-   [Use of Git and
+    Gitlab.com](https://gitlab.com/0p3r4t4/PPPUCPP2nd/blob/master/notes/git_and_gitlab_howto.md).
+    This could be included into "compilers and tools" but I prefer to have it
+    separated.
+-   [Literature](https://gitlab.com/0p3r4t4/PPPUCPP2nd/blob/master/notes/literature.md).
+    Mainly articles, references and guidelines that I read, voluntarily or by
+    accident, and found interesting. 
+-   [Tips and
+    tricks](https://gitlab.com/0p3r4t4/PPPUCPP2nd/blob/master/notes/tips_and_tricks.md).
+    Aspects of programming and C++ that are not, or not yet, covered by the
+    book but I want to remember once I faced or used them.
+
 ---
 
 ## My review of the book (so far)
 
 _In construction_
+
+Let me tell you that this book is hard. If you are committed to do almost every
+drill and exercise, and have a family and a full time job (oh! and you're
+watching American Gods, playing Mass Effect Andromeda, reading Gödel, Escher,
+Bach: an Eternal Golden Braid, and so on ...) this book will accompany you a
+fair long time.
+
+And because of its hardness I find it much more valuable. Programming
+is a difficult task (and I mean DIFFICULT) and the author constantly remembers
+you this fact, both explicitly and implicitly. Just as real as it is.
+
+Implicitly because in his step-by-step approximation he shows you how you are
+previously mistaken or not so successful in getting ahead with the tasks
+proposed. He nicely do so by a writing style that is just a mental speech from
+a real and seasoned programmer. If you are new to programming perhaps you
+don't get how useful and what a timesaver this could be.
+
+Implicitly because the exercises are fairly poor balanced, ranging from trivial
+to those where you will cry out "I give up!", and exercise statements are
+sometimes like a bad requirements elicitation and you can't simply do what is
+stated but something more for your solution to correctly work. Just as real as
+real programming job is.
+
+As it sounds, it feels like a harsh review, but that would imply to
+underestimate the author, something I wouldn't dare to do in regard to Bjarne
+Stroustrup. Instead, I believe that all is an orchestrated master plan and
+that, in the end, it works like a damned good introductory text to (real and
+serious) programming.
 
 ---
 
