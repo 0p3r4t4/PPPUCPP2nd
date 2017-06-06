@@ -41,6 +41,21 @@
 //  (there no exact arithmetic relationship) if you are trading EUR to USD or
 //  USD to EUR. So I'll simplify based on rates from currencies to USD. We
 //  could expand Currency_data to treat these differences if we want to.
+//
+//  When I add the constructor Money(double, Currency) without removing the
+//  constructor Money(long int, Currency) and try to create an object with
+//  something like Money{0, Currency::USD}, compilers complains about an
+//  ambiguous call. The thing is that 0 is an int, and between the two
+//  candidates, it must be converted, so no one is better than the other.
+//  The solution is to suffix the integer literal to mark int as a long int, so
+//  Money{0L, Currency::USD} will disambiguate. C++ is turning difficult by
+//  moments.
+//  We could argue if we need the former constructor with long int now that we
+//  have a constructor with double that will simplify the >> operator overload
+//  on Money.
+//
+//  Now, with currency exchange rate being doubles and applied on all
+//  arithmetic operators for Money, rounding is needed almost everywhere.
 
 #include "std_lib_facilities.h"
 
@@ -49,7 +64,7 @@ namespace Financial {
 constexpr char currency{'$'};   // To be deleted
 
 enum class Currency {
-    USD, ARS, DKK, EUR, GBP
+   USD, ARS, DKK, EUR, GBP
 };
 
 class Currency_data { 
@@ -82,6 +97,33 @@ const vector<Currency_data::row> Currency_data::data {
 
 // Global currency data provider
 const Currency_data currency_data{};
+
+// Currency operators (need currency_data)
+ostream& operator<<(ostream& os, const Currency currency)
+{
+    os << currency_data.name(currency);
+    return os;
+}
+
+istream& operator>>(istream&is, Currency& currency)
+try
+{
+    char c;
+    string name;
+    // assume currency name has always three chars
+    // beware the magic number!
+    for (int i = 0; i < 3; ++i) {
+        is >> c;
+        name += c;
+    }
+    currency = currency_data.currency(name);    // may throw
+    return is;
+}
+catch(Currency_data::Invalid_currency& e)
+{
+    is.clear(ios_base::failbit);
+    return is;
+}
 
 // Currency_data function members
 void Currency_data::print() const
@@ -174,17 +216,20 @@ Money::Money() : m_amount{0}, m_currency{Currency::USD} { };
 // Money operators
 Money operator-(const Money& rhs)
 {
-    return Money{-rhs.amount()};
+    return Money{-rhs.amount(), rhs.currency()};
 }
 
 Money operator+(const Money& lhs, const Money& rhs)
 {
-    return Money{lhs.amount()+rhs.amount(), lhs.currency()};
+    // avoid unreadable one-liner
+    double ratio{currency_data.ratio(lhs.currency(), rhs.currency())};
+    return Money{iround(lhs.amount()+(rhs.amount()*ratio)), lhs.currency()};
 }
 
 Money operator-(const Money& lhs, const Money& rhs)
 {
-    return Money{lhs.amount()-rhs.amount(), lhs.currency()};
+    double ratio{currency_data.ratio(lhs.currency(), rhs.currency())};
+    return Money{iround(lhs.amount()-(rhs.amount()*ratio)), lhs.currency()};
 }
 
 Money operator*(const Money& lhs, double rhs)
@@ -208,22 +253,25 @@ double operator/(const Money& lhs, const Money& rhs)
 {
     if (rhs.amount() == 0) throw Money::Division_by_zero{};
 
-    return (double(lhs.amount())/rhs.amount());
+    double ratio{currency_data.ratio(lhs.currency(), rhs.currency())};
+    return (double(lhs.amount())/(rhs.amount()*ratio));
 }
 
 bool operator==(const Money& lhs, const Money& rhs)
 {
-    return (lhs.amount() == rhs.amount());
+    double ratio{currency_data.ratio(lhs.currency(), rhs.currency())};
+    return (lhs.amount() == iround(rhs.amount()*ratio));
 }
 
 bool operator!=(const Money& lhs, const Money& rhs)
 {
-    return (lhs.amount() != rhs.amount());
+    double ratio{currency_data.ratio(lhs.currency(), rhs.currency())};
+    return (lhs.amount() != iround(rhs.amount()*ratio));
 }
 
 ostream& operator<<(ostream& os, const Money& money)
 {
-    os << currency << money.units() << '.';
+    os << money.currency() << money.units() << '.';
     if (abs(money.cents()) < 10) os << '0'; // we could need a leading 0
     os << abs(money.cents());
 
@@ -231,26 +279,23 @@ ostream& operator<<(ostream& os, const Money& money)
 }
 
 istream& operator>>(istream& is, Money& money)
+try
 {
-    long int units{0};
-    char cur, dot;
-    char d, u;
+    double amount{0};
+    Currency currency{Currency::USD};
 
-    is >> cur >> units >> dot >> d >> u;
+    is >> currency;
     if (!is) return is;
-    if (cur != currency || dot != '.' || !isdigit(d) || !isdigit(u)) {
-        is.clear(ios_base::failbit);
-        return is;
-    }
-    // if we read an integer after the dot we could find out that
-    // 00000015 results to be 15. A solution will be to put back the
-    // dot and read a double. This has its own set of new problems, so
-    // I will read two chars and compose the cents. Pure brute force.
-    int cents{(d-'0')*10+(u-'0')};
+    is >> amount;
+    if (!is) return is;
 
-    if (units < 0) cents = -cents;  // only units have sign, but cents matter
-    money = Money{(units*100)+cents, Currency::USD};
+    money = Money{amount, currency};            // may throw
 
+    return is;
+}
+catch(Money::Invalid_amount& e)  
+{
+    is.clear(ios_base::failbit);
     return is;
 }
 
@@ -260,7 +305,6 @@ using namespace Financial;
 
 int main()
 try{
-
     currency_data.print(); // Silly test. REMOVE IT. Or not.
 
     // Currency_data::ratio() test
@@ -312,7 +356,7 @@ try{
     // Test >> and << operators;
     cout << "Write some quantities (examples: $123.04 or $-10.10, two digits"
          << " for cents are mandatory. Quit with Ctrl+D).\n> ";
-    Money input{0,Currency::USD};
+    Money input{12.01,Currency::USD};
     while (cin) {
         cin >> input;
         if (cin.eof()) break;
