@@ -1,7 +1,11 @@
-// 10.drill.04.cpp
+// 10.drill.05.cpp
 //
-//  Open an ofstream and output each point to a file named mydata.txt. On
-//  Windows, blah blah blah (not in Windows ;P)
+//  Close the ofstream and then open an ifstream for mydata.txt. Read the data
+//  from mydata.txt and store it in a new vector called processed_points.
+//
+// COMMENTS
+//
+//  I will implement fill_from_file() from §10.4.
 
 #include "std_lib_facilities.h"
 
@@ -46,6 +50,16 @@ ostream& operator<<(ostream& os, vector<Point>& vp)
 
 constexpr int no_points{7};
 const string of_name = "mydata.txt";
+const string if_name = "mydata.txt";
+
+void fill_from_file(vector<Point>& points, const string& name)
+{
+    ifstream ist{name};
+    if (!ist) error("can't open input file ", name);
+
+    for (Point p; ist >> p;)
+        points.push_back(p);
+}
 
 int main()
 try{
@@ -72,6 +86,13 @@ try{
     ofstream ost{of_name};
     if (!ost) error("can't open output file", of_name);
     ost << original_points;
+    ost.close();
+
+    cout << "Reading point from file " << if_name << " ...\n";
+    vector<Point> processed_points;
+    fill_from_file(processed_points, if_name);
+
+    cout << processed_points;   // Test if we read something
     
     return 0;
 }
