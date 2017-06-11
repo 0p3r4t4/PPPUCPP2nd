@@ -1,16 +1,7 @@
-// 10.drill.02.cpp
+// 10.drill.04.cpp
 //
-//  Using the code and discussion in §10.4, prompt the user to input seven
-//  (x,y) pairs. As the data is entered, store it in a vector of Points called
-//  original_points.
-//
-// COMMMENTS
-//
-//  I don't know if I must simply ask the user for seven Points or enforce it.
-//  I will enforce.
-//  We must implement an input operator for Point. It will not handle errors
-//  the exhaustive way though.
-//  And, yes, I'm not doing it the way §10.4 does, but I can't resist myself.
+//  Open an ofstream and output each point to a file named mydata.txt. On
+//  Windows, blah blah blah (not in Windows ;P)
 
 #include "std_lib_facilities.h"
 
@@ -37,7 +28,7 @@ istream& operator>>(istream& is, Point& p)
     char ch1, ch2, ch3;
 
     is >> ch1 >> x >> ch2 >> y >> ch3;
-    if (is && ch1 == '(' && ch2 == ',' && ch3 == ')')
+    if (cin && ch1 == '(' && ch2 == ',' && ch3 == ')')
         p = Point(x, y);
     else 
         is.clear(ios_base::failbit);
@@ -45,7 +36,16 @@ istream& operator>>(istream& is, Point& p)
     return is;
 }
 
+ostream& operator<<(ostream& os, vector<Point>& vp)
+{
+    for (Point p : vp)
+        os << '(' << p.x() << ", " << p.y() << ')' << '\n';
+
+    return os;
+}
+
 constexpr int no_points{7};
+const string of_name = "mydata.txt";
 
 int main()
 try{
@@ -66,9 +66,12 @@ try{
         }
     }
 
-    cout << "You've entered those points:\n";
-    for (Point p : original_points)
-        cout << '(' << p.x() << ", " << p.y() << ')' << '\n';
+    cout << "You've entered those points:\n" << original_points;
+
+    cout << "Writing to file " << of_name << " ...\n";
+    ofstream ost{of_name};
+    if (!ost) error("can't open output file", of_name);
+    ost << original_points;
     
     return 0;
 }

@@ -32,7 +32,7 @@ istream& operator>>(istream& is, Point& p)
     char ch1, ch2, ch3;
 
     is >> ch1 >> x >> ch2 >> y >> ch3;
-    if (cin && ch1 == '(' && ch2 == ',' && ch3 == ')')
+    if (is && ch1 == '(' && ch2 == ',' && ch3 == ')')
         p = Point(x, y);
     else 
         is.clear(ios_base::failbit);
@@ -43,7 +43,7 @@ istream& operator>>(istream& is, Point& p)
 ostream& operator<<(ostream& os, vector<Point>& vp)
 {
     for (Point p : vp)
-        cout << '(' << p.x() << ", " << p.y() << ')' << '\n';
+        os << '(' << p.x() << ", " << p.y() << ')' << '\n';
 
     return os;
 }
