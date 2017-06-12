@@ -1,7 +1,7 @@
 // 10.drill.07.cpp
 //
-//  Compare the two vectors and print Something's wrong! if the numbr of
-//  elements of the values of elements differ.
+//  Compare the two vectors and print Something's wrong! if the number of
+//  elements or the values of elements differ.
 //
 // COMMENTS
 //
@@ -102,7 +102,7 @@ try{
     // original_points[2] = Point{-1, -1};
 
     if (original_points != processed_points)
-        cout << "Something's wrogn!\n";
+        cerr << "Something's wrong!\n";
     
     return 0;
 }
