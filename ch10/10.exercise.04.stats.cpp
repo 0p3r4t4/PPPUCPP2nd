@@ -7,10 +7,19 @@
 //
 // COMMENTS
 //
+//  This time, and it seems contrary to the criterion exposed on the first part
+//  of the problem, the transformation will take place on the Reading >>
+//  operator. I consider it as a representation change, where we read
+//  temperatures with distinct scales and are able to store them on a
+//  "normalized" form (Fahrenheit scale, in this case).
+//
+//  I borrow ctof() function from 5.exercise.06.cpp. There are "magic" numbers
+//  on it, but since they're fixed values on the formula for conversion I don't
+//  feel the need to make them symbolic constants.
 
 #include "std_lib_facilities.h"
 
-const string of_name{"10.exercise.04.output"};
+const string if_name{"10.exercise.04.output"};
 
 constexpr int min_hour{0};         // min hour in 24h format
 constexpr int max_hour{23};        // max hour in 24h format
@@ -18,21 +27,45 @@ constexpr int max_hour{23};        // max hour in 24h format
 // conditions out there.
 constexpr double min_temp{-100};   // ~ -73C
 constexpr double max_temp{150};    // ~ 65C
+constexpr double celsius_absolute_zero{-273.15};
+constexpr char fahrenheit_suffix{'f'};
+constexpr char celsius_suffix{'c'};
 
 struct Reading {            // a temperature reading
     int hour;               // hour after midnight [0:23]
     double temperature;     // in Fahrenheit
 };
 
+double ctof(double c)
+// Converts Celsius to Fahrenheit
+// pre-condition: Celsius temperature equal oe greater than 273.15 (absolute
+//                zero)
+{
+    if (c < celsius_absolute_zero)
+        error("Indicated temperature below absolute zero!");
+    return c*9.0/5+32;      // Conversion formula
+}
+
 istream& operator>>(istream& is, Reading& rhs)
 {
-    int hour{0};
-    double temp{0};
+    int hour{0};        // If not default initialized with valid values,
+    double temp{0};     // the read that provokes EOF will be masked by 
+    char unit{'f'};     // setting only failbit on the checks before returning
 
-    is >> hour >> temp;
+    is >> hour >> temp >> unit;
+
+    if (is.eof()) return is;    // Do not let all to default initialization 
+                                // of read variables
 
     if ((hour < min_hour) || (hour > max_hour) ||
-        (temp < min_temp) || (temp > max_temp)) {
+        ((unit != fahrenheit_suffix) && (unit != celsius_suffix))) {
+        is.clear(ios_base::failbit);
+        return is;
+    }
+
+    if (unit == celsius_suffix) temp = ctof(temp);  // Normalize to Fahrenheit
+    // We couldn't check if the temperature is within range before normalizing
+    if ((temp < min_temp) || (temp > max_temp)) {
         is.clear(ios_base::failbit);
         return is;
     }
@@ -88,8 +121,8 @@ try
     get_readings_from_file(readings, if_name);
     cout << "Got " << readings.size() << " temperature readings from file "
          << if_name << ".\n";
-    cout << "Temperature mean: " << readings_mean(readings) << '\n';
-    cout << "Temperature median: " << readings_median(readings) << '\n';
+    cout << "Temperature mean: " << readings_mean(readings) << " ºF\n";
+    cout << "Temperature median: " << readings_median(readings) << " ºF\n";
     return 0;
 }
 catch (exception& e)
