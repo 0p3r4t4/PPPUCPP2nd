@@ -2,6 +2,18 @@
 //
 //  Write the function print_year() mentioned in §10.11.2.
 //
+// COMMENTS
+//
+//  Since we have to implement print_year() and not overload an output
+//  operator, the question is wheter implement the remaining (month, day,
+//  reading) output operations as functions or implement some of them as ouput
+//  operators. I have decided the output to be some kind of XML, and thus,
+//  implement it as operators seems not very neutral to me and more focused
+//  towards functions. 
+//
+//  The output will be more verbose than the input. It will be sorted within
+//  each year. I avoid writing a day if there are no readings, but, for
+//  simplicity I don't avoid empty years or months.
 
 #include "std_lib_facilities.h"
 
@@ -160,8 +172,44 @@ istream& operator>>(istream& is, Year& y)
     return is;
 }
 
+void print_hour(ostream& os, int h, double t)
+{
+    os << "      <reading hour=\"" << h << "\" temperature=\"" 
+       << t << "ºF\"/>\n";
+}
+
+void print_day(ostream& os, const Day& d, int n)
+{
+    // Are there readings?
+    bool readings{false};
+    for (double t : d.hour) {
+        if (t != not_a_reading) {
+            readings = true;
+            break;
+        }
+    }
+    if (!readings) return;
+
+    os << "    <day number=\"" << n << "\">\n";
+    for (int i = 0; i < 24; ++i)
+        if (d.hour[i] != not_a_reading) print_hour(os, i, d.hour[i]);
+    os << "    </day>\n";
+}
+
+void print_month(ostream& os, const Month& m)
+{
+    os << "  <month name=\"" << int_to_month(m.month) << "\">\n";
+    for (int i = 1; i < 32; ++i)
+        print_day(os, m.day[i], i);
+    os << "  </month>\n";
+}
+
 void print_year(ostream& os, const Year& y)
 {
+    os << "<year number=\"" << y.year << "\">\n";
+    for (Month m : y.month)
+        if (m.month != not_a_month) print_month(os, m);
+    os << "</year>\n";
 }
 
 int main()

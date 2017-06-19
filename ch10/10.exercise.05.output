@@ -1,0 +1,41 @@
+<year number="1990">
+</year>
+<year number="1991">
+  <month name="June">
+  </month>
+</year>
+<year number="1992">
+  <month name="January">
+    <day number="1">
+      <reading hour="0" temperature="61.5ºF"/>
+    </day>
+  </month>
+  <month name="February">
+    <day number="1">
+      <reading hour="1" temperature="64ºF"/>
+    </day>
+    <day number="2">
+      <reading hour="2" temperature="65.2ºF"/>
+    </day>
+  </month>
+</year>
+<year number="2000">
+  <month name="February">
+    <day number="1">
+      <reading hour="0" temperature="67.2ºF"/>
+      <reading hour="1" temperature="68ºF"/>
+    </day>
+    <day number="2">
+      <reading hour="3" temperature="66.66ºF"/>
+    </day>
+  </month>
+  <month name="December">
+    <day number="14">
+      <reading hour="0" temperature="-2ºF"/>
+    </day>
+    <day number="15">
+      <reading hour="14" temperature="-8.8ºF"/>
+      <reading hour="15" temperature="-9.2ºF"/>
+    </day>
+  </month>
+</year>
