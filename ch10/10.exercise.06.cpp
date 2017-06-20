@@ -5,6 +5,9 @@
 //  so that if r is a Roman_int, we can write cout << "Roman" << r << "equals"
 //  << r.as_int() << '\n';.
 
+#include "std_lib_facilities.h"
+#include "10.exercise.06.roman.h"
+
 int main()
 try 
 {
@@ -16,6 +19,7 @@ catch (exception& e)
     return 1;
 }
 catch (...)
+{
     cerr << "Unknown exception!!\n";
     return 2;
 }
