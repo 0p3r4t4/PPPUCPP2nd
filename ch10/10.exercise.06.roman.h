@@ -7,16 +7,20 @@
 
 namespace Roman {
 
+constexpr size_t lut_end{100};
+constexpr int max{4999};    // max int representable with implemented notation
+constexpr int min{1};       // min int
+
 class Not_a_particle { };   // Exception when get_particle or lut_idx doesn't
                             // found a particle
+class Not_roman { };        // Exception when Roman_int initialized with
+                            // value out of [min, max]
 
 struct lut_row {
     string particle;    // particle of Roman number, p.e. M, XL, V or I
     int value;          // associated decimal value
     size_t next;        // next particle to look ahead after this particle
 };
-
-constexpr size_t lut_end{100};
 
 class Roman_int {
 public:

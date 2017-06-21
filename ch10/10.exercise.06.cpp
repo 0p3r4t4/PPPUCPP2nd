@@ -11,15 +11,49 @@
 int main()
 try 
 {
+    Roman::Roman_int r{45};
+    cout << r.value() << '\n';
+    r = Roman::Roman_int{"MCMLXXVIII"};
+    cout << r.value() << " in Roman is " << r.as_int() << '\n';
+    try {
+        r = Roman::Roman_int{"IXIX"};
+        cout << r.as_int() << '\n';
+    }
+    catch (Roman::Not_roman& e) {
+        cout << "NOT ROMAN!!\n";
+    }
+    try {
+        r = Roman::Roman_int{"abdba"};
+        cout << r.as_int() << '\n';
+    }
+    catch (Roman::Not_roman& e) {
+        cout << "NOT ROMAN!!\n";
+    }
+    /*
+    while (cin) {
+        string s;
+        cin >> s;
+        cout << Roman::Roman_int{s}.as_int() << '\n';
+    }
+    */
+    while (cin >> r) {
+        cout << r.as_int() << " -> " << r.value() << '\n';
+    }
     return 0;
+}
+catch (Roman::Not_roman& e)
+{
+    cerr << "Tried to read something else or create a Roman_int out of bounds [" 
+         << Roman::min << ", " << Roman::max << "]\n";
+    return 1;
 }
 catch (exception& e)
 {
     cerr << e.what() << '\n';
-    return 1;
+    return 2;
 }
 catch (...)
 {
     cerr << "Unknown exception!!\n";
-    return 2;
+    return 3;
 }

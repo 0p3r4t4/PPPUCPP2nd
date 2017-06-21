@@ -1,4 +1,7 @@
 // 10.exercise.06.roman.cpp
+//
+// COMMENTS 
+//  See 10.exercise.06.md
 
 #include "std_lib_facilities.h"
 #include "10.exercise.06.roman.h"
@@ -38,12 +41,19 @@ const size_t lut_size{lut.size()};
 
 Roman_int::Roman_int(string s) : m_value{0}
 {
-    stringstream ss{s};
-    // try-catch??
-    m_value = parse_roman(ss);
+    stringstream ss{s};         // to be able to reuse parse_roman()
+    m_value = parse_roman(ss);  // could throw Not_roman
+
+    string dummy;
+    ss >> dummy;
+    if (dummy.size() != 0)      // s is not totally consumed, so error
+        throw Not_roman{};
 }
 
-Roman_int::Roman_int(int a) : m_value{a} { };
+Roman_int::Roman_int(int a) : m_value{a}
+{
+    if (m_value < min || m_value > max) throw Not_roman{};
+};
 
 string Roman_int::value() const
 {
@@ -64,12 +74,14 @@ string get_particle(istream& is, size_t start)
     string particle;
 
     // Read two chars and compose a particle, taking account of EOF
-    is >> first;
-    if (is.eof()) return "E";       // no more to read, use "E" as fake end
-    is >> second;
+    first = is.get();
+    if (is.eof() || isspace(first)) return "E";  // no more to read,
+                                                 // use "E" as fake end
+    particle = first;       // examine at least the first character
+    second = is.get();
+
     if (is.eof()){
         is.clear();                 // backtrack the out of bounds read
-        particle = first;           // only one symbol remaining
         try {
             lut_idx(particle, start);   // throws Not_a_particle  
         }
@@ -79,7 +91,7 @@ string get_particle(istream& is, size_t start)
         }
     }
     else {
-        particle = first + second;
+        particle += second;
         try {
             lut_idx(particle, start);
         }
@@ -105,18 +117,39 @@ int parse_roman(istream& is)
     size_t idx{0};
 
     while (idx != lut_end) {
-        string particle = get_particle(is, idx);
-        idx = lut_idx(particle, idx);
-        r += lut[idx].value;
-        idx = lut[idx].next;
+        try {
+            string particle = get_particle(is, idx);
+            idx = lut_idx(particle, idx);
+            r += lut[idx].value;
+            idx = lut[idx].next;
+        }
+        catch (Not_a_particle& e) {
+            // No particle has been parsed.
+            if (r == 0) throw Not_roman{};
+            break;  // return the roman parsed so far
+        }
     }
 
     return r;
 }
 
 string compose_roman(int a)
+// Returns a string with the Roman numeral for a
+// Precondition: a msut be representable with a Roman numeral
 {
+    if (a < min || a > max) throw Not_roman{};
+
     string s{""};
+    size_t idx{0};
+
+    while (a != 0) {
+        if ((a - lut[idx].value) >= 0) {    // Test if m_value can hold it
+            s += lut[idx].particle;
+            a -= lut[idx].value;
+        }
+        idx++;   // next particle
+    }
+
     return s;
 }
 
@@ -128,8 +161,12 @@ ostream& operator<<(ostream& os, const Roman_int& rhs)
 
 istream& operator>>(istream& is, Roman_int& rhs)
 {
-    // try-catch??
-    rhs = Roman_int{parse_roman(is)};
+    try {
+        rhs = Roman_int{parse_roman(is)};
+    }
+    catch (Not_roman& e) {   // on error, just set failbit on istream
+        is.clear(ios_base::failbit);
+    }
     return is;
 }
 
