@@ -113,8 +113,8 @@ string get_particle(istream& is, size_t start)
 
 int parse_roman(istream& is)
 {
-    int r{0};
-    size_t idx{0};
+    int r{0};       // accumulator
+    size_t idx{0};  // index to begin the search of a particle in the LUT
 
     while (idx != lut_end) {
         try {
