@@ -1,7 +1,8 @@
 // 10.exercise.06.roman.cpp
 //
 // COMMENTS 
-//  See 10.exercise.06.md
+//
+//  See details on 10.exercise.06.md
 
 #include "std_lib_facilities.h"
 #include "10.exercise.06.roman.h"
@@ -147,7 +148,7 @@ string compose_roman(int a)
             s += lut[idx].particle;
             a -= lut[idx].value;
         }
-        idx++;   // next particle
+        ++idx;   // next particle
     }
 
     return s;

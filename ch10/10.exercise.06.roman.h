@@ -1,4 +1,7 @@
 // 10.exercise.06.roman.h
+//
+// COMMENTS 
+//  See details on 10.exercise.06.md
 
 #include "std_lib_facilities.h"
 
@@ -24,11 +27,11 @@ struct lut_row {
 
 class Roman_int {
 public:
-    Roman_int(string s);
-    Roman_int(int a);
+    Roman_int(string s);    // Initialize with a Roman numeral
+    Roman_int(int a);       // Initialize with an int
 
-    string value() const;
-    int as_int() const { return m_value; }
+    string value() const;   // return a string with the Roman numeral
+    int as_int() const { return m_value; }  // return the int value
 private:
     int m_value;
 };

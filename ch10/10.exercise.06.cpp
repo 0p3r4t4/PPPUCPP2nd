@@ -4,6 +4,9 @@
 //  >>. Provide Roman_int with an as_int() member that returns the int value,
 //  so that if r is a Roman_int, we can write cout << "Roman" << r << "equals"
 //  << r.as_int() << '\n';.
+//
+// COMMENTS
+//  See details on 10.exercise.06.md
 
 #include "std_lib_facilities.h"
 #include "10.exercise.06.roman.h"
@@ -14,7 +17,9 @@ try
     Roman::Roman_int r{45};
     cout << r.value() << '\n';
     r = Roman::Roman_int{"MCMLXXVIII"};
-    cout << r.value() << " in Roman is " << r.as_int() << '\n';
+    cout << r << " in Roman is " << r.as_int() << '\n';
+
+    // Provoke errors on constructor
     try {
         r = Roman::Roman_int{"IXIX"};
         cout << r.as_int() << '\n';
@@ -29,16 +34,13 @@ try
     catch (Roman::Not_roman& e) {
         cout << "NOT ROMAN!!\n";
     }
-    /*
-    while (cin) {
-        string s;
-        cin >> s;
-        cout << Roman::Roman_int{s}.as_int() << '\n';
-    }
-    */
+
+    // Test loop, get a Roman numeral, convert to int and convert again to
+    // Roman numeral ...
     while (cin >> r) {
-        cout << r.as_int() << " -> " << r.value() << '\n';
+        cout << r.as_int() << " -> " << r << '\n';
     }
+
     return 0;
 }
 catch (Roman::Not_roman& e)
