@@ -1,7 +1,6 @@
 // 10.exercise.06.roman.cpp
 //
 // COMMENTS 
-//
 //  See details on 10.exercise.06.md
 
 #include "std_lib_facilities.h"
@@ -144,7 +143,7 @@ string compose_roman(int a)
     size_t idx{0};
 
     while (a != 0) {
-        if ((a - lut[idx].value) >= 0) {    // Test if m_value can hold it
+        if (a >= lut[idx].value) {    // Test if m_value can hold it
             s += lut[idx].particle;
             a -= lut[idx].value;
         }
