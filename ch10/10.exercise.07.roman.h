@@ -1,4 +1,4 @@
-// 10.exercise.06.roman.h
+// 10.exercise.07.roman.h
 //
 // COMMENTS 
 //  See details on 10.exercise.06.md
@@ -28,7 +28,7 @@ struct lut_row {
 class Roman_int {
 public:
     Roman_int(string s);    // Initialize with a Roman numeral
-    Roman_int(int a);       // Initialize with an int
+    Roman_int(int a = 1);   // Initialize with an int
 
     string value() const;   // return a string with the Roman numeral
     int as_int() const { return m_value; }  // return the int value
@@ -49,6 +49,13 @@ Roman_int operator+(const Roman_int& lhs, const Roman_int& rhs);
 Roman_int operator-(const Roman_int& lhs, const Roman_int& rhs);
 Roman_int operator*(const Roman_int& lhs, const Roman_int& rhs);
 Roman_int operator/(const Roman_int& lhs, const Roman_int& rhs);
+Roman_int operator%(const Roman_int& lhs, const Roman_int& rhs);
+
+Roman_int& operator+=(Roman_int& lhs, const Roman_int& rhs);
+Roman_int& operator-=(Roman_int& lhs, const Roman_int& rhs);
+Roman_int& operator*=(Roman_int& lhs, const Roman_int& rhs);
+Roman_int& operator/=(Roman_int& lhs, const Roman_int& rhs);
+Roman_int& operator%=(Roman_int& lhs, const Roman_int& rhs);
 
 int parse_roman(istream& is);
 } // namespace Roman

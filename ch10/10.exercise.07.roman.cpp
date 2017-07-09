@@ -1,4 +1,4 @@
-// 10.exercise.06.roman.cpp
+// 10.exercise.07.roman.cpp
 //
 // COMMENTS 
 //  See details on 10.exercise.06.md
@@ -39,7 +39,7 @@ vector<lut_row> lut = {     // Look up table to process Roman int in and out
 
 const size_t lut_size{lut.size()};
 
-Roman_int::Roman_int(string s) : m_value{0}
+Roman_int::Roman_int(string s) : m_value{1}
 {
     stringstream ss{s};         // to be able to reuse parse_roman()
     m_value = parse_roman(ss);  // could throw Not_roman
@@ -50,7 +50,7 @@ Roman_int::Roman_int(string s) : m_value{0}
         throw Not_roman{};
 }
 
-Roman_int::Roman_int(int a) : m_value{a}
+Roman_int::Roman_int(int a = 1) : m_value{a}
 {
     if (m_value < min || m_value > max) throw Not_roman{};
 };
@@ -75,8 +75,12 @@ string get_particle(istream& is, size_t start)
 
     // Read two chars and compose a particle, taking account of EOF
     first = is.get();
-    if (is.eof() || isspace(first)) return "E";  // no more to read,
-                                                 // use "E" as fake end
+    if (is.eof()) return "E";  // no more to read, use "E" as fake end
+    if (isspace(first)) {      // separator, no more to read
+        is.putback(first);
+        return "E";
+    }
+
     particle = first;       // examine at least the first character
     second = is.get();
 
@@ -189,6 +193,42 @@ Roman_int operator/(const Roman_int& lhs, const Roman_int& rhs)
 {
     // rhs.as_int() could not be zero
     return Roman_int{lhs.as_int()/rhs.as_int()};    // throws if out of range
+}
+
+Roman_int operator%(const Roman_int& lhs, const Roman_int& rhs)
+{
+    // rhs.as_int() could not be zero
+    return Roman_int{lhs.as_int()%rhs.as_int()};    // throws if out of range
+}
+
+Roman_int& operator+=(Roman_int& lhs, const Roman_int& rhs)
+{
+    lhs = lhs + rhs;
+    return lhs;
+}
+
+Roman_int& operator-=(Roman_int& lhs, const Roman_int& rhs)
+{
+    lhs = lhs - rhs;
+    return lhs;
+}
+
+Roman_int& operator*=(Roman_int& lhs, const Roman_int& rhs)
+{
+    lhs = lhs * rhs;
+    return lhs;
+}
+
+Roman_int& operator/=(Roman_int& lhs, const Roman_int& rhs)
+{
+    lhs = lhs / rhs;    // rhs can't be zero
+    return lhs;
+}
+
+Roman_int& operator%=(Roman_int& lhs, const Roman_int& rhs)
+{
+    lhs = lhs % rhs;    // rhs can't be zero
+    return lhs;
 }
 
 } // namespace Roman

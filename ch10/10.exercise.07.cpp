@@ -16,8 +16,11 @@
 //  replaced with [roman-numeral-literal], and we have to rethink about
 //  functions (mainly sqrt) and representation range of Roman numerals.
 //
-//  And Roman numerals have no negative or zero concept, so msut be taken into
-//  account.
+//  And Roman numerals have no negative or zero concept, so must be taken into
+//  account. Unary + and - operatorss make no sense either.
+//
+//  Using Roman_int in the calculator exposes a bug in Roman::get_particle,
+//  since it doesn't putback to input stream '\n' chars.
 //
 // This program implements a basic expression calculator based in this input
 // grammar:
@@ -55,8 +58,6 @@
 //  Primary:
 //      Number
 //      "("Expression")"
-//      "-" Primary
-//      "+" Primary
 //      Name
 //      Function"("Arguments")"
 //  Function:
@@ -152,14 +153,6 @@ Token Token_stream::get()
 	case '=':
 	case ',':   // Added as separator for function argument lists
 		return Token{ch};   // These literals directly define Token kind
-	case '.':
-	case '0': case '1': case '2': case '3': case '4':
-	case '5': case '6': case '7': case '8': case '9':   // Numeric literal
-	{	cin.putback(ch);
-		double val;
-		cin >> val;
-		return Token{number, val};
-	} 
     case 'M': case 'D': case 'C': case 'L':
     case 'X': case 'V': case 'I':               // Roman numeral literal
     {
@@ -261,8 +254,8 @@ void Symbol_table::declare(string s, Roman::Roman_int d, bool c)
 void Symbol_table::print()
 {
     for (Variable v : var_table) {
-        cout << v.name << " = " << v.value;
-        if (v.constant) cout << " (constant)";
+        cout << v.name << " = " << v.value << " (" << v.value.as_int() << ')';
+        if (v.constant) cout << " [constant]";
         cout << '\n';
     }
 }
@@ -300,10 +293,9 @@ Roman::Roman_int eval_function(char c)
     // Evaluation snd restrictions implementation
     switch (c) {
     case sqrtfun:
-        if (args[0] < 0) error("sqrt() is undefined for negative numbers");
-        return sqrt(args[0]);
+        return Roman::Roman_int(narrow_cast<int>(sqrt(args[0].as_int())));
     case powfun:
-        return pow(args[0], narrow_cast<int>(args[1]));
+        return Roman::Roman_int(pow(args[0].as_int(), args[1].as_int()));
     default:
         // In case we have defined the name as a token for Function rule but
         // forgot to implement its evaluation
@@ -321,10 +313,6 @@ Roman::Roman_int primary()
 		if (t.kind != ')') error("')' expected");
 		return d;
 	}
-	case '-':   // Negative signed numbers
-		return - primary();
-	case '+':   // Positive signed numbers
-		return primary();
 	case number:
 		return t.value;
     case name:  // Variable: get value from table
@@ -350,14 +338,12 @@ Roman::Roman_int term()
 			break;
 		case '/':
 		{	Roman::Roman_int d = primary();
-			if (d == 0) error("divide by zero");
 			left /= d;
 			break;
 		}
         case '%':
         {   Roman::Roman_int d = primary();
-            if (d == 0) error("divide by zero");
-            left = fmod(left, d);
+            left %= d;
             break;
         }
 		default:
@@ -459,30 +445,29 @@ const string result = "= ";
 
 void print_help()
 {
-    cout << "\n\tTiny calculator help.\n"
+    cout << "\n\tTiny Roman calculator help.\n"
             "\n\tBASIC SYNTAX\n\n"
             "\tFinish an expression with ; or new line to print results.\n"
             "\tSupported operands: *, /, %, +, -, = (assignment).\n"
-            "\tYou can use parenthesis to group expressions: 4*(2+3).\n"
+            "\tYou can use parenthesis to group expressions: IV*(II+III).\n"
             "\n\tCOMMANDS\n\n"
-            "\thelp     Prints this help message.\n"
-            "\tsymbols  Prints currently declared variables and constants.\n"
-            "\tquit     Exit the program.\n"
+            "\tauxilium   Prints this help message.\n"
+            "\tsymbols    Prints currently declared variables and constants.\n"
+            "\tquit       Exit the program.\n"
             "\n\tFUNCTIONS\n\n"
             "\tsqrt(n)    Square root of n.\n"
             "\tpow(n,e)   e power of n, with e an integer number.\n"
             "\n\tVARIABLES\n\n"
             "\tVariable names must be composed of alphanumeric characters and '_',\n"
-            "\tand must start with an alphabetic character.\n\n"
+            "\tand must start with an alphabetic character except M, D, C, L,\n"
+            "\tX, V and I, as they express Roman numerals.\n\n"
             "\tlet var = expr     Declares a variable var and initializes it\n"
             "\t                   with expr expression evaluation value.\n\n"
             "\tconst var = expr   Declares and initializes a constant named var.\n\n"
             "\tvar = expr         Assigns a new value to a previously declared\n"
             "\t                   variable.\n\n"
             "\tPredefined variables:\n"
-            "\t\tpi   3.14159265359 (constant)\n"
-            "\t\te    2.71828182846 (constant)\n"
-            "\t\tk    1000\n\n";
+            "\t\tk    M (1000)\n\n";
 }
 
 void calculate()
@@ -502,6 +487,10 @@ void calculate()
             ts.putback(t);
             cout << result << statement() << '\n';
         }
+	}
+	catch (Roman::Not_roman& e) {
+	    cerr << "Result out of bounds of Roman numeral representation\n";
+	    clean_up_mess();
 	}
 	catch(exception& e) {
 		cerr << e.what() << '\n';
